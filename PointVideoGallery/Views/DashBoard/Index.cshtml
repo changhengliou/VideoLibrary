@@ -1,0 +1,493 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section header {
+    <link href="/Static/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/Static/css/owl.carousel.css" rel="stylesheet" type="text/css">
+}
+<section class="wrapper">
+<!--state overview start-->
+<div class="row state-overview">
+    <div class="col-lg-3 col-sm-6">
+        <section class="panel">
+            <div class="symbol terques">
+                <i class="fa fa-film"></i>
+            </div>
+            <div class="value">
+                <h1>
+                    <a href="video_list.html">3,275</a>
+                </h1>
+                <p>影片數量</p>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-3 col-sm-6">
+        <section class="panel">
+            <div class="symbol red">
+                <i class="fa fa-camera-retro"></i>
+            </div>
+            <div class="value">
+                <h1>
+                    <a href="software-license.html">108</a>
+                </h1>
+                <p>照片數量</p>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-3 col-sm-6">
+        <section class="panel">
+            <div class="symbol yellow">
+                <i class="fa fa-picture-o"></i>
+            </div>
+            <div class="value">
+                <h1>
+                    <a href="policy.html">8</a>
+                </h1>
+                <p>圖檔數量</p>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-3 col-sm-6">
+        <section class="panel">
+            <div class="symbol blue">
+                <i class="fa fa-file-text-o"></i>
+            </div>
+            <div class="value">
+                <h1>
+                    <a href="users.html">50</a>
+                </h1>
+                <p>文字檔數量</p>
+            </div>
+        </section>
+    </div>
+</div>
+<!--state overview end-->
+
+<div class="row">
+    <div class="col-lg-8">
+        <!--custom chart start-->
+        <div class="border-head">
+            <h3>警示記錄</h3>
+        </div>
+        <div>
+            <div id="monthlyalertreport" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
+        <!--custom chart end-->
+    </div>
+    <div class="col-lg-4">
+        <!--new earning start-->
+        <div>
+            <div id="internetreport" style="height: 210px; margin: 0 auto"></div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <!--new earning end-->
+        <!--total earning start-->
+        <div>
+            <div id="lanreport" style="height: 210px; margin: 0 auto"></div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <!--total earning end-->
+    </div>
+</div>
+
+<div class="row">
+<div class="col-lg-8">
+    <!--timeline start-->
+    <section class="panel">
+        <div class="panel-body">
+            <div class="text-center mbot30">
+                <h3 class="timeline-title">事件時間軸</h3>
+                <p class="t-info">企業事件發生記錄</p>
+            </div>
+
+            <div class="timeline">
+                <article class="timeline-item">
+                    <div class="timeline-desk">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <span class="arrow"></span>
+                                <span class="timeline-icon red"></span>
+                                <span class="timeline-date">08:25 am</span>
+                                <h1 class="red">USB攜出記錄</h1>
+                                <p>小明透過USB帶走了 : veryimportant.docx</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="timeline-item alt">
+                    <div class="timeline-desk">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <span class="arrow-alt"></span>
+                                <span class="timeline-icon green"></span>
+                                <span class="timeline-date">10:00 am</span>
+                                <h1 class="green">非法上網記錄</h1>
+                                <p>
+                                    <a href="#">Charmmy</a> 瀏覽了非法網站 <span>
+                                        <a href="#" class="green">Facebook</a>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="timeline-item">
+                    <div class="timeline-desk">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <span class="arrow"></span>
+                                <span class="timeline-icon blue"></span>
+                                <span class="timeline-date">11:35 am</span>
+                                <h1 class="blue">硬體變更</h1>
+                                <p>
+                                    <a href="#">系統變更記錄</a> 違規聊天記錄, 變更項目 <span>
+                                        <a href="#" class="blue">記憶體</a>
+                                    </span>
+                                </p>
+                                <div class="album">
+                                    <a href="#">
+                                        <img alt="" src="/Static/img/sm-img-1.jpg">
+                                    </a>
+                                    <a href="#">
+                                        <img alt="" src="/Static/img/sm-img-2.jpg">
+                                    </a>
+                                    <a href="#">
+                                        <img alt="" src="/Static/img/sm-img-3.jpg">
+                                    </a>
+                                    <a href="#">
+                                        <img alt="" src="/Static/img/sm-img-1.jpg">
+                                    </a>
+                                    <a href="#">
+                                        <img alt="" src="/Static/img/sm-img-2.jpg">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="timeline-item alt">
+                    <div class="timeline-desk">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <span class="arrow-alt"></span>
+                                <span class="timeline-icon purple"></span>
+                                <span class="timeline-date">3:20 pm</span>
+                                <h1 class="purple">聊天記錄</h1>
+                                <p>Charmmy違反企業聊天規則</p>
+                                <div class="notification">
+                                    <i class=" fa fa-exclamation-sign"></i> 違法關鍵字 <a href="#">抱抱</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="timeline-item">
+                    <div class="timeline-desk">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <span class="arrow"></span>
+                                <span class="timeline-icon light-green"></span>
+                                <span class="timeline-date">07:49 pm</span>
+                                <h1 class="light-green">非法軟體執行</h1>
+                                <p>
+                                    <a href="#">Dora</a> 執行了非法軟體: <span>
+                                        <a href="#" class="light-green">BTorrent.exe</a>
+                                    </span> 已提出警示
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="clearfix">&nbsp;</div>
+        </div>
+    </section>
+    <!--timeline end-->
+</div>
+<div class="col-lg-4">
+    <!--revenue start-->
+    <section class="panel">
+        <div class="revenue-head">
+            <span>
+                <i class="fa fa-bar-chart"></i>
+            </span>
+            <h3>節省成本</h3>
+            <span class="rev-combo pull-right">
+                Dec 2013
+            </span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6 text-center">
+                    <div class="easy-pie-chart">
+                        <div class="percentage" data-percent="35">
+                            <span>35</span>%
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="chart-info chart-position">
+                        <span class="increase"></span>
+                        <span>Revenue Increase</span>
+                    </div>
+                    <div class="chart-info">
+                        <span class="decrease"></span>
+                        <span>Revenue Decrease</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer revenue-foot">
+            <ul>
+                <li class="first active">
+                    <a href="javascript:;">
+                        <i class="fa fa-bullseye"></i>
+                        印表機列印
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class=" fa fa-th-large"></i>
+                        人力成本
+                    </a>
+                </li>
+                <li class="last">
+                    <a href="javascript:;">
+                        <i class=" fa fa-align-justify"></i>
+                        資訊安全
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <!--revenue end-->
+    <!--features carousel start-->
+    <section class="panel">
+        <div class="flat-carousal">
+            <div id="owl-demo" class="owl-carousel owl-theme">
+                <div class="item">
+                    <h1>新進電腦數量 : 12</h1>
+                    <div class="text-center">
+                        <a href="javascript:;" class="view-all">檢視新進電腦</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <h1>聊天記錄違規 : 3</h1>
+                    <div class="text-center">
+                        <a href="javascript:;" class="view-all">檢視記錄</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <h1>遠端使用者求救</h1>
+                    <div class="text-center">
+                        <a href="javascript:;" class="view-all">回應使用者</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <ul class="ft-link">
+                <li class="active">
+                    <a href="javascript:;">
+                        <i class="fa fa-gears"></i>
+                        管理策略
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class=" fa fa-desktop"></i>
+                        遠端遙控
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class=" fa fa-asterisk"></i>
+                        系統警示設定
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <i class=" fa fa-circle"></i>
+                        使用者求救
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <!--features carousel end-->
+</div>
+</div>
+</section>
+@section scripts
+{
+    <script src="/Static/js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="/Static/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="/Static/js/owl.carousel.js"></script>
+    <script src="/Static/js/jquery.customSelect.min.js"></script>
+    <script src="/Static/js/highcharts.js"></script>
+    <script src="/Static/js/easy-pie-chart.js"></script>
+<script>
+    $(document).ready(function () {
+        //owl carousel
+          $("#owl-demo").owlCarousel({
+              navigation : true,
+              slideSpeed : 300,
+              paginationSpeed : 400,
+              singleItem : true,
+			  autoPlay:true
+          });
+        //custom select box
+          $(function () {
+              $('select.styled').customSelect();
+          });
+
+        /* 過去一個月警示數量 */
+          $(function () {
+              $('#monthlyalertreport').highcharts({
+                  chart: {
+                      type: 'column',
+                      backgroundColor: 'rgba(0,0,0,0)'
+                  },
+                  title: {
+                      text: '過去一個月警示數量',
+                      x: -20 //center
+                  },
+                  credits: {
+                      enabled: false
+                  },
+                  xAxis: {
+                      categories: ['1/1', '1/2', '1/3', '1/4', '1/5', '1/6', '1/7', '1/8', '1/9', '1/10', '1/11', '1/12',
+                          '1/13', '1/14', '1/15', '1/16', '1/17', '1/18', '1/19', '1/20', '1/21', '1/22', '1/23', '1/24', '1/25', '1/26', '1/27', '1/28', '1/29', '1/30']
+                  },
+                  yAxis: {
+                      gridLineDashStyle: 'dot',
+                      title: {
+                          text: '數量'
+                      },
+                      plotLines: [{
+                          value: 0,
+                          width: 1,
+                          color: '#808080'
+
+                      }]
+                  },
+                  tooltip: {
+                      valueSuffix: ''
+                  },
+                  legend: {
+                      layout: 'vertical',
+                      align: 'right',
+                      verticalAlign: 'middle',
+                      borderWidth: 0
+                  },
+                  series: [{
+                      name: '數量',
+                      color: '#57c8f2',
+                      data: [18, 86, 67, 38, 104, 152, 13, 53, 33, 28, 71, 94, 123, 345, 123, 12, 56, 67, 53, 32, 356, 234, 45, 84, 97, 67, 81, 265, 134, 12]
+                      ,
+                      showInLegend: false
+                  }]
+              });
+          });
+
+        /* Internet流量分析 */
+          $(function () {
+              $('#internetreport').highcharts({
+                  chart: {
+                      type: 'areaspline'
+                  },
+                  title: {
+                      text: 'Internet網路流量'
+                  },
+                  xAxis: {
+                      categories: [
+                          '5', '6', '7', '8', '9', '10', '11',
+                              '12', '13', '14', '15', '16'
+                      ]
+                  },
+                  yAxis: {
+                      title: {
+                          text: '流量'
+                      },
+                      labels: {
+                          formatter: function () {
+                              return this.value / 1000 + 'MB';
+                          }
+                      }
+                  },
+                  tooltip: {
+                      shared: true,
+                      valueSuffix: ' MB'
+                  },
+                  credits: {
+                      enabled: false
+                  },
+                  plotOptions: {
+                      areaspline: {
+                          fillOpacity: 0.5
+                      }
+                  },
+                  series: [{
+                      name: '上傳頻寬',
+                      data: [170068, 108285, 28374, 197444, 10664, 139576, 296791, 272187, 165239, 211091, 254790, 29006],
+                      color: '#0094ff'
+                  }, {
+                      name: '下載頻寬',
+                      data: [80955, 132720, 36060, 192393, 196862, 219472, 31779, 235581, 279476, 206451, 184903, 118870],
+                      color: '#b6ff00'
+                  }]
+              });
+          });
+
+        /* LAN流量分析 */
+          $(function () {
+              $('#lanreport').highcharts({
+                  chart: {
+                      type: 'areaspline'
+                  },
+                  title: {
+                      text: '內部網路流量分析'
+                  },
+                  xAxis: {
+                      categories: [
+                          '5', '6', '7', '8', '9', '10', '11',
+                              '12', '13', '14', '15', '16'
+                      ]
+                  },
+                  yAxis: {
+                      title: {
+                          text: '流量'
+                      },
+                      labels: {
+                          formatter: function () {
+                              return this.value / 1000 + 'MB';
+                          }
+                      }
+                  },
+                  tooltip: {
+                      shared: true,
+                      valueSuffix: ' MB'
+                  },
+                  credits: {
+                      enabled: false
+                  },
+                  plotOptions: {
+                      areaspline: {
+                          fillOpacity: 0.5
+                      }
+                  },
+                  series: [{
+                      name: '上傳頻寬',
+                      data: [50079, 37352, 8267, 6078, 16128, 46, 27956, 15502, 47330, 52139, 9994, 24753],
+                      color: '#f8d347'
+                  }, {
+                      name: '下載頻寬',
+                      data: [45771, 23693, 54747, 1884, 17282, 49289, 24027, 1121, 44058, 48989, 18608, 27762],
+                      color: '#6ccac9'
+                  }]
+              });
+          });
+      });
+</script>
+}

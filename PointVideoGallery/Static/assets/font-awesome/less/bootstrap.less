@@ -1,0 +1,84 @@
+/* BOOTSTRAP SPECIFIC CLASSES
+ * -------------------------- */
+
+/* Bootstrap 2.0 sprites.less reset */
+[class^="fa fa-"],
+[class*=" fa fa-"] {
+  display: inline;
+  width: auto;
+  height: auto;
+  line-height: normal;
+  vertical-align: baseline;
+  background-image: none;
+  background-position: 0% 0%;
+  background-repeat: repeat;
+  margin-top: 0;
+}
+
+/* more sprites.less reset */
+.fa fa-white,
+.nav-pills > .active > a > [class^="fa fa-"],
+.nav-pills > .active > a > [class*=" fa fa-"],
+.nav-list > .active > a > [class^="fa fa-"],
+.nav-list > .active > a > [class*=" fa fa-"],
+.navbar-inverse .nav > .active > a > [class^="fa fa-"],
+.navbar-inverse .nav > .active > a > [class*=" fa fa-"],
+.dropdown-menu > li > a:hover > [class^="fa fa-"],
+.dropdown-menu > li > a:hover > [class*=" fa fa-"],
+.dropdown-menu > .active > a > [class^="fa fa-"],
+.dropdown-menu > .active > a > [class*=" fa fa-"],
+.dropdown-submenu:hover > a > [class^="fa fa-"],
+.dropdown-submenu:hover > a > [class*=" fa fa-"] {
+  background-image: none;
+}
+
+
+/* keeps Bootstrap styles with and without icons the same */
+.btn, .nav {
+  [class^="fa fa-"],
+  [class*=" fa fa-"] {
+//    display: inline;
+    &.fa fa-large { line-height: .9em; }
+    &.fa fa-spin { display: inline-block; }
+  }
+}
+.nav-tabs, .nav-pills {
+  [class^="fa fa-"],
+  [class*=" fa fa-"] {
+    &, &.fa fa-large { line-height: .9em; }
+  }
+}
+.btn {
+  [class^="fa fa-"],
+  [class*=" fa fa-"] {
+    &.pull-left, &.pull-right {
+      &.fa fa-2x { margin-top: .18em; }
+    }
+    &.fa fa-spin.fa fa-large { line-height: .8em; }
+  }
+}
+.btn.btn-small {
+  [class^="fa fa-"],
+  [class*=" fa fa-"] {
+    &.pull-left, &.pull-right {
+      &.fa fa-2x { margin-top: .25em; }
+    }
+  }
+}
+.btn.btn-large {
+  [class^="fa fa-"],
+  [class*=" fa fa-"] {
+    margin-top: 0; // overrides bootstrap default
+    &.pull-left, &.pull-right {
+      &.fa fa-2x { margin-top: .05em; }
+    }
+    &.pull-left.fa fa-2x { margin-right: .2em; }
+    &.pull-right.fa fa-2x { margin-left: .2em; }
+  }
+}
+
+/* Fixes alignment in nav lists */
+.nav-list [class^="fa fa-"],
+.nav-list [class*=" fa fa-"] {
+  line-height: inherit;
+}

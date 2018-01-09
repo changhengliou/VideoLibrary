@@ -1,42 +1,276 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("header", required: false)
+    <!--external css-->
+    <link href="/Static/assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <!--right slidebar-->
+    <link href="/Static/css/slidebars.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/Static/css/style.css" rel="stylesheet">
+    <link href="/Static/css/style-responsive.css" rel="stylesheet"/>
+
+    <script type="text/javascript">
+        var appInsights = window.appInsights ||
+            function(config) {
+                function r(config) {
+                    t[config] = function() {
+                        var i = arguments;
+                        t.queue.push(function() { t[config].apply(t, i) })
+                    }
+                }
+
+                var t = { config: config }, u = document, e = window, o = "script", s = u.createElement(o), i, f;
+                for (s.src =
+                        config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js",
+                    u.getElementsByTagName(o)[0].parentNode.appendChild(s), t.cookie = u.cookie, t.queue = [], i =
+                        ["Event", "Exception", "Metric", "PageView", "Trace", "Ajax"];
+                    i.length;
+                ) r("track" + i.pop());
+                return r("setAuthenticatedUserContext"), r("clearAuthenticatedUserContext"),
+                    config.disableExceptionTracking ||
+                    (i = "onerror", r("_" + i), f = e[i], e[i] = function(config, r, u, e, o) {
+                        var s = f && f(config, r, u, e, o);
+                        return s !== !0 && t["_" + i](config, r, u, e, o), s
+                    }), t
+            }({
+                instrumentationKey: "ef97fd62-a5b9-4399-bde2-50a10458d94f"
+            });
+        window.appInsights = appInsights;
+        appInsights.trackPageView();
+    </script>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-            </div>
-        </div>
+<section id="container">
+<!--header start-->
+<header class="header white-bg">
+    <div class="sidebar-toggle-box">
+        <div data-original-title="Toggle Navigation" data-placement="right" class="fa fa-bars tooltips"></div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+    <!--logo start-->
+    <a href="/" class="logo">Media<span>Box</span></a>
+    <!--logo end-->
+    <div class="nav notify-row" id="top_menu">
+        <!-- notification start -->
+        <ul class="nav top-menu">
+            <!-- settings start -->
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <i class="fa fa-tasks"></i>
+                    <span class="badge bg-success">6</span>
+                </a>
+                <ul class="dropdown-menu extended tasks-bar">
+                    <div class="notify-arrow notify-arrow-green"></div>
+                    <li>
+                        <p class="green">系統資源檢視器</p>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <div class="task-info">
+                                <div class="desc">待處理影片</div>
+                                <div class="percent">41筆</div>
+                            </div>
+                            <div class="progress progress-striped">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <div class="task-info">
+                                <div class="desc">磁碟空間</div>
+                                <div class="percent">60%</div>
+                            </div>
+                            <div class="progress progress-striped">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                    <span class="sr-only">60% Complete (warning)</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <div class="task-info">
+                                <div class="desc">使用記憶體</div>
+                                <div class="percent">87%</div>
+                            </div>
+                            <div class="progress progress-striped">
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 87%">
+                                    <span class="sr-only">87% Complete</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <div class="task-info">
+                                <div class="desc">CPU負載</div>
+                                <div class="percent">33%</div>
+                            </div>
+                            <div class="progress progress-striped">
+                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                    <span class="sr-only">33% Complete (danger)</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="external">
+                        <a href="#">管理系統版本 : 2.01</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- settings end -->
+        </ul>
+        <!-- notification end -->
+    </div>
+    <div class="top-nav ">
+        <!--search & user info start-->
+        <ul class="nav pull-right top-menu">
+            <li>
+                <input type="text" class="form-control search" placeholder="關鍵字搜尋" style="width: 180px; height: 37px; border: 1px solid #eaeaea;">
+            </li>
+
+            <li class="button">
+                <a href="@Url.Action("Upload", "Video")">
+                    <i class="fa fa-cloud-upload"></i>
+                    <span> 影片上傳 </span>
+                </a>
+            </li>
+            <!-- user login dropdown start-->
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <i class="fa fa-user"></i>
+                    <span class="username">Admin</span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu extended logout">
+                    <div class="log-arrow-up"></div>
+                    <li>
+                        <a href="user-detail.html"><i class="fa fa-suitcase"></i> 基本資料</a>
+                    </li>
+                    <li>
+                        <a href="authority.html"><i class="fa fa-cog"></i> 權限控管</a>
+                    </li>
+                    <li>
+                        <a href="subscribe.html"><i class="fa fa-bell"></i> 系統警示訂閱</a>
+                    </li>
+                    <li>
+                        <a href="login.html"><i class="fa fa-key"></i> 登出</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- user login dropdown end -->
+        </ul>
+        <!--search & user info end-->
+    </div>
+</header>
+<!--header end-->
+<!--sidebar start-->
+<aside>
+    <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu" id="nav-accordion">
+            <li class="sub-menu">
+                <a href="#" class="active">
+                    <i class="fa fa-film"></i>
+                    <span>媒體資產</span>
+                </a>
+                <ul class="sub">
+                    <li class="active">
+                        <a href="/">
+                            <span>媒體片庫</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="video-tag.html">
+                            <span>影片標籤</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="/dashboard">
+                    <i class="fa fa-dashboard"></i>
+                    <span>系統總覽</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="rule.html">
+                    <i class="fa fa-gear"></i>
+                    <span>轉檔規則</span>
+                </a>
+                <ul class="sub">
+                    <li>
+                        <a href="rule.html">規則管理</a>
+                    </li>
+                    <li>
+                        <a href="status.html">轉檔狀態</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="view-log.html">
+                    <i class="fa fa-clock-o"></i>
+                    <span>觀看紀錄</span>
+                </a>
+            </li>
+
+            <li class="sub-menu">
+                <a href="javascript:;">
+                    <i class="fa fa-user"></i>
+                    <span>基本資料</span>
+                </a>
+                <ul class="sub">
+                    <li>
+                        <a href="users.html">使用者清單</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="sub-menu">
+                <a href="javascript:;">
+                    <i class="fa fa-cog"></i>
+                    <span>系統選項</span>
+                </a>
+                <ul class="sub">
+                    <li>
+                        <a href="console-log.html">操作紀錄</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>
+<!--main content start-->
+<section id="main-content">
+    @RenderBody()
+</section>
+<!--main content end-->
+<!--footer start-->
+<footer class="site-footer">
+    <div class="text-center">
+        @DateTime.Today.Year &copy; - 端點科技股份有限公司
+        <a href="#" class="go-top">
+            <i class="fa fa-angle-up"></i>
+        </a>
+    </div>
+</footer>
+<!--footer end-->
+</section>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+<script src="/Static/js/jquery.dcjqaccordion.2.7.js"></script>
+<script src="/Static/js/jquery.scrollTo.min.js"></script>
+<script src="/Static/js/jquery.nicescroll.js"></script>
+<script src="/Static/js/respond.min.js"></script>
+<script src="/Static/js/common-scripts.js"></script>
 </body>
 </html>

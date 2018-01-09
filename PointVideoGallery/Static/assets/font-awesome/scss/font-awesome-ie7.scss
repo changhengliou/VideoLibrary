@@ -1,0 +1,1953 @@
+/*!
+ *  Font Awesome 3.2.1
+ *  the iconic font designed for Bootstrap
+ *  ------------------------------------------------------------------------------
+ *  The full suite of pictographic icons, examples, and documentation can be
+ *  found at http://fontawesome.io.  Stay up to date on Twitter at
+ *  http://twitter.com/fontawesome.
+ *
+ *  License
+ *  ------------------------------------------------------------------------------
+ *  - The Font Awesome font is licensed under SIL OFL 1.1 -
+ *    http://scripts.sil.org/OFL
+ *  - Font Awesome CSS, LESS, and SASS files are licensed under MIT License -
+ *    http://opensource.org/licenses/mit-license.html
+ *  - Font Awesome documentation licensed under CC BY 3.0 -
+ *    http://creativecommons.org/licenses/by/3.0/
+ *  - Attribution is no longer required in Font Awesome 3.0, but much appreciated:
+ *    "Font Awesome by Dave Gandy - http://fontawesome.io"
+ *
+ *  Author - Dave Gandy
+ *  ------------------------------------------------------------------------------
+ *  Email: dave@fontawesome.io
+ *  Twitter: http://twitter.com/davegandy
+ *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
+ */
+
+.fa fa-large {
+  font-size: (4em/3);
+  margin-top: -4px;
+  padding-top: 3px;
+  margin-bottom: -4px;
+  padding-bottom: 3px;
+  vertical-align: middle;
+}
+
+.nav {
+  [class^="fa fa-"],
+  [class*=" fa fa-"] {
+    vertical-align: inherit;
+    margin-top: -4px;
+    padding-top: 3px;
+    margin-bottom: -4px;
+    padding-bottom: 3px;
+    &.fa fa-large {
+      vertical-align: -25%;
+    }
+  }
+}
+
+.nav-pills, .nav-tabs {
+  [class^="fa fa-"],
+  [class*=" fa fa-"] {
+    &.fa fa-large {
+      line-height: .75em;
+      margin-top: -7px;
+      padding-top: 5px;
+      margin-bottom: -5px;
+      padding-bottom: 4px;
+    }
+  }
+}
+
+.btn {
+  [class^="fa fa-"],
+  [class*=" fa fa-"] {
+    &.pull-left, &.pull-right { vertical-align: inherit; }
+    &.fa fa-large {
+      margin-top: -.5em;
+    }
+  }
+}
+
+a [class^="fa fa-"],
+a [class*=" fa fa-"] {
+  cursor: pointer;
+}
+
+@mixin ie7icon($inner) { *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '#{$inner}'); }
+
+
+.fa fa-glass {
+  @include ie7icon('&#xf000;');
+}
+
+
+.fa fa-music {
+  @include ie7icon('&#xf001;');
+}
+
+
+.fa fa-search {
+  @include ie7icon('&#xf002;');
+}
+
+
+.fa fa-envelope-o {
+  @include ie7icon('&#xf003;');
+}
+
+
+.fa fa-heart {
+  @include ie7icon('&#xf004;');
+}
+
+
+.fa fa-star {
+  @include ie7icon('&#xf005;');
+}
+
+
+.fa fa-star-empty {
+  @include ie7icon('&#xf006;');
+}
+
+
+.fa fa-user {
+  @include ie7icon('&#xf007;');
+}
+
+
+.fa fa-film {
+  @include ie7icon('&#xf008;');
+}
+
+
+.fa fa-th-large {
+  @include ie7icon('&#xf009;');
+}
+
+
+.fa fa-th {
+  @include ie7icon('&#xf00a;');
+}
+
+
+.fa fa-th-list {
+  @include ie7icon('&#xf00b;');
+}
+
+
+.fa fa-ok {
+  @include ie7icon('&#xf00c;');
+}
+
+
+.fa fa-remove {
+  @include ie7icon('&#xf00d;');
+}
+
+
+.fa fa-zoom-in {
+  @include ie7icon('&#xf00e;');
+}
+
+
+.fa fa-zoom-out {
+  @include ie7icon('&#xf010;');
+}
+
+
+.fa fa-off {
+  @include ie7icon('&#xf011;');
+}
+
+.fa fa-power-off {
+  @include ie7icon('&#xf011;');
+}
+
+
+.fa fa-signal {
+  @include ie7icon('&#xf012;');
+}
+
+
+.fa fa-cog {
+  @include ie7icon('&#xf013;');
+}
+
+.fa fa-gear {
+  @include ie7icon('&#xf013;');
+}
+
+
+.fa fa-trash-o {
+  @include ie7icon('&#xf014;');
+}
+
+
+.fa fa-home {
+  @include ie7icon('&#xf015;');
+}
+
+
+.fa fa-file-alt {
+  @include ie7icon('&#xf016;');
+}
+
+
+.fa fa-clock-o {
+  @include ie7icon('&#xf017;');
+}
+
+
+.fa fa-road {
+  @include ie7icon('&#xf018;');
+}
+
+
+.fa fa-download-alt {
+  @include ie7icon('&#xf019;');
+}
+
+
+.fa fa-download {
+  @include ie7icon('&#xf01a;');
+}
+
+
+.fa fa-upload {
+  @include ie7icon('&#xf01b;');
+}
+
+
+.fa fa-inbox {
+  @include ie7icon('&#xf01c;');
+}
+
+
+.fa fa-play-circle {
+  @include ie7icon('&#xf01d;');
+}
+
+
+.fa fa-repeat {
+  @include ie7icon('&#xf01e;');
+}
+
+.fa fa-rotate-right {
+  @include ie7icon('&#xf01e;');
+}
+
+
+.fa fa-refresh {
+  @include ie7icon('&#xf021;');
+}
+
+
+.fa fa-list-alt {
+  @include ie7icon('&#xf022;');
+}
+
+
+.fa fa-lock {
+  @include ie7icon('&#xf023;');
+}
+
+
+.fa fa-flag {
+  @include ie7icon('&#xf024;');
+}
+
+
+.fa fa-headphones {
+  @include ie7icon('&#xf025;');
+}
+
+
+.fa fa-volume-off {
+  @include ie7icon('&#xf026;');
+}
+
+
+.fa fa-volume-down {
+  @include ie7icon('&#xf027;');
+}
+
+
+.fa fa-volume-up {
+  @include ie7icon('&#xf028;');
+}
+
+
+.fa fa-qrcode {
+  @include ie7icon('&#xf029;');
+}
+
+
+.fa fa-barcode {
+  @include ie7icon('&#xf02a;');
+}
+
+
+.fa fa-tag {
+  @include ie7icon('&#xf02b;');
+}
+
+
+.fa fa-tags {
+  @include ie7icon('&#xf02c;');
+}
+
+
+.fa fa-book {
+  @include ie7icon('&#xf02d;');
+}
+
+
+.fa fa-bookmark {
+  @include ie7icon('&#xf02e;');
+}
+
+
+.fa fa-print {
+  @include ie7icon('&#xf02f;');
+}
+
+
+.fa fa-camera {
+  @include ie7icon('&#xf030;');
+}
+
+
+.fa fa-font {
+  @include ie7icon('&#xf031;');
+}
+
+
+.fa fa-bold {
+  @include ie7icon('&#xf032;');
+}
+
+
+.fa fa-italic {
+  @include ie7icon('&#xf033;');
+}
+
+
+.fa fa-text-height {
+  @include ie7icon('&#xf034;');
+}
+
+
+.fa fa-text-width {
+  @include ie7icon('&#xf035;');
+}
+
+
+.fa fa-align-left {
+  @include ie7icon('&#xf036;');
+}
+
+
+.fa fa-align-center {
+  @include ie7icon('&#xf037;');
+}
+
+
+.fa fa-align-right {
+  @include ie7icon('&#xf038;');
+}
+
+
+.fa fa-align-justify {
+  @include ie7icon('&#xf039;');
+}
+
+
+.fa fa-list {
+  @include ie7icon('&#xf03a;');
+}
+
+
+.fa fa-indent-left {
+  @include ie7icon('&#xf03b;');
+}
+
+
+.fa fa-indent-right {
+  @include ie7icon('&#xf03c;');
+}
+
+
+.fa fa-facetime-video {
+  @include ie7icon('&#xf03d;');
+}
+
+
+.fa fa-picture {
+  @include ie7icon('&#xf03e;');
+}
+
+
+.fa fa-pencil {
+  @include ie7icon('&#xf040;');
+}
+
+
+.fa fa-map-marker {
+  @include ie7icon('&#xf041;');
+}
+
+
+.fa fa-adjust {
+  @include ie7icon('&#xf042;');
+}
+
+
+.fa fa-tint {
+  @include ie7icon('&#xf043;');
+}
+
+
+.fa fa-edit {
+  @include ie7icon('&#xf044;');
+}
+
+
+.fa fa-share {
+  @include ie7icon('&#xf045;');
+}
+
+
+.fa fa-check {
+  @include ie7icon('&#xf046;');
+}
+
+
+.fa fa-move {
+  @include ie7icon('&#xf047;');
+}
+
+
+.fa fa-step-backward {
+  @include ie7icon('&#xf048;');
+}
+
+
+.fa fa-fast-backward {
+  @include ie7icon('&#xf049;');
+}
+
+
+.fa fa-backward {
+  @include ie7icon('&#xf04a;');
+}
+
+
+.fa fa-play {
+  @include ie7icon('&#xf04b;');
+}
+
+
+.fa fa-pause {
+  @include ie7icon('&#xf04c;');
+}
+
+
+.fa fa-stop {
+  @include ie7icon('&#xf04d;');
+}
+
+
+.fa fa-forward {
+  @include ie7icon('&#xf04e;');
+}
+
+
+.fa fa-fast-forward {
+  @include ie7icon('&#xf050;');
+}
+
+
+.fa fa-step-forward {
+  @include ie7icon('&#xf051;');
+}
+
+
+.fa fa-eject {
+  @include ie7icon('&#xf052;');
+}
+
+
+.fa fa-chevron-left {
+  @include ie7icon('&#xf053;');
+}
+
+
+.fa fa-chevron-right {
+  @include ie7icon('&#xf054;');
+}
+
+
+.fa fa-plus-sign {
+  @include ie7icon('&#xf055;');
+}
+
+
+.fa fa-minus-sign {
+  @include ie7icon('&#xf056;');
+}
+
+
+.fa fa-remove-sign {
+  @include ie7icon('&#xf057;');
+}
+
+
+.fa fa-ok-sign {
+  @include ie7icon('&#xf058;');
+}
+
+
+.fa fa-question-sign {
+  @include ie7icon('&#xf059;');
+}
+
+
+.fa fa-info-sign {
+  @include ie7icon('&#xf05a;');
+}
+
+
+.fa fa-screenshot {
+  @include ie7icon('&#xf05b;');
+}
+
+
+.fa fa-remove-circle {
+  @include ie7icon('&#xf05c;');
+}
+
+
+.fa fa-ok-circle {
+  @include ie7icon('&#xf05d;');
+}
+
+
+.fa fa-ban-circle {
+  @include ie7icon('&#xf05e;');
+}
+
+
+.fa fa-arrow-left {
+  @include ie7icon('&#xf060;');
+}
+
+
+.fa fa-arrow-right {
+  @include ie7icon('&#xf061;');
+}
+
+
+.fa fa-arrow-up {
+  @include ie7icon('&#xf062;');
+}
+
+
+.fa fa-arrow-down {
+  @include ie7icon('&#xf063;');
+}
+
+
+.fa fa-share-alt {
+  @include ie7icon('&#xf064;');
+}
+
+.fa fa-mail-forward {
+  @include ie7icon('&#xf064;');
+}
+
+
+.fa fa-resize-full {
+  @include ie7icon('&#xf065;');
+}
+
+
+.fa fa-resize-small {
+  @include ie7icon('&#xf066;');
+}
+
+
+.fa fa-plus {
+  @include ie7icon('&#xf067;');
+}
+
+
+.fa fa-minus {
+  @include ie7icon('&#xf068;');
+}
+
+
+.fa fa-asterisk {
+  @include ie7icon('&#xf069;');
+}
+
+
+.fa fa-exclamation-sign {
+  @include ie7icon('&#xf06a;');
+}
+
+
+.fa fa-gift {
+  @include ie7icon('&#xf06b;');
+}
+
+
+.fa fa-leaf {
+  @include ie7icon('&#xf06c;');
+}
+
+
+.fa fa-fire {
+  @include ie7icon('&#xf06d;');
+}
+
+
+.fa fa-eye-open {
+  @include ie7icon('&#xf06e;');
+}
+
+
+.fa fa-eye-close {
+  @include ie7icon('&#xf070;');
+}
+
+
+.fa fa-warning-sign {
+  @include ie7icon('&#xf071;');
+}
+
+
+.fa fa-plane {
+  @include ie7icon('&#xf072;');
+}
+
+
+.fa fa-calendar {
+  @include ie7icon('&#xf073;');
+}
+
+
+.fa fa-random {
+  @include ie7icon('&#xf074;');
+}
+
+
+.fa fa-comment {
+  @include ie7icon('&#xf075;');
+}
+
+
+.fa fa-magnet {
+  @include ie7icon('&#xf076;');
+}
+
+
+.fa fa-chevron-up {
+  @include ie7icon('&#xf077;');
+}
+
+
+.fa fa-chevron-down {
+  @include ie7icon('&#xf078;');
+}
+
+
+.fa fa-retweet {
+  @include ie7icon('&#xf079;');
+}
+
+
+.fa fa-shopping-cart {
+  @include ie7icon('&#xf07a;');
+}
+
+
+.fa fa-folder-close {
+  @include ie7icon('&#xf07b;');
+}
+
+
+.fa fa-folder-open {
+  @include ie7icon('&#xf07c;');
+}
+
+
+.fa fa-resize-vertical {
+  @include ie7icon('&#xf07d;');
+}
+
+
+.fa fa-resize-horizontal {
+  @include ie7icon('&#xf07e;');
+}
+
+
+.fa fa-bar-chart {
+  @include ie7icon('&#xf080;');
+}
+
+
+.fa fa-twitter-sign {
+  @include ie7icon('&#xf081;');
+}
+
+
+.fa fa-facebook-sign {
+  @include ie7icon('&#xf082;');
+}
+
+
+.fa fa-camera-retro {
+  @include ie7icon('&#xf083;');
+}
+
+
+.fa fa-key {
+  @include ie7icon('&#xf084;');
+}
+
+
+.fa fa-cogs {
+  @include ie7icon('&#xf085;');
+}
+
+.fa fa-cog {
+  @include ie7icon('&#xf085;');
+}
+
+
+.fa fa-comments {
+  @include ie7icon('&#xf086;');
+}
+
+
+.fa fa-thumbs-up-alt {
+  @include ie7icon('&#xf087;');
+}
+
+
+.fa fa-thumbs-down-alt {
+  @include ie7icon('&#xf088;');
+}
+
+
+.fa fa-star-half {
+  @include ie7icon('&#xf089;');
+}
+
+
+.fa fa-heart-empty {
+  @include ie7icon('&#xf08a;');
+}
+
+
+.fa fa-signout {
+  @include ie7icon('&#xf08b;');
+}
+
+
+.fa fa-linkedin-sign {
+  @include ie7icon('&#xf08c;');
+}
+
+
+.fa fa-pushpin {
+  @include ie7icon('&#xf08d;');
+}
+
+
+.fa fa-external-link {
+  @include ie7icon('&#xf08e;');
+}
+
+
+.fa fa-signin {
+  @include ie7icon('&#xf090;');
+}
+
+
+.fa fa-trophy {
+  @include ie7icon('&#xf091;');
+}
+
+
+.fa fa-github-sign {
+  @include ie7icon('&#xf092;');
+}
+
+
+.fa fa-upload-alt {
+  @include ie7icon('&#xf093;');
+}
+
+
+.fa fa-lemon {
+  @include ie7icon('&#xf094;');
+}
+
+
+.fa fa-phone {
+  @include ie7icon('&#xf095;');
+}
+
+
+.fa fa-check-empty {
+  @include ie7icon('&#xf096;');
+}
+
+.fa fa-unchecked {
+  @include ie7icon('&#xf096;');
+}
+
+
+.fa fa-bookmark-empty {
+  @include ie7icon('&#xf097;');
+}
+
+
+.fa fa-phone-sign {
+  @include ie7icon('&#xf098;');
+}
+
+
+.fa fa-twitter {
+  @include ie7icon('&#xf099;');
+}
+
+
+.fa fa-facebook {
+  @include ie7icon('&#xf09a;');
+}
+
+
+.fa fa-github {
+  @include ie7icon('&#xf09b;');
+}
+
+
+.fa fa-unlock {
+  @include ie7icon('&#xf09c;');
+}
+
+
+.fa fa-credit-card {
+  @include ie7icon('&#xf09d;');
+}
+
+
+.fa fa-rss {
+  @include ie7icon('&#xf09e;');
+}
+
+
+.fa fa-hdd-o {
+  @include ie7icon('&#xf0a0;');
+}
+
+
+.fa fa-bullhorn {
+  @include ie7icon('&#xf0a1;');
+}
+
+
+.fa fa-bell {
+  @include ie7icon('&#xf0a2;');
+}
+
+
+.fa fa-certificate {
+  @include ie7icon('&#xf0a3;');
+}
+
+
+.fa fa-hand-right {
+  @include ie7icon('&#xf0a4;');
+}
+
+
+.fa fa-hand-left {
+  @include ie7icon('&#xf0a5;');
+}
+
+
+.fa fa-hand-up {
+  @include ie7icon('&#xf0a6;');
+}
+
+
+.fa fa-hand-down {
+  @include ie7icon('&#xf0a7;');
+}
+
+
+.fa fa-circle-arrow-left {
+  @include ie7icon('&#xf0a8;');
+}
+
+
+.fa fa-circle-arrow-right {
+  @include ie7icon('&#xf0a9;');
+}
+
+
+.fa fa-circle-arrow-up {
+  @include ie7icon('&#xf0aa;');
+}
+
+
+.fa fa-circle-arrow-down {
+  @include ie7icon('&#xf0ab;');
+}
+
+
+.fa fa-globe {
+  @include ie7icon('&#xf0ac;');
+}
+
+
+.fa fa-wrench {
+  @include ie7icon('&#xf0ad;');
+}
+
+
+.fa fa-tasks {
+  @include ie7icon('&#xf0ae;');
+}
+
+
+.fa fa-filter {
+  @include ie7icon('&#xf0b0;');
+}
+
+
+.fa fa-briefcase {
+  @include ie7icon('&#xf0b1;');
+}
+
+
+.fa fa-fullscreen {
+  @include ie7icon('&#xf0b2;');
+}
+
+
+.fa fa-group {
+  @include ie7icon('&#xf0c0;');
+}
+
+
+.fa fa-link {
+  @include ie7icon('&#xf0c1;');
+}
+
+
+.fa fa-cloud {
+  @include ie7icon('&#xf0c2;');
+}
+
+
+.fa fa-beaker {
+  @include ie7icon('&#xf0c3;');
+}
+
+
+.fa fa-cut {
+  @include ie7icon('&#xf0c4;');
+}
+
+
+.fa fa-copy {
+  @include ie7icon('&#xf0c5;');
+}
+
+
+.fa fa-paper-clip {
+  @include ie7icon('&#xf0c6;');
+}
+
+.fa fa-paperclip {
+  @include ie7icon('&#xf0c6;');
+}
+
+
+.fa fa-save {
+  @include ie7icon('&#xf0c7;');
+}
+
+
+.fa fa-sign-blank {
+  @include ie7icon('&#xf0c8;');
+}
+
+
+.fa fa-gears {
+  @include ie7icon('&#xf0c9;');
+}
+
+
+.fa fa-list-ul {
+  @include ie7icon('&#xf0ca;');
+}
+
+
+.fa fa-list-ol {
+  @include ie7icon('&#xf0cb;');
+}
+
+
+.fa fa-strikethrough {
+  @include ie7icon('&#xf0cc;');
+}
+
+
+.fa fa-underline {
+  @include ie7icon('&#xf0cd;');
+}
+
+
+.fa fa-table {
+  @include ie7icon('&#xf0ce;');
+}
+
+
+.fa fa-magic {
+  @include ie7icon('&#xf0d0;');
+}
+
+
+.fa fa-truck {
+  @include ie7icon('&#xf0d1;');
+}
+
+
+.fa fa-pinterest {
+  @include ie7icon('&#xf0d2;');
+}
+
+
+.fa fa-pinterest-sign {
+  @include ie7icon('&#xf0d3;');
+}
+
+
+.fa fa-google-plus-sign {
+  @include ie7icon('&#xf0d4;');
+}
+
+
+.fa fa-google-plus {
+  @include ie7icon('&#xf0d5;');
+}
+
+
+.fa fa-money {
+  @include ie7icon('&#xf0d6;');
+}
+
+
+.fa fa-caret-down {
+  @include ie7icon('&#xf0d7;');
+}
+
+
+.fa fa-caret-up {
+  @include ie7icon('&#xf0d8;');
+}
+
+
+.fa fa-caret-left {
+  @include ie7icon('&#xf0d9;');
+}
+
+
+.fa fa-caret-right {
+  @include ie7icon('&#xf0da;');
+}
+
+
+.fa fa-columns {
+  @include ie7icon('&#xf0db;');
+}
+
+
+.fa fa-sort {
+  @include ie7icon('&#xf0dc;');
+}
+
+
+.fa fa-sort-down {
+  @include ie7icon('&#xf0dd;');
+}
+
+
+.fa fa-sort-up {
+  @include ie7icon('&#xf0de;');
+}
+
+
+.fa fa-envelope-o {
+  @include ie7icon('&#xf0e0;');
+}
+
+
+.fa fa-linkedin {
+  @include ie7icon('&#xf0e1;');
+}
+
+
+.fa fa-undo {
+  @include ie7icon('&#xf0e2;');
+}
+
+.fa fa-rotate-left {
+  @include ie7icon('&#xf0e2;');
+}
+
+
+.fa fa-legal {
+  @include ie7icon('&#xf0e3;');
+}
+
+
+.fa fa-dashboard {
+  @include ie7icon('&#xf0e4;');
+}
+
+
+.fa fa-comment-alt {
+  @include ie7icon('&#xf0e5;');
+}
+
+
+.fa fa-comments-alt {
+  @include ie7icon('&#xf0e6;');
+}
+
+
+.fa fa-bolt {
+  @include ie7icon('&#xf0e7;');
+}
+
+
+.fa fa-sitemap {
+  @include ie7icon('&#xf0e8;');
+}
+
+
+.fa fa-umbrella {
+  @include ie7icon('&#xf0e9;');
+}
+
+
+.fa fa-paste {
+  @include ie7icon('&#xf0ea;');
+}
+
+
+.fa fa-lightbulb {
+  @include ie7icon('&#xf0eb;');
+}
+
+
+.fa fa-exchange {
+  @include ie7icon('&#xf0ec;');
+}
+
+
+.fa fa-cloud-download {
+  @include ie7icon('&#xf0ed;');
+}
+
+
+.fa fa-cloud-upload {
+  @include ie7icon('&#xf0ee;');
+}
+
+
+.fa fa-user-md {
+  @include ie7icon('&#xf0f0;');
+}
+
+
+.fa fa-stethoscope {
+  @include ie7icon('&#xf0f1;');
+}
+
+
+.fa fa-suitcase {
+  @include ie7icon('&#xf0f2;');
+}
+
+
+.fa fa-bell {
+  @include ie7icon('&#xf0f3;');
+}
+
+
+.fa fa-coffee {
+  @include ie7icon('&#xf0f4;');
+}
+
+
+.fa fa-food {
+  @include ie7icon('&#xf0f5;');
+}
+
+
+.fa fa-file-text-alt {
+  @include ie7icon('&#xf0f6;');
+}
+
+
+.fa fa-building {
+  @include ie7icon('&#xf0f7;');
+}
+
+
+.fa fa-hospital {
+  @include ie7icon('&#xf0f8;');
+}
+
+
+.fa fa-ambulance {
+  @include ie7icon('&#xf0f9;');
+}
+
+
+.fa fa-medkit {
+  @include ie7icon('&#xf0fa;');
+}
+
+
+.fa fa-fighter-jet {
+  @include ie7icon('&#xf0fb;');
+}
+
+
+.fa fa-beer {
+  @include ie7icon('&#xf0fc;');
+}
+
+
+.fa fa-h-sign {
+  @include ie7icon('&#xf0fd;');
+}
+
+
+.fa fa-plus-sign-alt {
+  @include ie7icon('&#xf0fe;');
+}
+
+
+.fa fa-double-angle-left {
+  @include ie7icon('&#xf100;');
+}
+
+
+.fa fa-double-angle-right {
+  @include ie7icon('&#xf101;');
+}
+
+
+.fa fa-double-angle-up {
+  @include ie7icon('&#xf102;');
+}
+
+
+.fa fa-double-angle-down {
+  @include ie7icon('&#xf103;');
+}
+
+
+.fa fa-angle-left {
+  @include ie7icon('&#xf104;');
+}
+
+
+.fa fa-angle-right {
+  @include ie7icon('&#xf105;');
+}
+
+
+.fa fa-angle-up {
+  @include ie7icon('&#xf106;');
+}
+
+
+.fa fa-angle-down {
+  @include ie7icon('&#xf107;');
+}
+
+
+.fa fa-desktop {
+  @include ie7icon('&#xf108;');
+}
+
+
+.fa fa-laptop {
+  @include ie7icon('&#xf109;');
+}
+
+
+.fa fa-tablet {
+  @include ie7icon('&#xf10a;');
+}
+
+
+.fa fa-mobile-phone {
+  @include ie7icon('&#xf10b;');
+}
+
+
+.fa fa-circle-blank {
+  @include ie7icon('&#xf10c;');
+}
+
+
+.fa fa-quote-left {
+  @include ie7icon('&#xf10d;');
+}
+
+
+.fa fa-quote-right {
+  @include ie7icon('&#xf10e;');
+}
+
+
+.fa fa-spinner {
+  @include ie7icon('&#xf110;');
+}
+
+
+.fa fa-circle {
+  @include ie7icon('&#xf111;');
+}
+
+
+.fa fa-reply {
+  @include ie7icon('&#xf112;');
+}
+
+.fa fa-mail-reply {
+  @include ie7icon('&#xf112;');
+}
+
+
+.fa fa-github-alt {
+  @include ie7icon('&#xf113;');
+}
+
+
+.fa fa-folder-close-alt {
+  @include ie7icon('&#xf114;');
+}
+
+
+.fa fa-folder-open-alt {
+  @include ie7icon('&#xf115;');
+}
+
+
+.fa fa-expand-alt {
+  @include ie7icon('&#xf116;');
+}
+
+
+.fa fa-collapse-alt {
+  @include ie7icon('&#xf117;');
+}
+
+
+.fa fa-smile {
+  @include ie7icon('&#xf118;');
+}
+
+
+.fa fa-frown {
+  @include ie7icon('&#xf119;');
+}
+
+
+.fa fa-meh {
+  @include ie7icon('&#xf11a;');
+}
+
+
+.fa fa-gamepad {
+  @include ie7icon('&#xf11b;');
+}
+
+
+.fa fa-keyboard {
+  @include ie7icon('&#xf11c;');
+}
+
+
+.fa fa-flag-alt {
+  @include ie7icon('&#xf11d;');
+}
+
+
+.fa fa-flag-checkered {
+  @include ie7icon('&#xf11e;');
+}
+
+
+.fa fa-terminal {
+  @include ie7icon('&#xf120;');
+}
+
+
+.fa fa-code {
+  @include ie7icon('&#xf121;');
+}
+
+
+.fa fa-reply-all {
+  @include ie7icon('&#xf122;');
+}
+
+
+.fa fa-mail-reply-all {
+  @include ie7icon('&#xf122;');
+}
+
+
+.fa fa-star-half-empty {
+  @include ie7icon('&#xf123;');
+}
+
+.fa fa-star-half-full {
+  @include ie7icon('&#xf123;');
+}
+
+
+.fa fa-location-arrow {
+  @include ie7icon('&#xf124;');
+}
+
+
+.fa fa-crop {
+  @include ie7icon('&#xf125;');
+}
+
+
+.fa fa-code-fork {
+  @include ie7icon('&#xf126;');
+}
+
+
+.fa fa-unlink {
+  @include ie7icon('&#xf127;');
+}
+
+
+.fa fa-question {
+  @include ie7icon('&#xf128;');
+}
+
+
+.fa fa-info {
+  @include ie7icon('&#xf129;');
+}
+
+
+.fa fa-exclamation {
+  @include ie7icon('&#xf12a;');
+}
+
+
+.fa fa-superscript {
+  @include ie7icon('&#xf12b;');
+}
+
+
+.fa fa-subscript {
+  @include ie7icon('&#xf12c;');
+}
+
+
+.fa fa-eraser {
+  @include ie7icon('&#xf12d;');
+}
+
+
+.fa fa-puzzle-piece {
+  @include ie7icon('&#xf12e;');
+}
+
+
+.fa fa-microphone {
+  @include ie7icon('&#xf130;');
+}
+
+
+.fa fa-microphone-off {
+  @include ie7icon('&#xf131;');
+}
+
+
+.fa fa-shield {
+  @include ie7icon('&#xf132;');
+}
+
+
+.fa fa-desktop {
+  @include ie7icon('&#xf133;');
+}
+
+
+.fa fa-fire-extinguisher {
+  @include ie7icon('&#xf134;');
+}
+
+
+.fa fa-rocket {
+  @include ie7icon('&#xf135;');
+}
+
+
+.fa fa-maxcdn {
+  @include ie7icon('&#xf136;');
+}
+
+
+.fa fa-chevron-sign-left {
+  @include ie7icon('&#xf137;');
+}
+
+
+.fa fa-chevron-sign-right {
+  @include ie7icon('&#xf138;');
+}
+
+
+.fa fa-chevron-sign-up {
+  @include ie7icon('&#xf139;');
+}
+
+
+.fa fa-chevron-sign-down {
+  @include ie7icon('&#xf13a;');
+}
+
+
+.fa fa-html5 {
+  @include ie7icon('&#xf13b;');
+}
+
+
+.fa fa-css3 {
+  @include ie7icon('&#xf13c;');
+}
+
+
+.fa fa-anchor {
+  @include ie7icon('&#xf13d;');
+}
+
+
+.fa fa-unlock-alt {
+  @include ie7icon('&#xf13e;');
+}
+
+
+.fa fa-bullseye {
+  @include ie7icon('&#xf140;');
+}
+
+
+.fa fa-ellipsis-horizontal {
+  @include ie7icon('&#xf141;');
+}
+
+
+.fa fa-ellipsis-vertical {
+  @include ie7icon('&#xf142;');
+}
+
+
+.fa fa-rss-sign {
+  @include ie7icon('&#xf143;');
+}
+
+
+.fa fa-play-sign {
+  @include ie7icon('&#xf144;');
+}
+
+
+.fa fa-ticket {
+  @include ie7icon('&#xf145;');
+}
+
+
+.fa fa-minus-sign-alt {
+  @include ie7icon('&#xf146;');
+}
+
+
+.fa fa-check-minus {
+  @include ie7icon('&#xf147;');
+}
+
+
+.fa fa-level-up {
+  @include ie7icon('&#xf148;');
+}
+
+
+.fa fa-level-down {
+  @include ie7icon('&#xf149;');
+}
+
+
+.fa fa-check-sign {
+  @include ie7icon('&#xf14a;');
+}
+
+
+.fa fa-edit-sign {
+  @include ie7icon('&#xf14b;');
+}
+
+
+.fa fa-external-link-sign {
+  @include ie7icon('&#xf14c;');
+}
+
+
+.fa fa-share-sign {
+  @include ie7icon('&#xf14d;');
+}
+
+
+.fa fa-compass {
+  @include ie7icon('&#xf14e;');
+}
+
+
+.fa fa-collapse {
+  @include ie7icon('&#xf150;');
+}
+
+
+.fa fa-collapse-top {
+  @include ie7icon('&#xf151;');
+}
+
+
+.fa fa-expand {
+  @include ie7icon('&#xf152;');
+}
+
+
+.fa fa-eur {
+  @include ie7icon('&#xf153;');
+}
+
+.fa fa-euro {
+  @include ie7icon('&#xf153;');
+}
+
+
+.fa fa-gbp {
+  @include ie7icon('&#xf154;');
+}
+
+
+.fa fa-usd {
+  @include ie7icon('&#xf155;');
+}
+
+.fa fa-dollar {
+  @include ie7icon('&#xf155;');
+}
+
+
+.fa fa-inr {
+  @include ie7icon('&#xf156;');
+}
+
+.fa fa-rupee {
+  @include ie7icon('&#xf156;');
+}
+
+
+.fa fa-jpy {
+  @include ie7icon('&#xf157;');
+}
+
+.fa fa-yen {
+  @include ie7icon('&#xf157;');
+}
+
+
+.fa fa-cny {
+  @include ie7icon('&#xf158;');
+}
+
+.fa fa-renminbi {
+  @include ie7icon('&#xf158;');
+}
+
+
+.fa fa-krw {
+  @include ie7icon('&#xf159;');
+}
+
+.fa fa-won {
+  @include ie7icon('&#xf159;');
+}
+
+
+.fa fa-btc {
+  @include ie7icon('&#xf15a;');
+}
+
+.fa fa-bitcoin {
+  @include ie7icon('&#xf15a;');
+}
+
+
+.fa fa-file {
+  @include ie7icon('&#xf15b;');
+}
+
+
+.fa fa-file-text {
+  @include ie7icon('&#xf15c;');
+}
+
+
+.fa fa-sort-by-alphabet {
+  @include ie7icon('&#xf15d;');
+}
+
+
+.fa fa-sort-by-alphabet-alt {
+  @include ie7icon('&#xf15e;');
+}
+
+
+.fa fa-sort-by-attributes {
+  @include ie7icon('&#xf160;');
+}
+
+
+.fa fa-sort-by-attributes-alt {
+  @include ie7icon('&#xf161;');
+}
+
+
+.fa fa-sort-by-order {
+  @include ie7icon('&#xf162;');
+}
+
+
+.fa fa-sort-by-order-alt {
+  @include ie7icon('&#xf163;');
+}
+
+
+.fa fa-thumbs-up {
+  @include ie7icon('&#xf164;');
+}
+
+
+.fa fa-thumbs-down {
+  @include ie7icon('&#xf165;');
+}
+
+
+.fa fa-youtube-sign {
+  @include ie7icon('&#xf166;');
+}
+
+
+.fa fa-youtube {
+  @include ie7icon('&#xf167;');
+}
+
+
+.fa fa-xing {
+  @include ie7icon('&#xf168;');
+}
+
+
+.fa fa-xing-sign {
+  @include ie7icon('&#xf169;');
+}
+
+
+.fa fa-youtube-play {
+  @include ie7icon('&#xf16a;');
+}
+
+
+.fa fa-dropbox {
+  @include ie7icon('&#xf16b;');
+}
+
+
+.fa fa-stackexchange {
+  @include ie7icon('&#xf16c;');
+}
+
+
+.fa fa-instagram {
+  @include ie7icon('&#xf16d;');
+}
+
+
+.fa fa-flickr {
+  @include ie7icon('&#xf16e;');
+}
+
+
+.fa fa-adn {
+  @include ie7icon('&#xf170;');
+}
+
+
+.fa fa-bitbucket {
+  @include ie7icon('&#xf171;');
+}
+
+
+.fa fa-bitbucket-sign {
+  @include ie7icon('&#xf172;');
+}
+
+
+.fa fa-tumblr {
+  @include ie7icon('&#xf173;');
+}
+
+
+.fa fa-tumblr-sign {
+  @include ie7icon('&#xf174;');
+}
+
+
+.fa fa-long-arrow-down {
+  @include ie7icon('&#xf175;');
+}
+
+
+.fa fa-long-arrow-up {
+  @include ie7icon('&#xf176;');
+}
+
+
+.fa fa-long-arrow-left {
+  @include ie7icon('&#xf177;');
+}
+
+
+.fa fa-long-arrow-right {
+  @include ie7icon('&#xf178;');
+}
+
+
+.fa fa-apple {
+  @include ie7icon('&#xf179;');
+}
+
+
+.fa fa-windows {
+  @include ie7icon('&#xf17a;');
+}
+
+
+.fa fa-android {
+  @include ie7icon('&#xf17b;');
+}
+
+
+.fa fa-linux {
+  @include ie7icon('&#xf17c;');
+}
+
+
+.fa fa-dribbble {
+  @include ie7icon('&#xf17d;');
+}
+
+
+.fa fa-skype {
+  @include ie7icon('&#xf17e;');
+}
+
+
+.fa fa-foursquare {
+  @include ie7icon('&#xf180;');
+}
+
+
+.fa fa-trello {
+  @include ie7icon('&#xf181;');
+}
+
+
+.fa fa-female {
+  @include ie7icon('&#xf182;');
+}
+
+
+.fa fa-male {
+  @include ie7icon('&#xf183;');
+}
+
+
+.fa fa-gittip {
+  @include ie7icon('&#xf184;');
+}
+
+
+.fa fa-sun {
+  @include ie7icon('&#xf185;');
+}
+
+
+.fa fa-moon {
+  @include ie7icon('&#xf186;');
+}
+
+
+.fa fa-archive {
+  @include ie7icon('&#xf187;');
+}
+
+
+.fa fa-bug {
+  @include ie7icon('&#xf188;');
+}
+
+
+.fa fa-vk {
+  @include ie7icon('&#xf189;');
+}
+
+
+.fa fa-weibo {
+  @include ie7icon('&#xf18a;');
+}
+
+
+.fa fa-renren {
+  @include ie7icon('&#xf18b;');
+}
+
+
