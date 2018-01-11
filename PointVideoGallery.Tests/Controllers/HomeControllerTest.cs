@@ -16,7 +16,7 @@ namespace PointVideoGallery.Tests.Controllers
         public void Index()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            VideoController controller = new VideoController();
 
             // Act
             ViewResult result = controller.Index() as ViewResult;
@@ -29,10 +29,10 @@ namespace PointVideoGallery.Tests.Controllers
         public void About()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            VideoController controller = new VideoController();
 
             // Act
-            ViewResult result = controller.About() as ViewResult;
+            ViewResult result = controller.Contact() as ViewResult;
 
             // Assert
             Assert.AreEqual("Your application description page.", result.ViewBag.Message);
@@ -42,7 +42,7 @@ namespace PointVideoGallery.Tests.Controllers
         public void Contact()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            VideoController controller = new VideoController();
 
             // Act
             ViewResult result = controller.Contact() as ViewResult;

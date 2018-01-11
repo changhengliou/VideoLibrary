@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -18,7 +19,7 @@ namespace PointVideoGallery
         {
             var container = new Container();
             
-            container.Register<IService, VideoFileService>(Reuse.Singleton);
+            container.Register<IService, VideoFileService>(Reuse.Transient);
 
             //.WithWebApi(GlobalConfiguration.Configuration, throwIfUnresolved: DryIocWebApi.IsController)
             container.WithMvc(new [] { Assembly.GetAssembly(typeof(VideoController)) });
