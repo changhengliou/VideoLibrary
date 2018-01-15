@@ -28,9 +28,12 @@ namespace PointVideoGallery.Services
                     var data = await connection.QueryAsync<VideoFile>(sql: "SELECT * FROM VideoFile");
                     return data.ToList();
                 }
-                catch (MySqlException e)
+                catch (Exception e)
                 {
-                    Trace.WriteLine(e);
+                    if (e is MySqlException || e is TimeoutException)
+                        Trace.WriteLine(e);
+                    else
+                        throw e;
                 }
                 await connection.CloseAsync();
                 return null;
@@ -58,9 +61,12 @@ namespace PointVideoGallery.Services
                             length = file.VideoLength
                         });
                 }
-                catch (MySqlException e)
+                catch (Exception e)
                 {
-                    Trace.WriteLine(e);
+                    if (e is MySqlException || e is TimeoutException)
+                        Trace.WriteLine(e);
+                    else
+                        throw e;
                 }
                 await connection.CloseAsync();
             }
@@ -77,8 +83,12 @@ namespace PointVideoGallery.Services
                     var data = await connection.QueryAsync<VideoFileService>(sql: "");
                     var d = await connection.QueryFirstAsync<VideoFileService>(sql: "");
                 }
-                catch (MySqlException)
+                catch (Exception e)
                 {
+                    if (e is MySqlException || e is TimeoutException)
+                        Trace.WriteLine(e);
+                    else
+                        throw e;
                 }
                 await connection.CloseAsync();
             }
@@ -95,8 +105,12 @@ namespace PointVideoGallery.Services
                     var data = await connection.QueryAsync<VideoFileService>(sql: "");
                     var d = await connection.QueryFirstAsync<VideoFileService>(sql: "");
                 }
-                catch (MySqlException)
+                catch (Exception e)
                 {
+                    if (e is MySqlException || e is TimeoutException)
+                        Trace.WriteLine(e);
+                    else
+                        throw e;
                 }
                 await connection.CloseAsync();
             }

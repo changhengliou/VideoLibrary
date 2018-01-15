@@ -1,0 +1,47 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link href="/Static/dist/site.css" rel="stylesheet" />
+    <link href="/Static/dist/signin.css" rel="stylesheet" />
+</head>
+<body>
+<div class="header-login">
+    CNS DTV <span style="color: #FF6C60;">SERVER</span>
+</div>
+<div class="center-form">
+    <div class="panel panel-default">
+        <div class="panel-body" style="width: 350px; background: #eee;">
+            <form name="signin">
+                <div class="lock-icon form-group"></div>
+                <div style="width: 230px; display: inline-block;">
+                    <div class="input-group form-group">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        <input id="uid" type="text" class="form-control" name="uid" placeholder="使用者帳號">
+                    </div>
+                    <div class="input-group form-group">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-lock"></i>
+                        </span>
+                        <input id="pwd" type="password" class="form-control" name="pwd" placeholder="使用者密碼">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-login form-control" id="submitBtn">登入</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer-login">All rights reserved © 2018 Point Media Tech Co. </div>
+</div>
+    <script src="/Static/dist/vendor.js"></script>
+    <script src="/Static/dist/signin.js"></script>
+</body>
+</html>

@@ -242,6 +242,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Global.asax.cs">
@@ -253,6 +254,8 @@
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\VideoFileService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\ActiveViewHelper.cs" />
+    <Compile Include="Utils\Helper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -311,9 +314,15 @@
     <Content Include="Views\Video\Contact.cshtml" />
     <Content Include="Views\Video\Index.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
-    <Content Include="Views\DashBoard\Index.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Video\Detail.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Signin.cshtml" />
+    <Content Include="Views\DashBoard\Resource.cshtml" />
+    <Content Include="Views\DashBoard\Publish.cshtml" />
+    <Content Include="Views\DashBoard\Location.cshtml" />
+    <Content Include="Views\DashBoard\Ticker.cshtml" />
+    <Content Include="Views\DashBoard\Events.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

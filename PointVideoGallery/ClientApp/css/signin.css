@@ -1,0 +1,46 @@
+.center-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.lock-icon {
+    width: 85px;
+    height: 85px;
+    background: url("../img/lock-icon.svg") no-repeat;
+    background-size: cover;
+    display: inline-block;
+}
+
+.btn-login {
+    background-color: #006df0;
+    color: #fff;
+}
+
+.btn-login:hover {
+    background-color: #0262d8;
+    color: #fff;
+}
+
+.btn-login:active {
+    background-color: #0350ad;
+    color: #fff;
+}
+
+.footer-login {
+    text-align: center;
+    color: #aaa;
+}
+
+.header-login {
+    position: fixed;
+    top: 0px;
+    height: 40px;
+    width: 100%;
+    background: #006df0;
+    color: #fff;
+    text-align: center;
+    font-size: 24px;
+    line-height: 40px;
+}

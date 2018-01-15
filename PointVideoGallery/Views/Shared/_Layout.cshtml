@@ -1,19 +1,20 @@
-﻿<!DOCTYPE html>
+﻿@using PointVideoGallery.Utils
+@{
+    var activeController = ViewContext.RouteData.Values["Controller"].ToString();
+    var activeAction = ViewContext.RouteData.Values["Action"].ToString();
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="端點媒資管理系統">
+    <meta name="author" content="端點科技">
+    <meta name="keyword" content="MAM">
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
+    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="stylesheet" href="/Static/dist/site.css">
     @RenderSection("header", required: false)
-    <!--external css-->
-    <link href="/Static/assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
-    <!--right slidebar-->
-    <link href="/Static/css/slidebars.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="/Static/css/style.css" rel="stylesheet">
-    <link href="/Static/css/style-responsive.css" rel="stylesheet"/>
-
     <script type="text/javascript">
         var appInsights = window.appInsights ||
             function(config) {
@@ -44,15 +45,17 @@
         appInsights.trackPageView();
     </script>
 </head>
-<body>
+<body style="position: relative; padding-bottom: 41px; min-height: 100vh;">
 <section id="container">
 <!--header start-->
 <header class="header white-bg">
     <div class="sidebar-toggle-box">
-        <div data-original-title="Toggle Navigation" data-placement="right" class="fa fa-bars tooltips"></div>
+        <div id="sb-toggle" data-original-title="展開/隱藏" data-placement="right" class="glyphicon glyphicon-menu-hamburger tooltips"
+             style="font-size: 20px;">
+        </div>
     </div>
     <!--logo start-->
-    <a href="/" class="logo">Media<span>Box</span></a>
+    <a href="#" class="logo">CNS DTV</a>
     <!--logo end-->
     <div class="nav notify-row" id="top_menu">
         <!-- notification start -->
@@ -60,7 +63,7 @@
             <!-- settings start -->
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <i class="fa fa-tasks"></i>
+                    <i class="glyphicon glyphicon-tasks"></i>
                     <span class="badge bg-success">6</span>
                 </a>
                 <ul class="dropdown-menu extended tasks-bar">
@@ -75,7 +78,8 @@
                                 <div class="percent">41筆</div>
                             </div>
                             <div class="progress progress-striped">
-                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 40%">
 
                                 </div>
                             </div>
@@ -88,7 +92,8 @@
                                 <div class="percent">60%</div>
                             </div>
                             <div class="progress progress-striped">
-                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 60%">
                                     <span class="sr-only">60% Complete (warning)</span>
                                 </div>
                             </div>
@@ -114,7 +119,8 @@
                                 <div class="percent">33%</div>
                             </div>
                             <div class="progress progress-striped">
-                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 33%">
                                     <span class="sr-only">33% Complete (danger)</span>
                                 </div>
                             </div>
@@ -129,39 +135,51 @@
         </ul>
         <!-- notification end -->
     </div>
-    <div class="top-nav ">
+    <div class="top-nav">
         <!--search & user info start-->
         <ul class="nav pull-right top-menu">
             <li>
-                <input type="text" class="form-control search" placeholder="關鍵字搜尋" style="width: 180px; height: 37px; border: 1px solid #eaeaea;">
+                <div class="form-group has-feedback search">
+                    <input type="text" class="form-control" placeholder="關鍵字搜尋" style="width: 180px; height: 37px; border: 1px solid #eaeaea;">
+                    <i class="glyphicon glyphicon-search form-control-feedback"></i>
+                </div>
             </li>
 
             <li class="button">
-                <a href="@Url.Action("Upload", "Video")">
-                    <i class="fa fa-cloud-upload"></i>
+                <a href="#">
+                    <i class="glyphicon glyphicon-cloud-upload"></i>
                     <span> 影片上傳 </span>
                 </a>
             </li>
+
             <!-- user login dropdown start-->
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <i class="fa fa-user"></i>
+                    <i class="glyphicon glyphicon-user"></i>
                     <span class="username">Admin</span>
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu extended logout">
                     <div class="log-arrow-up"></div>
                     <li>
-                        <a href="user-detail.html"><i class="fa fa-suitcase"></i> 基本資料</a>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-briefcase"></i> 基本資料
+                        </a>
                     </li>
                     <li>
-                        <a href="authority.html"><i class="fa fa-cog"></i> 權限控管</a>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-cog"></i> 權限控管
+                        </a>
                     </li>
                     <li>
-                        <a href="subscribe.html"><i class="fa fa-bell"></i> 系統警示訂閱</a>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-exclamation-sign"></i> 系統警示訂閱
+                        </a>
                     </li>
                     <li>
-                        <a href="login.html"><i class="fa fa-key"></i> 登出</a>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-log-out"></i> 登出
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -176,71 +194,87 @@
     <div id="sidebar" class="nav-collapse ">
         <!-- sidebar menu start-->
         <ul class="sidebar-menu" id="nav-accordion">
+            <li>
+                <a href="#">
+                    <i class="glyphicon glyphicon-dashboard"></i>
+                    <span>廣告主機</span>
+                </a>
+            </li>
             <li class="sub-menu">
-                <a href="#" class="active">
-                    <i class="fa fa-film"></i>
-                    <span>媒體資產</span>
+                <a href="#">
+                    <i class="glyphicon glyphicon-wrench"></i>
+                    <span>權限設定</span>
                 </a>
                 <ul class="sub">
-                    <li class="active">
-                        <a href="/">
+                    <li>
+                        <a href="#">
                             <span>媒體片庫</span>
                         </a>
                     </li>
                     <li>
-                        <a href="video-tag.html">
+                        <a href="#">
                             <span>影片標籤</span>
                         </a>
                     </li>
                 </ul>
             </li>
-            <li>
-                <a href="/dashboard">
-                    <i class="fa fa-dashboard"></i>
-                    <span>系統總覽</span>
-                </a>
-            </li>
-            <li class="sub-menu">
-                <a href="rule.html">
-                    <i class="fa fa-gear"></i>
-                    <span>轉檔規則</span>
-                </a>
-                <ul class="sub">
-                    <li>
-                        <a href="rule.html">規則管理</a>
-                    </li>
-                    <li>
-                        <a href="status.html">轉檔狀態</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="view-log.html">
-                    <i class="fa fa-clock-o"></i>
-                    <span>觀看紀錄</span>
-                </a>
-            </li>
 
             <li class="sub-menu">
-                <a href="javascript:;">
-                    <i class="fa fa-user"></i>
-                    <span>基本資料</span>
+                <a href="#" class="@ActiveViewHelper.ActiveClass(activeController, "dashboard")">
+                    <i class="glyphicon glyphicon-bullhorn"></i>
+                    <span>行銷活動</span>
                 </a>
                 <ul class="sub">
-                    <li>
-                        <a href="users.html">使用者清單</a>
+                    <li class="@ActiveViewHelper.ActiveClass(activeAction, "publish")">
+                        <a href="@Url.Action("Publish", "DashBoard")">廣告發佈</a>
+                    </li>
+                    <li class="@ActiveViewHelper.ActiveClass(activeAction, "resource")">
+                        <a href="@Url.Action("Resource", "DashBoard")">資源維護</a>
+                    </li>
+                    <li class="@ActiveViewHelper.ActiveClass(activeAction, "location")">
+                        <a href="@Url.Action("Location", "DashBoard")">廣告位置</a>
+                    </li>
+                    <li class="@ActiveViewHelper.ActiveClass(activeAction, "ticker")">
+                        <a href="@Url.Action("Ticker", "DashBoard")">Ticker</a>
+                    </li>
+                    <li class="@ActiveViewHelper.ActiveClass(activeAction, "events")">
+                        <a href="@Url.Action("Events", "DashBoard")">廣告活動</a>
                     </li>
                 </ul>
             </li>
 
             <li class="sub-menu">
                 <a href="javascript:;">
-                    <i class="fa fa-cog"></i>
-                    <span>系統選項</span>
+                    <i class="glyphicon glyphicon-cog"></i>
+                    <span>系統作業</span>
                 </a>
                 <ul class="sub">
                     <li>
-                        <a href="console-log.html">操作紀錄</a>
+                        <a href="#">使用者清單</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="sub-menu">
+                <a href="javascript:;">
+                    <i class="glyphicon glyphicon-shopping-cart"></i>
+                    <span>套餐訂購</span>
+                </a>
+                <ul class="sub">
+                    <li>
+                        <a href="#">操作紀錄</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="sub-menu">
+                <a href="javascript:;">
+                    <i class="glyphicon glyphicon-user"></i>
+                    <span>個人資訊</span>
+                </a>
+                <ul class="sub">
+                    <li>
+                        <a href="#">操作紀錄</a>
                     </li>
                 </ul>
             </li>
@@ -248,29 +282,25 @@
         <!-- sidebar menu end-->
     </div>
 </aside>
+<!--sidebar end-->
 <!--main content start-->
 <section id="main-content">
-    @RenderBody()
+    <section class="wrapper">
+        @RenderBody()
+    </section>
 </section>
 <!--main content end-->
 <!--footer start-->
 <footer class="site-footer">
-    <div class="text-center">
-        @DateTime.Today.Year &copy; - 端點科技股份有限公司
-        <a href="#" class="go-top">
-            <i class="fa fa-angle-up"></i>
-        </a>
-    </div>
+    @DateTime.Today.Year &copy; 端點科技股份有限公司
+    <a href="#" class="go-top">
+        <i class="glyphicon glyphicon-menu-up"></i>
+    </a>
 </footer>
 <!--footer end-->
 </section>
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
+<script src="/Static/dist/vendor.js"></script>
+<script src="/Static/dist/site.js"></script>
 @RenderSection("scripts", required: false)
-<script src="/Static/js/jquery.dcjqaccordion.2.7.js"></script>
-<script src="/Static/js/jquery.scrollTo.min.js"></script>
-<script src="/Static/js/jquery.nicescroll.js"></script>
-<script src="/Static/js/respond.min.js"></script>
-<script src="/Static/js/common-scripts.js"></script>
 </body>
 </html>

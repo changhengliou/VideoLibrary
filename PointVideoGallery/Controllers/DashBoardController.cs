@@ -11,6 +11,31 @@ namespace PointVideoGallery.Controllers
         // GET: DashBoard
         public ActionResult Index()
         {
+            return RedirectPermanent("/dashboard/publish");
+        }
+
+        public ActionResult Resource()
+        {
+            return View();
+        }
+
+        public ActionResult Publish()
+        {
+            return View();
+        }
+
+        public ActionResult Location()
+        {
+            return View();
+        }
+
+        public ActionResult Ticker()
+        {
+            return View();
+        }
+
+        public ActionResult Events()
+        {
             return View();
         }
     }

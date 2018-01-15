@@ -19,7 +19,7 @@ namespace PointVideoGallery
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             DryIocConfig.ConfigureDependencyInjection();
-            FileIndexConfig.RegisterFileIndexService();
+//            FileIndexConfig.RegisterFileIndexService();
         }
     }
 }

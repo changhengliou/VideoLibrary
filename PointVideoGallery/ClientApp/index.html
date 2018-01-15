@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="端點媒資管理系統">
+    <meta name="author" content="端點科技">
+    <meta name="keyword" content="MAM">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <title>端點媒資管理系統</title>
+    <link rel="stylesheet" href="/Static/dist/site.css">
+</head>
+
+<body style="position: relative; padding-bottom: 41px; min-height: 100vh;">
+    <section id="container">
+        <!--header start-->
+        <header class="header white-bg">
+            <div class="sidebar-toggle-box">
+                <div id="sb-toggle" data-original-title="Toggle Navigation" data-placement="right" class="glyphicon glyphicon-menu-hamburger tooltips"
+                    style="font-size: 20px;"></div>
+            </div>
+            <!--logo start-->
+            <a href="#" class="logo">CNS DTV</a>
+            <!--logo end-->
+            <div class="nav notify-row" id="top_menu">
+                <!--  notification start -->
+                <ul class="nav top-menu">
+                    <!-- settings start -->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="glyphicon glyphicon-tasks"></i>
+                            <span class="badge bg-success">6</span>
+                        </a>
+                        <ul class="dropdown-menu extended tasks-bar">
+                            <div class="notify-arrow notify-arrow-green"></div>
+                            <li>
+                                <p class="green">系統資源檢視器</p>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div class="task-info">
+                                        <div class="desc">待處理影片</div>
+                                        <div class="percent">41筆</div>
+                                    </div>
+                                    <div class="progress progress-striped">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: 40%">
+
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div class="task-info">
+                                        <div class="desc">磁碟空間</div>
+                                        <div class="percent">60%</div>
+                                    </div>
+                                    <div class="progress progress-striped">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div class="task-info">
+                                        <div class="desc">使用記憶體</div>
+                                        <div class="percent">87%</div>
+                                    </div>
+                                    <div class="progress progress-striped">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 87%">
+                                            <span class="sr-only">87% Complete</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div class="task-info">
+                                        <div class="desc">CPU負載</div>
+                                        <div class="percent">33%</div>
+                                    </div>
+                                    <div class="progress progress-striped">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: 33%">
+                                            <span class="sr-only">33% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="external">
+                                <a href="#">管理系統版本 : 2.01</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- settings end -->
+                </ul>
+                <!--  notification end -->
+            </div>
+            <div class="top-nav">
+                <!--search & user info start-->
+                <ul class="nav pull-right top-menu">
+                    <li>
+                        <div class="form-group has-feedback search">
+                            <input type="text" class="form-control" placeholder="關鍵字搜尋" style="width:180px; height:37px; border: 1px solid #eaeaea;">
+                            <i class="glyphicon glyphicon-search form-control-feedback"></i>
+                        </div>
+                    </li>
+
+                    <li class="button">
+                        <a href="#">
+                            <i class="glyphicon glyphicon-cloud-upload"></i>
+                            <span> 影片上傳 </span>
+                        </a>
+                    </li>
+
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="glyphicon glyphicon-user"></i>
+                            <span class="username">Admin</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-briefcase"></i> 基本資料</a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-cog"></i> 權限控管</a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-exclamation-sign"></i> 系統警示訂閱</a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-log-out"></i> 登出</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!--search & user info end-->
+            </div>
+        </header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <li>
+                        <a class="active" href="#">
+                            <i class="glyphicon glyphicon-dashboard"></i>
+                            <span>廣告主機</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="#">
+                            <i class="glyphicon glyphicon-wrench"></i>
+                            <span>權限設定</span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="#">
+                                    <span>媒體片庫</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <span>影片標籤</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="#">
+                            <i class="glyphicon glyphicon-bullhorn"></i>
+                            <span>行銷活動</span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="#">廣告發佈</a>
+                            </li>
+                            <li>
+                                <a href="#">資源維護</a>
+                            </li>
+                            <li>
+                                <a href="#">廣告位置</a>
+                            </li>
+                            <li>
+                                <a href="#">Ticker</a>
+                            </li>
+                            <li>
+                                <a href="#">廣告活動</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-cog"></i>
+                            <span>系統作業</span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="#">使用者清單</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-shopping-cart"></i>
+                            <span>套餐訂購</span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="#">操作紀錄</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-user"></i>
+                            <span>個人資訊</span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="#">操作紀錄</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- new media resources start -->
+                <div class='row'>
+                    <div class="col-sm-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="text-align:center;">
+                                <p class="glyphicon glyphicon-picture"></p>
+                                <p>新增 Image</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="text-align:center;">
+                                <p class="glyphicon glyphicon-facetime-video"></p>
+                                <p>新增 Media</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="text-align:center;">
+                                <p class="glyphicon glyphicon-globe"></p>
+                                <p>新增 WebPage</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- new media resources end -->
+                <table id="resource-table"></table>
+                
+            </section>
+        </section>
+        <!--main content end-->
+        <!--footer start-->
+        <footer class="site-footer">
+            <div class="text-center">
+                2015 &copy; 端點科技股份有限公司
+                <a href="#" class="go-top">
+                    <i class="glyphicon glyphicon-menu-up"></i>
+                </a>
+            </div>
+        </footer>
+        <!--footer end-->
+    </section>
+    <script src="/Static/dist/vendor.js"></script>
+    <script src="/Static/dist/site.js"></script>
+    <script src="/Static/dist/resource.js"></script>
+</body>
+
+</html>
