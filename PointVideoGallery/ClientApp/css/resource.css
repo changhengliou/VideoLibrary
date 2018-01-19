@@ -1,0 +1,44 @@
+.form-group .form-control {
+    width: 100%;
+}
+.form-group label.form-label {
+    width: 26px;
+    display: block;
+}
+input[type="file"] {
+    display: none;
+}
+
+.preview-img {
+    background-position: center!important;
+    background-size: contain!important;
+    height: 18vh;
+}
+
+.preview-img-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.preview-img.table-thumbnail {
+    height: 6vh;
+}
+
+.preview-img-abort {
+    position: absolute;
+    right: 14px;
+    font-size: 30px;
+    top: 0;
+    cursor: pointer;
+    color: #fff;
+    border-radius: 50%;
+    background: #ddd;
+    line-height: 17px;
+    width: 20px;
+    height: 20px;
+}
+
+.preview-img-abort:hover {
+    background: red;
+    color: black;
+}

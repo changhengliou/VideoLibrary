@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using PointVideoGallery.Utils;
 
 namespace PointVideoGallery
 {
@@ -19,6 +20,8 @@ namespace PointVideoGallery
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Formatters.Add(new BrowserJsonFormatter());
         }
     }
 }

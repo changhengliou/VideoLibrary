@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -19,7 +23,7 @@ namespace PointVideoGallery
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             DryIocConfig.ConfigureDependencyInjection();
-//            FileIndexConfig.RegisterFileIndexService();
+            MvcHandler.DisableMvcResponseHeader = true;
         }
     }
 }

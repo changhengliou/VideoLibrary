@@ -1,0 +1,312 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using Dapper;
+using MySql.Data.MySqlClient;
+using PointVideoGallery.Models;
+
+namespace PointVideoGallery.Services
+{
+    public class AdService : IService
+    {
+        public static string BasePath = ConfigurationManager.AppSettings["LibraryIndexBasePath"];
+        public static string ConnectionString = ConfigurationManager.AppSettings.Get("MySqlConnectionString");
+
+        /// <summary>
+        /// Save upload file to the disk, return null if failed
+        /// </summary>
+        public async Task<ResourceFile> SaveHttpFileToDiskAsync(HttpPostedFile file)
+        {
+            var fileName = file.FileName;
+            var dirPath = DateTime.Today.ToString("yyyy-MM-dd");
+            var filePath = Path.Combine(dirPath, fileName);
+
+            try
+            {
+                if (!Directory.Exists(Path.Combine(BasePath, dirPath)))
+                    Directory.CreateDirectory(Path.Combine(BasePath, dirPath));
+
+                int i = 2;
+                while (File.Exists(Path.Combine(BasePath, filePath)))
+                {
+                    filePath = Path.Combine(dirPath,
+                        Path.GetFileNameWithoutExtension(fileName) + $"_{i}" + Path.GetExtension(fileName));
+                    ++i;
+                }
+
+                using (var fileStream = File.Create(Path.Combine(BasePath, filePath)))
+                {
+                    await file.InputStream.CopyToAsync(fileStream);
+                }
+                return new ResourceFile
+                {
+                    Path = filePath.Replace(Path.DirectorySeparatorChar, '/'),
+                    ThumbnailPath = filePath.Replace(Path.DirectorySeparatorChar, '/'),
+                };
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e);
+                return null;
+            }
+        }
+
+        //SELECT LAST_INSERT_ID();
+        /// <summary>
+        /// Save resource to db
+        /// </summary>
+        public async Task<bool> AddResourceFileAsync(ResourceFile file)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    await connection.ExecuteAsync(
+                        "INSERT INTO `ad_resources` (Name, Path, ThumbnailPath, CreateTime, MediaType) VALUES " +
+                        "(@name, @path, @thumbnailPath, @createTime, @type);", new
+                        {
+                            name = file.Name,
+                            path = file.Path,
+                            thumbnailPath = file.ThumbnailPath,
+                            createTime = file.CreateTime,
+                            type = file.MediaType
+                        });
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
+                await connection.CloseAsync();
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Get resource from db
+        /// </summary>
+        /// <param name="offset">the number of offset to be shown</param>
+        /// <param name="limit">the number of rows in a single offset</param>
+        public async Task<List<ResourceFile>> GetResourceFileAsync(int offset = 0, int limit = 10,
+            string sort = "CreateTime", string order = "desc", string search = null)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                List<ResourceFile> list = null;
+                try
+                {
+                    await connection.OpenAsync();
+
+                    string sql = "SELECT * FROM `ad_resources` " +
+                                 (string.IsNullOrWhiteSpace(search)
+                                     ? ""
+                                     : "WHERE `Name` LIKE @search ") +
+                                 $"ORDER BY {sort} {order} " +
+                                 $"LIMIT {limit} OFFSET {offset};";
+
+                    list = (await connection.QueryAsync<ResourceFile>(sql, new {search = "%" + search + "%"})).ToList();
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                }
+                await connection.CloseAsync();
+                return list;
+            }
+        }
+
+        /// <summary>
+        /// update resource from db
+        /// </summary>
+        public async Task<bool> FindAndUpdateResourceFileByIdAsync(ResourceFile file)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                int count = 0;
+                try
+                {
+                    await connection.OpenAsync();
+                    count = await connection.ExecuteAsync(
+                        "UPDATE `ad_resources` SET `Name`=@name, `MediaType`=@type, `CreateTime`=@createTime WHERE `Id`=@id;",
+                        new
+                        {
+                            id = file.Id,
+                            name = file.Name,
+                            type = file.MediaType,
+                            createTime = DateTime.Now
+                        });
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
+                await connection.CloseAsync();
+                return count != 0;
+            }
+        }
+
+        /// <summary>
+        /// delete resource from db
+        /// </summary>
+        public async Task<bool> DropResourceFileByIdAsync(int id)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                int count = 0;
+                try
+                {
+                    await connection.OpenAsync();
+                    count = await connection.ExecuteAsync("DELETE FROM `ad_resources` WHERE `Id`=@id;", new {id = id});
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
+                await connection.CloseAsync();
+                return count != 0;
+            }
+        }
+
+        /// <summary>
+        /// Get the number of resourcefile from db
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetResourceFileCountAsync(string search = null)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                int count;
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var sql = "SELECT COUNT(*) FROM `ad_resources` " +
+                              (string.IsNullOrWhiteSpace(search) ? "" : "WHERE `Name` LIKE @search;");
+                    count = await connection.ExecuteScalarAsync<int>(sql, new {search = "%" + search + "%"});
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return 0;
+                }
+                await connection.CloseAsync();
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// Get AdLocationTag from db
+        /// </summary>
+        public async Task<List<LocationTag>> GetLocationTagsAsync()
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                List<LocationTag> list;
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var sql = "SELECT * FROM `ad_location_tags` ORDER BY `NAME` ASC;";
+                    list = (await connection.QueryAsync<LocationTag>(sql)).ToList();
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return null;
+                }
+                await connection.CloseAsync();
+                return list;
+            }
+        }
+
+        /// <summary>
+        /// insert locationTag into db
+        /// </summary>
+        public async Task<bool> AddLocationTagAsync(string name)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var sql = "INSERT INTO `ad_location_tags` (Name) VALUES (@name);";
+                    await connection.ExecuteAsync(sql, new {name = name});
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
+                await connection.CloseAsync();
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// update locationTag into db
+        /// </summary>
+        public async Task<bool> UpdateLocationTagByIdAsync(LocationTag tag)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                int rows = 0;
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var sql = "UPDATE `ad_location_tags` SET `Name`=@name WHERE `Id`=@id;";
+                    rows = await connection.ExecuteAsync(sql, new {Name = tag.Name, Id = tag.Id});
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
+                await connection.CloseAsync();
+                return rows != 0;
+            }
+        }
+
+        /// <summary>
+        /// remove locationTag into db
+        /// </summary>
+        public async Task<bool> RemoveLocationTagByIdAsync(int id)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                int rows = 0;
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var sql = "DELETE `ad_location_tags` WHERE `Id`=@id;";
+                    rows = await connection.ExecuteAsync(sql, new {Id = id});
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
+                await connection.CloseAsync();
+                return rows != 0;
+            }
+        }
+    }
+}

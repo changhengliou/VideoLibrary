@@ -1,37 +1,60 @@
 ﻿@section header {
+    <link href="/Static/dist/resource.css" rel="stylesheet"/>
 }
 <!-- new media resources start -->
-<div class='row'>
-    <div class="col-xs-4">
+<div class='row' id="res-row">
+    <div class="col-xs-12">
         <div class="panel panel-default">
-            <div class="panel-body" style="text-align: center;">
-                <p class="glyphicon glyphicon-picture"></p>
-                <p>新增 Image</p>
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-cog"></span> 新增資源
             </div>
-        </div>
-    </div>
-    <div class="col-xs-4">
-        <div class="panel panel-default">
-            <div class="panel-body" style="text-align: center;">
-                <p class="glyphicon glyphicon-facetime-video"></p>
-                <p>新增 Media</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-xs-4">
-        <div class="panel panel-default">
-            <div class="panel-body" style="text-align: center;">
-                <p class="glyphicon glyphicon-globe"></p>
-                <p>新增 WebPage</p>
+            <div class="panel-body">
+                <form id="preview-form" name="resourceUpload" enctype="multipart/form-data">
+                    <div class="col-xs-12" id="preview-panel"></div>
+                    <div class="col-sm-3 form-group">
+                        <label for="upload-img" class="btn btn-primary btn-sm">
+                            <i class="glyphicon glyphicon-upload"></i> 選擇檔案
+                        </label>
+                        <input type="file" id="upload-img" name="upload-img" style="display: none" multiple/>
+                        <input type="button" id="submit" class='btn btn-sm btn-primary' style="display: none;" value="提交"/>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 <!-- new media resources end -->
 <div class="panel panel-default">
-    <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表</div>
+    <div class="panel-heading">
+        <span class="glyphicon glyphicon-cog"></span> 資料列表
+    </div>
     <div class="panel-body">
         <table id="resource-table"></table>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" role="dialog">
+    <div class="modal-dialog modal-sm">    
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> 修改資料</h4>
+            </div>
+            <div class="modal-body">
+                <select class="form-control input-sm" form='resourceUpload' id='editType'>
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                    <option value="webpage">WebPage</option>
+                </select>
+                <input class='form-control input-sm' placeholder='name' type='text' style='margin-top: 8px;' id="editName"/>
+                <div style="margin-top: 12px; text-align: right;">
+                    <button class="btn btn-sm btn-primary" id="editUpdate">確定</button>
+                    <button class="btn btn-sm btn-danger" id="editDelete">刪除</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" id="editAbort">取消</button>
+                </div>
+            </div>
+        </div>
+      
     </div>
 </div>
 @section scripts

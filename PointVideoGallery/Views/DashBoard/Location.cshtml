@@ -1,13 +1,20 @@
-﻿
-
+﻿@section header {
+    <link href="/Static/dist/location.css" rel="stylesheet" />
+}
 <div class="panel panel-default">
     <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表</div>
     <div class="panel-body">
-        <table id="resource-table"></table>
+        <div style="display: none;" id="msg"></div>
+        <table id="table"></table>
+        <div style="position: relative; height: 40px;">
+            <button class="btn btn-sm btn-primary" style="margin-top: 10px; position: absolute; right: 0;" id="newRowBtn">
+                <span class="glyphicon glyphicon-plus"></span> 新增
+            </button>
+        </div>
     </div>
 </div>
 
 @section scripts
 {
-    <script src="/Static/dist/resource.js"></script>
+    <script src="/Static/dist/location.js"></script>
 }
