@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Caching;
 using System.Web;
 using System.Web.Http;
 using DryIoc;
@@ -17,12 +18,11 @@ namespace PointVideoGallery
     {
         public static void ConfigureDependencyInjection()
         {
-            var container = new Container();
-            
-            container.Register<IService, VideoFileService>(Reuse.Transient);
+            var container = new Container();            
+//            container.Register<IService, VideoFileService>(Reuse.Transient);
 
             //.WithWebApi(GlobalConfiguration.Configuration, throwIfUnresolved: DryIocWebApi.IsController)
-            container.WithMvc(new [] { Assembly.GetAssembly(typeof(VideoController)) });
+//            container.WithMvc(new [] { Assembly.GetAssembly(typeof(VideoController)) });
         }
     }
 }

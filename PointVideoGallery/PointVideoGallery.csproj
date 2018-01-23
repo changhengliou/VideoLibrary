@@ -176,6 +176,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -245,9 +246,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\AdEventApiController.cs" />
     <Compile Include="Api\AdLocationApiController.cs" />
     <Compile Include="Api\AdResourceApiController.cs" />
-    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Api\SoSettingApiController.cs" />
     <Compile Include="App_Start\DryIocConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -255,30 +257,30 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
-    <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\EventMap.cs" />
+    <Compile Include="Models\ResourceAction.cs" />
+    <Compile Include="Models\AdEvent.cs" />
+    <Compile Include="Models\EventDataBase.cs" />
+    <Compile Include="Models\EventDataResource.cs" />
     <Compile Include="Models\LocationTag.cs" />
+    <Compile Include="Models\ResourceEvent.cs" />
     <Compile Include="Models\ResourceFile.cs" />
-    <Compile Include="Models\VideoFile.cs" />
+    <Compile Include="Models\SoSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App_Start\FileIndexService.cs" />
     <Compile Include="Services\AdService.cs" />
     <Compile Include="Services\IService.cs" />
-    <Compile Include="Services\VideoFileService.cs" />
+    <Compile Include="Services\SettingService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\ActiveViewHelper.cs" />
     <Compile Include="Utils\BrowserJsonFormatter.cs" />
     <Compile Include="Utils\Helper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
@@ -286,31 +288,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <None Include="Scripts\jquery-3.2.1.intellisense.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-3.2.1.js" />
-    <Content Include="Scripts\jquery-3.2.1.min.js" />
-    <Content Include="Scripts\jquery-3.2.1.slim.js" />
-    <Content Include="Scripts\jquery-3.2.1.slim.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -325,18 +302,14 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Video\Upload.cshtml" />
-    <Content Include="Views\Video\Contact.cshtml" />
-    <Content Include="Views\Video\Index.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Shared\NotFound.cshtml" />
-    <Content Include="Views\Video\Detail.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Signin.cshtml" />
     <Content Include="Views\DashBoard\Resource.cshtml" />
     <Content Include="Views\DashBoard\Publish.cshtml" />
     <Content Include="Views\DashBoard\Location.cshtml" />
-    <Content Include="Views\DashBoard\Ticker.cshtml" />
+    <Content Include="Views\DashBoard\SoSetting.cshtml" />
     <Content Include="Views\DashBoard\Events.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -348,8 +321,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-    <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.2.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

@@ -17,7 +17,9 @@ module.exports = (env) => {
             vendor: ['jquery', 'bootstrap', 'superagent', 'webfontloader'], // external js share by all pages
             resource: path.join(__dirname, 'ClientApp', 'resource.js'), // individual js used in each page
             signin: path.join(__dirname, 'ClientApp', 'signin.js'),
-            location: path.join(__dirname, 'ClientApp', 'location.js')
+            location: path.join(__dirname, 'ClientApp', 'location.js'),
+            sosetting: path.join(__dirname, 'ClientApp', 'soSetting.js'),
+            events: path.join(__dirname, 'ClientApp', 'events.js'),
         },
         output: {
             filename: '[name].js',

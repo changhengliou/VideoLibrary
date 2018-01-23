@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Http;
 using System.Web.Mvc;
 using PointVideoGallery.Models;
@@ -19,7 +20,7 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route]
-        public async Task<IHttpActionResult> GetOrDropLocation()
+        public async Task<IHttpActionResult> GetLocation()
         {
             AdService service = new AdService();
             return Json(await service.GetLocationTagsAsync());
@@ -33,7 +34,7 @@ namespace PointVideoGallery.Api
         public async Task<IHttpActionResult> CreateLocation(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return BadRequest($"{name} Invalid request.");
+                return BadRequest($"Invalid request.");
             AdService service = new AdService();
             if (await service.AddLocationTagAsync(name))
                 return Ok();
@@ -62,10 +63,13 @@ namespace PointVideoGallery.Api
         [System.Web.Http.Route("{id}")]
         public async Task<IHttpActionResult> DeleteLocation(int id)
         {
+            //            HttpRuntime.Cache[""] = "";
+            //            HttpRuntime.Cache.Insert("", "", null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(20));
+//            HttpRuntime.Cache.Insert("", "", null, DateTime.Now.AddDays(1), Cache.NoSlidingExpiration);
             if (id < 0)
                 return BadRequest("Invalid request.");
             AdService service = new AdService();
-            if (await service.RemoveLocationTagByIdAsync(id))
+            if (await service.DropLocationTagByIdAsync(id))
                 return Ok();
             return StatusCode(HttpStatusCode.Gone);
         }

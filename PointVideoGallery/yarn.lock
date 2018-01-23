@@ -1115,30 +1115,6 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
-
-blueimp-canvas-to-blob@3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.5.0.tgz#5679ac32f6a2835821f0c3ad661719ff85a9236b"
-
-blueimp-file-upload@^9.19.3:
-  version "9.19.3"
-  resolved "https://registry.yarnpkg.com/blueimp-file-upload/-/blueimp-file-upload-9.19.3.tgz#626ee2b2fb20db7dc376b652631b31c1cd2baedf"
-  optionalDependencies:
-    blueimp-canvas-to-blob "3.5.0"
-    blueimp-load-image "2.12.2"
-    blueimp-tmpl "3.6.0"
-
-blueimp-load-image@2.12.2:
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-2.12.2.tgz#6a17598aab858d4fbf01543e0631141b51057c87"
-
-blueimp-tmpl@3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/blueimp-tmpl/-/blueimp-tmpl-3.6.0.tgz#a4910975d042e2bc03ba77f0e62d04f1548a524c"
-
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
@@ -1187,11 +1163,20 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
+bootstrap-datetimepicker-npm@^4.17.37-npm:
+  version "4.17.37-npm"
+  resolved "https://registry.yarnpkg.com/bootstrap-datetimepicker-npm/-/bootstrap-datetimepicker-npm-4.17.37-npm.tgz#6461c9fab696e7621a46bebe28ed150333cbda26"
+  dependencies:
+    bootstrap "^3.3"
+    jquery ">=1.8.3 <2.2.0"
+    moment "~2.8"
+    moment-timezone "~0.4"
+
 bootstrap-table@^1.11.2:
   version "1.11.2"
   resolved "https://registry.yarnpkg.com/bootstrap-table/-/bootstrap-table-1.11.2.tgz#5f5f8414c97d95a40e56d3d364523da432b3c0b1"
 
-bootstrap@^3.3.7:
+bootstrap@^3.3, bootstrap@^3.3.7:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
 
@@ -1493,10 +1478,6 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     lazy-cache "^2.0.2"
     static-extend "^0.1.1"
-
-classnames@^2.2.5:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
 cliui@^2.1.0:
   version "2.1.0"
@@ -2025,10 +2006,6 @@ dom-walk@^0.1.0:
 domain-browser@^1.1.1:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.1.7.tgz#867aa4b093faa05f1de08c06f4d7b21fdf8698bc"
-
-draftjs-utils@^0.8.8:
-  version "0.8.8"
-  resolved "https://registry.yarnpkg.com/draftjs-utils/-/draftjs-utils-0.8.8.tgz#5835daed95f59d3ee1f96fdcbbb9809772c86490"
 
 ecc-jsbn@~0.1.1:
   version "0.1.1"
@@ -3629,6 +3606,10 @@ jquery@>=1.8, jquery@>=1.8.3, jquery@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
+"jquery@>=1.8.3 <2.2.0":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.1.4.tgz#228bde698a0c61431dc2630a6a154f15890d2317"
+
 js-base64@^2.1.9:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.0.tgz#9e566fee624751a1d720c966cd6226d29d4025aa"
@@ -3780,12 +3761,6 @@ levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
-
-linkify-it@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-2.0.3.tgz#d94a4648f9b1c179d64fa97291268bdb6ce9434f"
-  dependencies:
-    uc.micro "^1.0.1"
 
 load-json-file@^1.0.0:
   version "1.1.0"
@@ -4105,6 +4080,20 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+moment-timezone@~0.4:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.4.1.tgz#81f598c3ad5e22cdad796b67ecd8d88d0f5baa06"
+  dependencies:
+    moment ">= 2.6.0"
+
+"moment@>= 2.6.0":
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
+
+moment@~2.8:
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.8.4.tgz#cc174aabb19223efff5699a9467805a2789838bf"
 
 ms@2.0.0:
   version "2.0.0"
@@ -5078,15 +5067,6 @@ react-dom@16.1.1:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-    prop-types "^15.6.0"
-
-react-draft-wysiwyg@^1.12.3:
-  version "1.12.4"
-  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.12.4.tgz#dafe574b6849290a1387b983d4ca62c00e791af8"
-  dependencies:
-    classnames "^2.2.5"
-    draftjs-utils "^0.8.8"
-    linkify-it "^2.0.3"
     prop-types "^15.6.0"
 
 react-hot-loader@3.1.2:
@@ -6109,10 +6089,6 @@ type-is@~1.6.15:
 ua-parser-js@^0.7.9:
   version "0.7.17"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.17.tgz#e9ec5f9498b9ec910e7ae3ac626a805c4d09ecac"
-
-uc.micro@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.3.tgz#7ed50d5e0f9a9fb0a573379259f2a77458d50192"
 
 uglify-js@^2.6, uglify-js@^2.8.29:
   version "2.8.29"

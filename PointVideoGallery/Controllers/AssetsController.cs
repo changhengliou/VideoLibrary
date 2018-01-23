@@ -89,7 +89,7 @@ namespace PointVideoGallery.Controllers
             finally
             {
                 Response.Flush();
-                Response.Close();
+                HttpContext.ApplicationInstance.CompleteRequest();
             }
         }
     }

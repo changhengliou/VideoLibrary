@@ -29,7 +29,7 @@ namespace PointVideoGallery.Controllers
             return View();
         }
 
-        public ActionResult Ticker()
+        public ActionResult SoSetting()
         {
             return View();
         }

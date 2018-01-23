@@ -16,7 +16,6 @@ namespace PointVideoGallery.Controllers
 
         public ActionResult Signin()
         {
-            return Json(new {x = "3"});
             return View();
         }
     }

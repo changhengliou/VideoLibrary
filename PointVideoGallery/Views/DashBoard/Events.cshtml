@@ -1,15 +1,77 @@
-﻿
-@{
-    ViewBag.Title = "Events";
+﻿@using PointVideoGallery.Models
+@using PointVideoGallery.Services
+@section header {
+    <link href="/Static/dist/events.css" rel="stylesheet" />
 }
+@{
+    var asService = new AdService();
+    var settingService = new SettingService();
+    var locations = asService.GetLocationTagsAsync().Result;
+    var so = settingService.GetSoSettingsAsync().Result;
+}
+<div id="viewPanel">
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-search"></span> 資料查詢</div>
+        <div class="panel-body">
+            <div class="col-xs-6">
+                <label for="locationSelect" style="display: block;">播放位址</label>
+                <select id="locationSelect" name="locations[]" multiple="multiple">
+                    @foreach (LocationTag obj in locations)
+                    {
+                        <option value="@obj.Id">@obj.Name</option>
+                    }
+                </select>
+                <div style="text-align: left; margin-top: 10px;">
+                    <button class="btn btn-sm btn-primary">
+                        <span class="glyphicon glyphicon-search"></span> 查詢
+                    </button>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <label for="soSelect" style="display: block;">So</label>
+                <select id="soSelect" name="so[]" multiple="multiple">
+                    @foreach (SoSetting obj in so)
+                    {
+                        <option value="@obj.Id">@obj.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表</div>
-    <div class="panel-body">
-        <table id="resource-table"></table>
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表</div>
+        <div class="panel-body">
+            <table id="table"></table>
+        </div>
+    </div>
+</div>
+@*Edit View*@
+<div id="editPanel" style="display: none;">
+    <button id="goBack" class="btn btn-sm btn-primary">返回</button>
+</div>
+
+<div class="modal fade" id="editModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> 修改資料</h4>
+            </div>
+            <div class="modal-body">
+                <div><span style="color: red; display: none; font-weight: 800;" id="editModalMsg"></span></div>
+                <input class='form-control input-sm' placeholder='SO代碼' type='text' style='margin-top: 8px;' id="editCode" />
+                <input class='form-control input-sm' placeholder='SO名稱' type='text' style='margin-top: 8px;' id="editName" />
+                <div style="margin-top: 12px; text-align: right;">
+                    <button class="btn btn-sm btn-primary" id="editUpdate">確定</button>
+                    <button class="btn btn-sm btn-danger" id="editDelete">刪除</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" id="editAbort">取消</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @section scripts
 {
-    <script src="/Static/dist/resource.js"></script>
+    <script src="/Static/dist/events.js"></script>
 }
