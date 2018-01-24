@@ -36,18 +36,26 @@ namespace PointVideoGallery.Api
         }
 
         /// <summary>
-        /// GET /api/v1/ad/events/q?soId=&locationId=
+        /// PUT /api/v1/ad/events/
         /// </summary>
-        /// <param name="s">soId</param>
-        /// <param name="l">locationId</param>
-        [System.Web.Http.Route("q")]
-        [System.Web.Http.HttpGet]
-        public async Task<IHttpActionResult> GetAdEvent([FromUri]int? s, int? l)
+        [System.Web.Http.Route]
+        [System.Web.Http.HttpPut]
+        public async Task<IHttpActionResult> UpdateSoOrLocationEvent([FromBody] PutQueryData data)
         {
             var service = new AdService();
-            int soId = s ?? -1,
-                locationId = l ?? -1;
-            return Json(await service.GetAdEventsAsync(soId: soId, locationId: locationId));
+            return Json(await service.AddAndDropEventsAsync(data.Id, data?.Add, data?.Rm, data.Type));
+        }
+
+        /// <summary>
+        /// POST /api/v1/ad/events/q?s=&l=
+        /// </summary>
+        /// <param name="data"></param>
+        [System.Web.Http.Route("q")]
+        [System.Web.Http.HttpPost]
+        public async Task<IHttpActionResult> GetAdEvent([FromBody] QueryData data)
+        {
+            var service = new AdService();
+            return Json(await service.GetAdEventsWithIdFilterAsync(data?.So, data?.Location));
         }
 
         /// <summary>
@@ -57,6 +65,9 @@ namespace PointVideoGallery.Api
         [System.Web.Http.HttpPost]
         public async Task<IHttpActionResult> AddEventLocation([FromBody] EventDataBase data)
         {
+            if (data == null)
+                return BadRequest("Invalid Request");
+
             AdService service = new AdService();
             if (await service.AddEventSettingAsync(data, DbEventType.Location))
                 return Ok();

@@ -1,0 +1,24 @@
+.title-div {
+    width: 40vw;
+    margin: 0 auto;
+}
+
+.input-with-label {
+    width: calc(100% - 67px); 
+    display: inline-block;
+}
+
+.input-right-label {
+    width: 62px; 
+    display: inline-block;
+    text-align: right;
+}
+div.panel-body div.form-group {
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width: 700px) {
+    .title-div {
+        width: 60vw;
+    }
+}

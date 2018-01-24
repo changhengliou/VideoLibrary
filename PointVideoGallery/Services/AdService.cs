@@ -339,7 +339,7 @@ namespace PointVideoGallery.Services
         /// <summary>
         /// Get ad Events from given soId and locationId, if both params is given, select intersection
         /// </summary>
-        public async Task<List<AdEvent>> GetAdEventsAsync(int soId, int locationId)
+        public async Task<List<AdEvent>> GetAdEventsWithIdFilterAsync(List<int> soId, List<int> locationId)
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
@@ -349,29 +349,52 @@ namespace PointVideoGallery.Services
                 try
                 {
                     await connection.OpenAsync();
-                    string sql;
+                    string sql = null;
 
-                    if (locationId > 0)
+                    switch (locationId.Count)
                     {
-                        sql =
-                            "SELECT `EventId`, `LocationId` AS `DataId` FROM `event_location` WHERE `LocationId`=@locationId;";
-                        locations =
-                            (await connection.QueryAsync<EventMap>(sql, new {locationId = locationId})).Select(s =>
-                                s.EventId);
+                        case 0:
+                            sql = "SELECT `EventId`, `LocationId` AS `DataId` FROM `event_location`;";
+                            break;
+                        case 1:
+                            sql = "SELECT `EventId`, `LocationId` AS `DataId` FROM `event_location` " +
+                                  $"WHERE `LocationId`={locationId[0]};";
+                            break;
+                        default:
+                            if (locationId.Count > 1)
+                            {
+                                sql = $"SELECT `EventId`, `LocationId` AS `DataId` FROM `event_location` " +
+                                      $"WHERE `LocationId` IN ({string.Join(",", locationId)});";
+                            }
+                            break;
                     }
 
-                    if (soId > 0)
+                    locations = (await connection.QueryAsync<EventMap>(sql)).Select(s => s.EventId);
+
+                    switch (soId.Count)
                     {
-                        sql = "SELECT `EventId`, `SoId` AS `DataId` FROM `event_so` WHERE `SoId` = @soId;";
-                        so = (await connection.QueryAsync<EventMap>(sql, new {soId = soId})).Select(s => s.EventId);
+                        case 0:
+                            sql = "SELECT `EventId`, `SoId` AS `DataId` FROM `event_so`;";
+                            break;
+                        case 1:
+                            sql = $"SELECT `EventId`, `SoId` AS `DataId` FROM `event_so` WHERE `SoId` = {soId[0]};";
+                            break;
+                        default:
+                            if (soId.Count > 1)
+                            {
+                                sql = "SELECT `EventId`, `SoId` AS `DataId` FROM `event_so` " +
+                                      $"WHERE `SoId` IN ({string.Join(",", soId)});";
+                            }
+                            break;
                     }
+                    so = (await connection.QueryAsync<EventMap>(sql)).Select(s => s.EventId);
 
                     // if both params are provide, select intersection
-                    if (locationId > 0 && soId > 0)
+                    if (locationId.Count > 0 && soId.Count > 0)
                     {
                         queryList.AddRange(locations.Intersect(so));
                     }
-                    else if (locationId > 0 || soId > 0)
+                    else if (locationId.Count > 0 || soId.Count > 0)
                     {
                         queryList.AddRange(so);
                         queryList.AddRange(locations);
@@ -519,6 +542,53 @@ namespace PointVideoGallery.Services
                     break;
             }
 
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    using (var transaction = await connection.BeginTransactionAsync())
+                    {
+                        await connection.ExecuteAsync(sql.ToString(), transaction: transaction);
+                        transaction.Commit();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
+                await connection.CloseAsync();
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Given 2 arrays specify events to be either add or remove from db
+        /// </summary>
+        /// <param name="add">events to be added</param>
+        /// <param name="rm">events to be removed</param>
+        public async Task<bool> AddAndDropEventsAsync(int id, List<int> add, List<int> rm, DbEventType type)
+        {
+            throw new NotImplementedException("Not finished yet");
+            string sql = null;
+            switch (type)
+            {
+                case DbEventType.So:
+                    sql = $"DELETE FROM `event_so` WHERE `SoId` IN ({string.Join(",", rm)}) AND `EventId`={id};";
+                    sql += $"INSERT INTO `event_so` (`EventId`, `SoId`) VALUES ()";
+                    break;
+                case DbEventType.Resource:
+                    sql = $"DELETE FROM `event_resource` WHERE `ResourceId` IN ({string.Join(",", rm)}) AND `EventId`={id};;";
+                    break;
+                case DbEventType.Location:
+                    sql = $"DELETE FROM `event_location` WHERE `LocationId` IN ({string.Join(",", rm)}) AND `EventId`={id};;";
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
             using (var connection = new MySqlConnection(ConnectionString))
             {
                 try

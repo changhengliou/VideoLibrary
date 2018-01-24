@@ -261,6 +261,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EventMap.cs" />
+    <Compile Include="Models\QueryData.cs" />
     <Compile Include="Models\ResourceAction.cs" />
     <Compile Include="Models\AdEvent.cs" />
     <Compile Include="Models\EventDataBase.cs" />

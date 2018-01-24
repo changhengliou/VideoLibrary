@@ -1,6 +1,6 @@
 import 'bootstrap-table';
 import 'bootstrap-table/dist/bootstrap-table.css';
-import { setTableViewZhTwLocal } from './js/utils';
+import { setTableViewZhTwLocal, tableSetting } from './js/utils';
 
 setTableViewZhTwLocal($);
 $.editable = false;
@@ -14,10 +14,11 @@ const setEditable = (editable) => {
 
 
 $('#table').bootstrapTable({
+    ...tableSetting,
+    search: true,
     url: '/api/v1/ad/location',
     uniqueId: 'Id',
     onClickCell: (field, value, row, element) => {
-        console.log(row);
         if (row.Id === -1)
             return;
         if (field !== 'Name')
@@ -26,25 +27,16 @@ $('#table').bootstrapTable({
             return;
         setRowEditable(element, row, value);
     },
-    iconSize: 'sm',
-    locale: 'zh-TW',
-    striped: true,
-    pagination: true,
-    pageNumber: 1,
-    pageSize: 10,
-    pageList: [10, 25, 50],
-    search: true,
-    showHeader: true,
-    showFooter: false,
-    showRefresh: true,
-    showToggle: false, //switch between cardView / detailView
-    showPaginationSwitch: false, // show/hide pagination
-    cardView: false, // if true, switch to card view
-    detailView: false, // if true, show plus sign with detail enabled
-    rowStyle: (row, index) => { return { css: { "vertical-align": "middle" } } },
+    onSort: () => {
+        setEditable(false);
+    },
+    onSearch: () => {
+        setEditable(false);
+    },
     columns: [{
         field: 'Name',
-        title: '名稱'
+        title: '名稱',
+        sortable: true
     }]
 });
 

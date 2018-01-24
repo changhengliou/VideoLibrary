@@ -1,6 +1,6 @@
 import 'bootstrap-table';
 import 'bootstrap-table/dist/bootstrap-table.css';
-import { setTableViewZhTwLocal, isEmpty } from './js/utils';
+import { setTableViewZhTwLocal, isEmpty, tableSetting } from './js/utils';
 
 // edit button click
 const onEditClick = (row) => {
@@ -13,38 +13,26 @@ const onEditClick = (row) => {
 }
 
 $(document).ready(() => {
+    setTableViewZhTwLocal($);
     var table = $('#table');
 
     table.bootstrapTable({
+        ...tableSetting,
+        search: true,
         onClickCell: (field, value, row, element) => {
             if (field !== 'Edit')
                 return;
             onEditClick(row);
         },
         url: '/api/v1/setting/so',
-        uniqueId: 'Id',
-        iconSize: 'sm',
-        locale: 'zh-TW',
-        striped: true,
-        pagination: true,
-        pageNumber: 1,
-        pageSize: 10,
-        pageList: [10, 25, 50],
-        search: true,
-        showHeader: true,
-        showFooter: false,
-        showRefresh: true,
-        showToggle: false, //switch between cardView / detailView
-        showPaginationSwitch: false, // show/hide pagination
-        cardView: false, // if true, switch to card view
-        detailView: false, // if true, show plus sign with detail enabled
-        rowStyle: (row, index) => { return { css: { "vertical-align": "middle" } } },
         columns: [{
             field: 'Code',
-            title: '代碼'
+            title: '代碼',
+            sortable: true
         }, {
             field: 'Name',
-            title: '名稱'
+            title: '名稱',
+            sortable: true
         }, {
             field: 'Edit',
             title: '編輯',

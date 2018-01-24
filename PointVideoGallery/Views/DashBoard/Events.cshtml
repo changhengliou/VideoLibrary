@@ -13,16 +13,13 @@
     <div class="panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-search"></span> 資料查詢</div>
         <div class="panel-body">
+            <span id="msgBox" style="color: red; display: none;"></span>
             <div class="col-xs-6">
                 <label for="locationSelect" style="display: block;">播放位址</label>
                 <select id="locationSelect" name="locations[]" multiple="multiple">
-                    @foreach (LocationTag obj in locations)
-                    {
-                        <option value="@obj.Id">@obj.Name</option>
-                    }
                 </select>
                 <div style="text-align: left; margin-top: 10px;">
-                    <button class="btn btn-sm btn-primary">
+                    <button class="btn btn-sm btn-primary" id="queryBtn">
                         <span class="glyphicon glyphicon-search"></span> 查詢
                     </button>
                 </div>
@@ -30,10 +27,6 @@
             <div class="col-xs-6">
                 <label for="soSelect" style="display: block;">So</label>
                 <select id="soSelect" name="so[]" multiple="multiple">
-                    @foreach (SoSetting obj in so)
-                    {
-                        <option value="@obj.Id">@obj.Name</option>
-                    }
                 </select>
             </div>
         </div>
@@ -44,15 +37,91 @@
         <div class="panel-body">
             <table id="table"></table>
         </div>
+        <div style="text-align: right; margin: 15px;">
+            <button class="btn btn-sm btn-primary" id="newEventBtn">
+                <span class="glyphicon glyphicon-plus-sign"></span> 新增
+            </button>
+        </div>
     </div>
 </div>
+
 @*Edit View*@
 <div id="editPanel" style="display: none;">
-    <button id="goBack" class="btn btn-sm btn-primary">返回</button>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-cog"></span> 基本資料
+        </div>
+        <div class="panel-body">
+            <div class="title-div">
+                <label>名稱</label>
+                <div class="form-group">
+                    <input type="text" name="name" class="form-control input-sm"/>
+                </div>
+                <label>影片</label>
+                <div class="form-group">
+                    <input type="text" name="name" class="form-control input-sm input-with-label"/>
+                    <button class="input-sm input-right-label form-control btn-primary" style="text-align: center;">
+                        <span class="glyphicon glyphicon-facetime-video"></span> 選擇
+                    </button>
+                </div>
+                <label>秒數</label>
+                <div class="form-group">
+                    <input type="number" name="name" class="form-control input-sm input-with-label" placeholder="10"/>
+                    <p class="input-right-label">秒</p>
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <button id="goBack" class="btn btn-sm btn-primary">返回</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> 1.顯示位置
+        </div>
+        <div class="panel-body">
+            <table id="location-table"></table>
+            <div style="text-align: right; margin: 15px 0;">
+                <button class="btn btn-sm btn-primary" id="newLocBtn">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> 2. SO
+        </div>
+        <div class="panel-body">
+            <table id="so-table"></table>
+            <div style="text-align: right; margin: 15px 0;">
+                <button class="btn btn-sm btn-primary" id="newSoBtn">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> 3. 播放項目
+        </div>
+        <div class="panel-body">
+            <div id="resource-table"></div>
+            <div style="text-align: right; margin: 15px 0;">
+                <button class="btn btn-sm btn-primary" id="newResBtn">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                </button>
+            </div>
+         </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> 4. 播放方式
+        </div>
+        <div class="panel-body">
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="editModal" role="dialog">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -60,18 +129,20 @@
             </div>
             <div class="modal-body">
                 <div><span style="color: red; display: none; font-weight: 800;" id="editModalMsg"></span></div>
-                <input class='form-control input-sm' placeholder='SO代碼' type='text' style='margin-top: 8px;' id="editCode" />
-                <input class='form-control input-sm' placeholder='SO名稱' type='text' style='margin-top: 8px;' id="editName" />
-                <div style="margin-top: 12px; text-align: right;">
-                    <button class="btn btn-sm btn-primary" id="editUpdate">確定</button>
-                    <button class="btn btn-sm btn-danger" id="editDelete">刪除</button>
-                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" id="editAbort">取消</button>
+                <select id="editSelect" name="data[]" multiple="multiple"></select>
+                <div style="margin-top: 10px; text-align: right;">
+                    <button id="editSubmit" class="btn btn-sm btn-primary">確認</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @section scripts
 {
+    <script>
+        $._so = [@foreach (var obj in so) { @Html.Raw($"{{Id:'{obj.Id}',Name:'{obj.Name}',Code:'{obj.Code}'}},") }];
+        $._loc = [@foreach (var obj in locations) { @Html.Raw($"{{Id:'{obj.Id}',Name:'{obj.Name}'}},") }];
+    </script>
     <script src="/Static/dist/events.js"></script>
 }
