@@ -117,9 +117,10 @@ const onEditClick = (row) => {
     document.getElementById('upload-img').addEventListener('change', (e) => {
         var input = e.target;
         if (input.files && input.files.length) {
-            toggleBtn();
-            for(var i = 0; i < input.files.length; ++i) {
+            var count = 0;
+            for (var i = 0; i < input.files.length; ++i) {
                 if (!input.files[i].type.match('image')) continue;
+                count++;
                 // read file as preview
                 var reader = new FileReader();
                 reader.id = i;
@@ -144,6 +145,8 @@ const onEditClick = (row) => {
 
                 reader.readAsDataURL(input.files[i]);
             }
+            if (count > 0)
+                toggleBtn();
         }
     });
     // submit button click listener
@@ -206,5 +209,9 @@ const onEditClick = (row) => {
         var ele = document.getElementById(`pre_${id}`);
         document.getElementById(`abort_${id}`).removeEventListener('click', onAbortPreviewBtnClick);
         ele.parentNode.removeChild(ele);
+        if ($('#preview-form [data-id]').length == 0) {
+            clearPreviewPanel();
+            toggleBtn();
+        }
     }
 })();

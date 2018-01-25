@@ -17,8 +17,38 @@ div.panel-body div.form-group {
     margin-bottom: 10px;
 }
 
+.preview-img {
+    background-position: center!important;
+    background-size: contain!important;
+    height: 8vh;
+}
+
+.playout.form-control {
+    display: inline-block;
+    width: 20vw;
+    margin: 1vh 1vw;
+}
+
+.playout-label {
+    display: block;
+}
+
+.fade-in {
+    opacity: 1;
+    animation: fadeIn 0.5s linear;
+}
+
+
+@keyframes fadeIn {
+  0% { opacity: 0 }
+  100% { opacity: 1 }
+}
+
 @media screen and (max-width: 700px) {
     .title-div {
         width: 60vw;
+    }
+    .playout.form-control {
+        width: 22vw;
     }
 }

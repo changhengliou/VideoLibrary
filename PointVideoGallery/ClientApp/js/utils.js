@@ -60,19 +60,15 @@ export const tableSetting = {
     rowStyle: (row, index) => { return { css: { "vertical-align": "middle" } } },
 }
 
-export const intersection = (a, b) => {
-    var ai = 0, bi = 0;
-    var result = [];
-
-    while (ai < a.length && bi < b.length) {
-        if (a[ai] < b[bi]) { ai++; }
-        else if (a[ai] > b[bi]) { bi++; }
-        else {
-            result.push(a[ai]);
-            ai++;
-            bi++;
-        }
-    }
-
-    return result;
+/**
+ * Given an array and 2 position, swap these 2 elements in the array 
+ * @param {Array} arr 
+ * @param {Number} posA 
+ * @param {Number} posB 
+ */
+export const swap = (arr, posA, posB) => {
+    let temp = arr[posA];
+    arr[posA] = arr[posB];
+    arr[posB] = temp;
+    return arr;
 }

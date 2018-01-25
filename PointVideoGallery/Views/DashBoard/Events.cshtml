@@ -55,11 +55,11 @@
             <div class="title-div">
                 <label>名稱</label>
                 <div class="form-group">
-                    <input type="text" name="name" class="form-control input-sm"/>
+                    <input type="text" name="name" class="form-control input-sm" id="name"/>
                 </div>
                 <label>影片</label>
                 <div class="form-group">
-                    <input type="text" name="name" class="form-control input-sm input-with-label"/>
+                    <input type="text" name="name" class="form-control input-sm input-with-label" disabled="disabled"/>
                     <button class="input-sm input-right-label form-control btn-primary" style="text-align: center;">
                         <span class="glyphicon glyphicon-facetime-video"></span> 選擇
                     </button>
@@ -70,56 +70,77 @@
                     <p class="input-right-label">秒</p>
                 </div>
             </div>
-            <div style="margin-top: 15px;">
-                <button id="goBack" class="btn btn-sm btn-primary">返回</button>
-            </div>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> 1.顯示位置
-        </div>
-        <div class="panel-body">
-            <table id="location-table"></table>
-            <div style="text-align: right; margin: 15px 0;">
-                <button class="btn btn-sm btn-primary" id="newLocBtn">
-                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
+            <div style="margin-top: 15px; text-align: right;">
+                <button id="save" class="btn btn-sm btn-primary" style="margin-right: 2vw;">
+                    <span class="glyphicon glyphicon-floppy-saved"></span> 儲存
+                </button>
+                <button id="goBack" class="btn btn-sm btn-default" style="margin-right: 2vw;">
+                    <span class="glyphicon glyphicon-floppy-remove"></span> 返回
                 </button>
             </div>
         </div>
     </div>
+@*    location/resource/so*@
+    <div id="editPanelBody" style="display: none;" class="fade-in">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list"></span> 1.顯示位置
+            </div>
+            <div class="panel-body">
+                <table id="location-table"></table>
+                <div style="text-align: right; margin: 15px 0;">
+                    <button class="btn btn-sm btn-primary" id="newLocBtn" data-toggle="modal" data-target="#editModal">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                </div>
+            </div>
+        </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> 2. SO
-        </div>
-        <div class="panel-body">
-            <table id="so-table"></table>
-            <div style="text-align: right; margin: 15px 0;">
-                <button class="btn btn-sm btn-primary" id="newSoBtn">
-                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
-                </button>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list"></span> 2. SO
+            </div>
+            <div class="panel-body">
+                <table id="so-table"></table>
+                <div style="text-align: right; margin: 15px 0;">
+                    <button class="btn btn-sm btn-primary" id="newSoBtn" data-toggle="modal" data-target="#editModal">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> 3. 播放項目
-        </div>
-        <div class="panel-body">
-            <div id="resource-table"></div>
-            <div style="text-align: right; margin: 15px 0;">
-                <button class="btn btn-sm btn-primary" id="newResBtn">
-                    <span class="glyphicon glyphicon-plus-sign"></span> 新增
-                </button>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list"></span> 3. 播放項目/方式
             </div>
-         </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> 4. 播放方式
-        </div>
-        <div class="panel-body">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="playout-label">播放方式</label>
+                    <select id="playoutMethod" class="form-control input-sm playout">
+                        <option value="taketurn" selected="selected">輪播</option>
+                        <option value="random">隨機</option>
+                    </select>
+                    <select id="playoutSeq" class="form-control input-sm playout">
+                        <option value="byasset" selected="selected">byasset</option>
+                        <option value="bytime">bytime</option>
+                    </select>
+                    <input type="number" placeholder="秒數" id="playoutSec" class="form-control input-sm playout" />
+                </div>
+                <label class="playout-label">播放項目</label>
+                <table id="resource-table"></table>
+                <div style="text-align: right; margin: 15px 0;">
+                    <button class="btn btn-sm btn-primary" id="newResBtn" data-toggle="modal" data-target="#editModal">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 新增
+                    </button>
+                    <button class="btn btn-sm btn-primary" id="saveRes" style="margin-left: 15px;">
+                        <span class="glyphicon glyphicon-floppy-saved"></span> 儲存
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
+@*modal*@
 <div class="modal fade" id="editModal" role="dialog">
     <div class="modal-dialog modal-md">
         <div class="modal-content">

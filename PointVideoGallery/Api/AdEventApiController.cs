@@ -36,6 +36,24 @@ namespace PointVideoGallery.Api
         }
 
         /// <summary>
+        /// PUT /api/v1/ad/events/info
+        /// </summary>
+        [System.Web.Http.Route("info")]
+        [System.Web.Http.HttpGet]
+        public async Task<IHttpActionResult> InsertOrUpdateInfoAsync([FromBody] AdEvent adEvent)
+        {
+            var service = new AdService();
+            // update event
+            if (adEvent.Id > 0)
+                return Json(await service.GetAdEventByIdAsync(1));
+            // new event
+            var id = await service.AddAdEventAsync(adEvent);
+            if (id == -1)
+                return InternalServerError();
+            return Json(new {id});
+        }
+
+        /// <summary>
         /// PUT /api/v1/ad/events/
         /// </summary>
         [System.Web.Http.Route]
@@ -43,7 +61,9 @@ namespace PointVideoGallery.Api
         public async Task<IHttpActionResult> UpdateSoOrLocationEvent([FromBody] PutQueryData data)
         {
             var service = new AdService();
-            return Json(await service.AddAndDropEventsAsync(data.Id, data?.Add, data?.Rm, data.Type));
+            if (await service.AddAndDropEventsAsync(data.Id, data?.Add, data?.Rm, data.Type))
+                return Json(await service.GetAdEventByIdAsync(data.Id));
+            return InternalServerError();
         }
 
         /// <summary>

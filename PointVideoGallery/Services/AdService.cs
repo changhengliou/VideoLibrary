@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Management;
 using Dapper;
 using MySql.Data.MySqlClient;
 using PointVideoGallery.Models;
@@ -312,6 +313,48 @@ namespace PointVideoGallery.Services
         }
 
         /// <summary>
+        /// Insert ad event to db
+        /// <param name="adEvent"></param>
+        /// <returns>-1 if failed, otherwise return id</returns>
+        /// </summary>
+        public async Task<int> AddAdEventAsync(AdEvent adEvent)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var sql =
+                        "INSERT INTO `ad_events` (`Name`, `PlayoutMethod`, `PlayoutTimeSpan`, `PlayoutSequence`) " +
+                        "VALUES (@name, @playoutMethod, @playoutTimeSpan, @playoutSequence);";
+
+                    if (await connection.ExecuteAsync(sql, new
+                    {
+                        name = adEvent.Name,
+                        playoutMethod = adEvent.PlayOutMethod,
+                        playoutTimeSpan = adEvent.PlayOutTimeSpan,
+                        playoutSequence = adEvent.PlayOutSequence
+                    }) != 1)
+                        throw new SqlExecutionException("Failed to insert data");
+
+                    var returnVal = await connection.QueryFirstAsync<int>("SELECT CAST(LAST_INSERT_ID() AS UNSIGNED INTEGER);");
+
+                    await connection.CloseAsync();
+
+                    return returnVal;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return -1;
+                }
+                
+            }
+        }
+
+        /// <summary>
         /// Get ad Events from db without dumping all the relations
         /// </summary>
         public async Task<List<AdEvent>> GetAdEventsAsync()
@@ -572,23 +615,52 @@ namespace PointVideoGallery.Services
         /// <param name="rm">events to be removed</param>
         public async Task<bool> AddAndDropEventsAsync(int id, List<int> add, List<int> rm, DbEventType type)
         {
-            throw new NotImplementedException("Not finished yet");
-            string sql = null;
+            var queryBuilder = new StringBuilder();
             switch (type)
             {
                 case DbEventType.So:
-                    sql = $"DELETE FROM `event_so` WHERE `SoId` IN ({string.Join(",", rm)}) AND `EventId`={id};";
-                    sql += $"INSERT INTO `event_so` (`EventId`, `SoId`) VALUES ()";
+                    if (rm != null && rm.Count > 0)
+                        queryBuilder.Append(
+                            $"DELETE FROM `event_so` WHERE `SoId` IN ({string.Join(",", rm)}) AND `EventId`={id};");
+                    if (add != null && add.Count > 0)
+                    {
+                        queryBuilder.Append($"INSERT INTO `event_so` (`EventId`, `SoId`) VALUES ");
+                        for (var i = 0; i < add.Count; i++)
+                        {
+                            queryBuilder.Append(i == add.Count - 1 ? $"({id}, {add[i]});" : $"({id}, {add[i]}), ");
+                        }
+                    }
                     break;
                 case DbEventType.Resource:
-                    sql = $"DELETE FROM `event_resource` WHERE `ResourceId` IN ({string.Join(",", rm)}) AND `EventId`={id};;";
+                    if (rm != null && rm.Count > 0)
+                        queryBuilder.Append(
+                            $"DELETE FROM `event_resource` WHERE `ResourceId` IN ({string.Join(",", rm)}) AND `EventId`={id};");
+                    if (add != null && add.Count > 0)
+                    {
+                        queryBuilder.Append($"INSERT INTO `event_resource` (`EventId`, `ResourceId`) VALUES ");
+                        for (var i = 0; i < add.Count; i++)
+                        {
+                            queryBuilder.Append(i == add.Count - 1 ? $"({id}, {add[i]});" : $"({id}, {add[i]}), ");
+                        }
+                    }
                     break;
                 case DbEventType.Location:
-                    sql = $"DELETE FROM `event_location` WHERE `LocationId` IN ({string.Join(",", rm)}) AND `EventId`={id};;";
+                    if (rm != null && rm.Count > 0)
+                        queryBuilder.Append(
+                            $"DELETE FROM `event_location` WHERE `LocationId` IN ({string.Join(",", rm)}) AND `EventId`={id};");
+                    if (add != null && add.Count > 0)
+                    {
+                        queryBuilder.Append($"INSERT INTO `event_location` (`EventId`, `LocationId`) VALUES ");
+                        for (var i = 0; i < add.Count; i++)
+                        {
+                            queryBuilder.Append(i == add.Count - 1 ? $"({id}, {add[i]});" : $"({id}, {add[i]}), ");
+                        }
+                    }
                     break;
                 default:
                     throw new ArgumentException();
             }
+
             using (var connection = new MySqlConnection(ConnectionString))
             {
                 try
@@ -597,7 +669,7 @@ namespace PointVideoGallery.Services
 
                     using (var transaction = await connection.BeginTransactionAsync())
                     {
-                        await connection.ExecuteAsync(sql.ToString(), transaction: transaction);
+                        await connection.ExecuteAsync(queryBuilder.ToString(), transaction: transaction);
                         transaction.Commit();
                     }
                 }
