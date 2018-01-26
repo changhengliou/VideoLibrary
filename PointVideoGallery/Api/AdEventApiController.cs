@@ -39,18 +39,32 @@ namespace PointVideoGallery.Api
         /// PUT /api/v1/ad/events/info
         /// </summary>
         [System.Web.Http.Route("info")]
-        [System.Web.Http.HttpGet]
+        [System.Web.Http.HttpPut]
         public async Task<IHttpActionResult> InsertOrUpdateInfoAsync([FromBody] AdEvent adEvent)
         {
             var service = new AdService();
             // update event
             if (adEvent.Id > 0)
-                return Json(await service.GetAdEventByIdAsync(1));
+                return Json(new {Id = await service.UpdateAdEventAsync(adEvent)});
+
             // new event
             var id = await service.AddAdEventAsync(adEvent);
             if (id == -1)
                 return InternalServerError();
-            return Json(new {id});
+            return Json(new {Id = id});
+        }
+
+        /// <summary>
+        /// DELETE /api/v1/ad/events/rm/{id}
+        /// </summary>
+        [System.Web.Http.Route("rm/{id}")]
+        [System.Web.Http.HttpDelete]
+        public async Task<IHttpActionResult> RemoveAdEvent(int id)
+        {
+            var service = new AdService();
+            if (await service.DropAdEventByIdAsync(id))
+                return Json(await service.GetAdEventsAsync());
+            return InternalServerError();
         }
 
         /// <summary>
@@ -63,6 +77,18 @@ namespace PointVideoGallery.Api
             var service = new AdService();
             if (await service.AddAndDropEventsAsync(data.Id, data?.Add, data?.Rm, data.Type))
                 return Json(await service.GetAdEventByIdAsync(data.Id));
+            return InternalServerError();
+        }
+
+        /// <summary>
+        /// PUT /api/v1/ad/events/res
+        /// </summary>
+        [System.Web.Http.Route]
+        [System.Web.Http.HttpPut]
+        public async Task<IHttpActionResult> UpdateResourcesAsync([FromBody] AdEvent data)
+        {
+            var service = new AdService();
+            await service.UpdateAdResourceAndPlayoutParamsAsync(data);
             return InternalServerError();
         }
 

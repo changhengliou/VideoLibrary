@@ -38,6 +38,14 @@ div.panel-body div.form-group {
     animation: fadeIn 0.5s linear;
 }
 
+div.panel-heading {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+div.alert {
+    font-size: 14px;
+}
 
 @keyframes fadeIn {
   0% { opacity: 0 }

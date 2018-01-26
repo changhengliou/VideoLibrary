@@ -12,8 +12,7 @@
 <div id="viewPanel">
     <div class="panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-search"></span> 資料查詢</div>
-        <div class="panel-body">
-            <span id="msgBox" style="color: red; display: none;"></span>
+        <div class="panel-body" id="query-panel">
             <div class="col-xs-6">
                 <label for="locationSelect" style="display: block;">播放位址</label>
                 <select id="locationSelect" name="locations[]" multiple="multiple">
@@ -34,7 +33,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表</div>
-        <div class="panel-body">
+        <div class="panel-body" id="event-list-panel">
             <table id="table"></table>
         </div>
         <div style="text-align: right; margin: 15px;">
@@ -51,7 +50,7 @@
         <div class="panel-heading">
             <span class="glyphicon glyphicon-cog"></span> 基本資料
         </div>
-        <div class="panel-body">
+        <div class="panel-body"  id="info-panel">
             <div class="title-div">
                 <label>名稱</label>
                 <div class="form-group">
@@ -113,7 +112,7 @@
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-th-list"></span> 3. 播放項目/方式
             </div>
-            <div class="panel-body">
+            <div class="panel-body" id="res-panel">
                 <div class="form-group">
                     <label class="playout-label">播放方式</label>
                     <select id="playoutMethod" class="form-control input-sm playout">
@@ -129,7 +128,7 @@
                 <label class="playout-label">播放項目</label>
                 <table id="resource-table"></table>
                 <div style="text-align: right; margin: 15px 0;">
-                    <button class="btn btn-sm btn-primary" id="newResBtn" data-toggle="modal" data-target="#editModal">
+                    <button class="btn btn-sm btn-primary" id="newResBtn" data-toggle="modal" data-target="#resourceModal">
                         <span class="glyphicon glyphicon-plus-sign"></span> 新增
                     </button>
                     <button class="btn btn-sm btn-primary" id="saveRes" style="margin-left: 15px;">
@@ -149,7 +148,6 @@
                 <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> 修改資料</h4>
             </div>
             <div class="modal-body">
-                <div><span style="color: red; display: none; font-weight: 800;" id="editModalMsg"></span></div>
                 <select id="editSelect" name="data[]" multiple="multiple"></select>
                 <div style="margin-top: 10px; text-align: right;">
                     <button id="editSubmit" class="btn btn-sm btn-primary">確認</button>
@@ -158,7 +156,23 @@
         </div>
     </div>
 </div>
-
+@*resource modal*@
+<div class="modal fade" id="resourceModal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> 資源選擇</h4>
+            </div>
+            <div class="modal-body">
+                <table id="res-select-table"></table>
+                <div style="margin-top: 10px; text-align: right;">
+                    <button id="resEditSubmit" class="btn btn-sm btn-primary">確認</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts
 {
     <script>

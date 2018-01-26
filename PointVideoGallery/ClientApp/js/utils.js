@@ -72,3 +72,21 @@ export const swap = (arr, posA, posB) => {
     arr[posB] = temp;
     return arr;
 }
+
+/**
+ * add a messgae banner
+ * @param {string} msgHighlight bold message 
+ * @param {string} msgBody message body
+ * @param {string} id container id 
+ * @param {string} type success or danger
+ */
+export const addMsgbox = (msgHighlight, msgBody, id = "msgBox", type = "success") => {
+    [].slice.call(document.querySelectorAll('div.alert')).map(obj => obj.parentElement.removeChild(obj));
+    var container = document.getElementById(id),
+        div = document.createElement('div');
+    div.className = `alert alert-${type} alert-dismissable`;
+    div.innerHTML = 
+        `<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+         <strong>${msgHighlight}</strong> ${isEmpty(msgBody) ? '' : msgBody}`;
+    container.insertBefore(div, container.childNodes[0]);
+}

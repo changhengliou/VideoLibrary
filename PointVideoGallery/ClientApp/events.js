@@ -3,7 +3,7 @@ import 'bootstrap-table/dist/bootstrap-table.css';
 import 'select2';
 import 'select2/dist/css/select2.css';
 import './css/events.css';
-import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap } from './js/utils';
+import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, addMsgbox, getDateString } from './js/utils';
 
 
 const disableBy = fn => fn ? 'disable="disabled"' : null;
@@ -61,6 +61,23 @@ const getDiff = (oldArr, newArr) => {
     return { add: add, rm: rm };
 }
 
+/**
+ *  Given 2 array with old data and new data, return the difference
+ * @param {Array} oldArr // 2,5,9,13
+ * @param {Array} newArr // 5,7,9
+ * @returns {Object} 
+ * @return @param {Array} add data sholud be add, 
+ * @return @param {Array} rm data should be remove, 
+ * @return @param {Array} update data should be update
+ */
+const getResourceDiff = (oldArr, newArr) => {
+    for(var i = 0; i < oldArr.length && newArr.length; ++i) {
+        if (oldArr[i].Id !== newArr[i].Id) {
+            
+        }
+    }
+}
+
 $(document).ready(() => {
     var table = $('#table'),
         locTable = $('#location-table'),
@@ -83,9 +100,14 @@ $(document).ready(() => {
         }, {
             field: 'Edit',
             title: '編輯',
-            formatter: (value, row, index, field) => `<button class='btn btn-sm btn-default' data-id="${row.Id}" onClick='$.fn.switchView(this);'>
-                                                          <span class="glyphicon glyphicon-pencil"></span>
-                                                      </button>`
+            formatter: (value, row, index, field) => `<div>
+                                                          <button class='btn btn-sm btn-default' data-id="${row.Id}" onClick='$.fn.switchView(this);'>
+                                                              <span class="glyphicon glyphicon-pencil"></span>
+                                                          </button>
+                                                          <button class='btn btn-sm btn-default' data-id="${row.Id}" data-t='eve' onClick='$.fn.remove(this);'>
+                                                              <span class="glyphicon glyphicon-remove"></span>
+                                                          </button>
+                                                      </div>`
         }]
     });   
     locTable.bootstrapTable({
@@ -155,21 +177,50 @@ $(document).ready(() => {
             title: '排序/動作/刪除',
             formatter: (value, row, index, field) => 
                 `<div>
-                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-t='up' onClick='$.fn.moveSeq(this);'>
+                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-seq="${index}" data-t='up' onClick='$.fn.moveSeq(this);'>
                         <span class="glyphicon glyphicon-arrow-up"></span>
                     </button>
-                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-t='down' onClick='$.fn.moveSeq(this);'>
+                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-seq="${index}" data-t='down' onClick='$.fn.moveSeq(this);'>
                         <span class="glyphicon glyphicon-arrow-down"></span>
                     </button>
-                    <button class='btn btn-sm btn-default' data-id="${row.Id}" onClick='$.fn.moveSeq(this);'>
+                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-seq="${index}" onClick='$.fn.moveSeq(this);'>
                         <span class="glyphicon glyphicon-tag"></span>
                     </button>
-                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-t='res' onClick='$.fn.remove(this);'>
+                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-seq="${index}" data-t='res' onClick='$.fn.remove(this);'>
                         <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>`
         }]
-    })
+    });
+    // resource selection table
+    $('#res-select-table').bootstrapTable({
+        ...tableSetting,
+        url: '/api/v1/ad/resource/table',
+        sidePagination: 'server',
+        showRefresh: false,
+        pageSize: 5,
+        pageList: [5],
+        columns: [{
+            field: 'Checked',
+            title: '選擇',
+            checkbox: true
+        }, {
+            field: 'ThumbnailPath',
+            title: '預覽',
+            formatter: (value, row, index, field) => 
+                       `<div class='preview-img table-thumbnail' style='height:"5vh";background: url("/assets?p=${value}") no-repeat;'/>` 
+        }, {
+            field: 'MediaType',
+            title: '類型',
+        }, {
+            field: 'Name',
+            title: '名稱',
+        }, {
+            field: 'CreateTime',
+            title: '創建日期',
+            formatter: (value) => getDateString(new Date(value))
+        }]
+    });
 
     // initialize query select box
     $('#locationSelect').select2({
@@ -197,12 +248,11 @@ $(document).ready(() => {
             url: `/api/v1/ad/events/${id}`
         })
         .done(res => {
-            $._res = res;
-            var resource = res.Resources.sort((x, y) => x.Sequence > y.Sequence);
-            $._resSeq = resource.map(o => o.Id);
+            $._res = {...res, Resources: res.Resources.sort((x, y) => x.Sequence > y.Sequence)};
+            $._res_ = $._res.Resources;
             $('#location-table').bootstrapTable('load', res.LocationTags);
             $('#so-table').bootstrapTable('load', res.SoSettings);
-            $('#resource-table').bootstrapTable('load', resource);
+            $('#resource-table').bootstrapTable('load', $._res.Resources);
             document.getElementById('name').value = $._res.Name;
         })
         .fail(err => {
@@ -375,10 +425,29 @@ $(document).ready(() => {
         var id = e.getAttribute('data-id'),
             type = e.getAttribute('data-t');
         
+        if (type === 'eve') {
+            $.ajax({
+                url: `/api/v1/ad/events/rm/${id}`,
+                method: 'DELETE',
+            })
+            .then(res => {
+                addMsgbox("刪除成功!", null, "event-list-panel", "success");
+                $('#table').bootstrapTable('load', res); 
+            })
+            .catch(res => {
+                addMsgbox("刪除失敗!", null, "event-list-panel", "danger");
+            });
+            return;
+        }
         if (type === 'res') {
-            let pos = $._resSeq.indexOf(id);
-            $._resSeq = $._resSeq.splice(pos, 1);
-            $('#resource-table').bootstrapTable('removeByUniqueId', id);
+            var seq = parseInt(e.getAttribute('data-seq'));
+            $('#resource-table').bootstrapTable('remove', { 
+                field: 'Sequence', 
+                values: [ seq ]
+            });
+            $._res.Resources.map((obj, index) => {
+                obj.Sequence = index
+            });
             return;
         }
         $.ajax({
@@ -408,32 +477,41 @@ $(document).ready(() => {
         if (!(e instanceof HTMLElement))
             return;
         var type = e.getAttribute('data-t'),
-            id = parseInt(e.getAttribute('data-id')),
-            pos = $._resSeq.indexOf(id),
+            index = parseInt(e.getAttribute('data-seq')),
             _tb = $('#resource-table'),
-            _row = _tb.bootstrapTable('getRowByUniqueId', id);
+            _row = _tb.bootstrapTable('getData', false)[index];
 
         if (type === 'up') {
-            if (pos < 1)
+            if (index === 0)
                 return;
-            $._resSeq = swap($._resSeq, pos, pos - 1);
-            _tb.bootstrapTable('removeByUniqueId', id).bootstrapTable('insertRow', {
-                index: pos - 1,
+            _tb.bootstrapTable('remove', {
+                field: 'Sequence', 
+                values: [ index ]
+            }).bootstrapTable('insertRow', {
+                index: index - 1,
                 row: _row
             });
         } else if (type === 'down') {
-            if (pos >= $._resSeq.length - 1)
+            if (index === $._res.Resources.length - 1)
                 return;
-            $._resSeq = swap($._resSeq, pos, pos + 1);
-            _tb.bootstrapTable('removeByUniqueId', id).bootstrapTable('insertRow', {
-                index: pos + 1,
+            _tb.bootstrapTable('remove', {
+                field: 'Sequence', 
+                values: [ index ]
+            }).bootstrapTable('insertRow', {
+                index: index + 1,
                 row: _row
             });
         }
+        $._res.Resources.map((obj, index) => {
+            obj.Sequence = index;
+        });
     }
 
     // add event listener to go back button
-    document.getElementById('goBack').addEventListener('click', $.fn.switchView);
+    document.getElementById('goBack').addEventListener('click', (e) => {
+        $.fn.switchView();
+        $('#table').bootstrapTable('refresh');
+    });
     // add listener to query button
     document.getElementById('queryBtn').addEventListener('click', $.fn.query);
     // add listener when add new row button is click
@@ -453,13 +531,14 @@ $(document).ready(() => {
         document.getElementById('name').value = '';
         $.fn.switchView(null);
     });
+
     // on save event
     document.getElementById('save').addEventListener('click', (e) => {
-        if (isEmpty(name))
-            return;
         const name = document.getElementById('name').value,
               edit = document.getElementById('editPanel'),
               id = edit.getAttribute('data-id');
+        if (isEmpty(name))
+              return;
         // if new event, no data-id in htmldoc, so set id = -1
         $.ajax({
             method: 'PUT',
@@ -470,15 +549,82 @@ $(document).ready(() => {
             } 
         })
         .done(res => {
-            console.log(res);
             edit.setAttribute('data-id', res.Id);
+            if (id === 'null') {
+                // after successfully create new event with name, show edit panel body
+                var editBody = document.getElementById('editPanelBody');
+                editBody.style.display = '';
+                $._res = {
+                    Id: res.Id,
+                    LocationTags: [],
+                    Name: name,
+                    PlayOutMethod: 'taketurn',
+                    PlayOutSequence: 'byasset',
+                    PlayOutTimeSpan: 0,
+                    Resources: [],
+                    SoSettings: []
+                };
+                $('#location-table').bootstrapTable('load', $._res.LocationTags);
+                $('#so-table').bootstrapTable('load', $._res.SoSettings);
+                $('#resource-table').bootstrapTable('load', $._res.Resources);
+            } else {
+                $._res =  { ...$._res, Name: name };
+            }
+            addMsgbox("成功儲存!", null, "info-panel");
         })
         .fail(err => {
             console.log(err);
+            addMsgbox("儲存失敗!", "", "info-panel", "danger");
         });
     });
     // a workaround for close modal
     $('#editModal').on('hidden.bs.modal', function () {
         document.body.removeChild(document.querySelector('div.modal-backdrop.fade'));
+    });
+    $('#resourceModal').on('hidden.bs.modal', function () {
+        document.body.removeChild(document.querySelector('div.modal-backdrop.fade'));
+        $('#res-select-table').bootstrapTable('uncheckAll');
+    });
+
+    // add new resource
+    document.getElementById('resEditSubmit').addEventListener('click', (e) => {
+        var tb = $('#res-select-table'),
+            dataTb = $('#resource-table');
+        tb.bootstrapTable('getSelections').map(obj => {
+            dataTb.bootstrapTable('append', obj);
+        });
+        $._res.Resources = dataTb.bootstrapTable('getData', false);
+        $._res.Resources.map((obj, index) => {
+            obj.Sequence = index;
+        });
+
+        $('#resourceModal').modal('toggle');
+    });
+
+    document.getElementById('saveRes').addEventListener(click, (e) => {
+        var _tb = $('#resource-table'),
+            _new = $._res,
+            _old = $._res_;
+        $.ajax({
+            url: '/api/v1/ad/events/res',
+            method: 'PUT', 
+            data: {
+                id: $._res.Id,
+                resources: _tb.bootstrapTable('getData'),
+                playOutMethod: document.getElementById('playoutMethod').value,
+                playOutSequence: document.getElementById('playoutSeq').value,
+                playOutTimeSpan: document.getElementById('playoutSec').value
+            }
+        })
+        .done(res => {
+            addMsgbox("更新成功", "", "res-panel", "success");
+            console.log(res);
+            // _tb.bootstrapTable('load', res);
+            // $._res.Resources = res
+        })
+        .fail(err => {
+            console.log(err);
+            addMsgbox("更新失敗", "", "res-panel", "danger");
+        });
     });
 });

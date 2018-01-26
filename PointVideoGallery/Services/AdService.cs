@@ -350,7 +350,85 @@ namespace PointVideoGallery.Services
                     await connection.CloseAsync();
                     return -1;
                 }
-                
+            }
+        }
+
+        /// <summary>
+        /// Update ad event
+        /// </summary>
+        public async Task<int> UpdateAdEventAsync(AdEvent adEvent)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    var updateGen = new List<string>();
+
+                    await connection.OpenAsync();
+
+                    if (!string.IsNullOrWhiteSpace(adEvent.Name))
+                        updateGen.Add("`Name`=@name");
+                    if (!string.IsNullOrWhiteSpace(adEvent.PlayOutMethod))
+                        updateGen.Add("`PlayoutMethod`=@playoutMethod");
+                    if(!string.IsNullOrWhiteSpace(adEvent.PlayOutSequence))
+                        updateGen.Add("`PlayoutSequence`=@playoutSequence");
+                    if (adEvent.PlayOutTimeSpan >= 0)
+                        updateGen.Add("`PlayoutTimeSpan`=@playoutTimeSpan");
+
+                    if (updateGen.Count == 0)
+                        return -1;
+
+                    var sql = "UPDATE `ad_events` SET " + string.Join(",", updateGen) + " WHERE Id=@id;";
+
+                    if (await connection.ExecuteAsync(sql, new
+                    {
+                        id = adEvent.Id,
+                        name = adEvent.Name,
+                        playoutMethod = adEvent.PlayOutMethod,
+                        playoutTimeSpan = adEvent.PlayOutTimeSpan,
+                        playoutSequence = adEvent.PlayOutSequence
+                    }) != 1)
+                        throw new SqlExecutionException("Failed to insert data");
+
+                    await connection.CloseAsync();
+
+                    return adEvent.Id;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return -1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove ad event from id
+        /// </summary>
+        public async Task<bool> DropAdEventByIdAsync(int id)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    var sql = "DELETE FROM `ad_events` WHERE Id=@id";
+
+                    if (await connection.ExecuteAsync(sql, new { id = id }) != 1)
+                        throw new SqlExecutionException("Failed to remove data");
+
+                    await connection.CloseAsync();
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
             }
         }
 
@@ -681,6 +759,36 @@ namespace PointVideoGallery.Services
                 }
                 await connection.CloseAsync();
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// Update ad event resources and playout params 
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdateAdResourceAndPlayoutParamsAsync(AdEvent adEvent)
+        {
+            throw new NotImplementedException();
+            var queryBuilder = new StringBuilder("UPDATE ``");
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    using (var transaction = await connection.BeginTransactionAsync())
+                    {
+                        await connection.ExecuteAsync(queryBuilder.ToString(), transaction: transaction);
+                        transaction.Commit();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                }
+                await connection.CloseAsync();
             }
         }
     }
