@@ -889,7 +889,6 @@ namespace PointVideoGallery.Services
                     await connection.CloseAsync();
                     return null;
                 }
-                
             }
         }
     }

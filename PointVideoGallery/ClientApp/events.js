@@ -227,10 +227,6 @@ $(document).ready(() => {
         autoclose: true,
         startDate: '+1d'
     });
-    $('#schedule-datepicker').datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true
-    });
 
     // hide playoutweight by default
     resTable.bootstrapTable('hideColumn', 'PlayoutWeight');
@@ -354,6 +350,7 @@ $(document).ready(() => {
      */
     $.fn.addCalendar = (e) => {
         $('#calendarModal').modal('toggle');
+        document.getElementById('calendarUpdate').setAttribute('data-id', e.getAttribute('data-id'));
     }
 
     /**
@@ -574,6 +571,37 @@ $(document).ready(() => {
         $('#actionModal').modal('toggle');
     }
 
+    const onAddSchedule = (e) => {
+        const eventId = e.target.getAttribute('data-id'),
+              picker = $('#datepicker').data('datepicker');
+
+        if (isEmpty(eventId) || !picker) {
+            addMsgbox('系統錯誤!', '請嘗試重新整理', 'panel-body-msg', 'danger');
+            return;
+        }
+
+        if (picker.dates.length == 0) {
+            addMsgbox('尚未選擇時間', null, 'panel-body-msg', 'warning');
+            return;
+        }
+
+        $.ajax({
+            url: '/api/v1/schedule',
+            method: 'POST',
+            data: {
+                eventId: eventId,
+                s: getDateString(picker.dates[0]),
+                e: getDateString(picker.dates[1])
+            }
+        })
+        .done(res => {
+            addMsgbox('成功加入排程!', '<a href="/DashBoard/Publish">點此查看</a>', 'panel-body-msg', 'success');
+        })
+        .fail(err => {
+            addMsgbox('加入排程失敗!', null, 'panel-body-msg', 'danger');
+        });
+    }
+
     const onEventInfoSave = (e) => {
         const name = document.getElementById('name').value,
               edit = document.getElementById('editPanel'),
@@ -734,4 +762,7 @@ $(document).ready(() => {
 
     // save actions
     document.getElementById('actionEditSubmit').addEventListener('click', onActionSave);
+
+    // add schedule task
+    document.getElementById('calendarUpdate').addEventListener('click', onAddSchedule);
 });

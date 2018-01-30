@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointVideoGallery", "PointV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointVideoGallery.Tests", "PointVideoGallery.Tests\PointVideoGallery.Tests.csproj", "{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlGenerator", "XmlGenerator\XmlGenerator.csproj", "{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,18 +11,6 @@
 }
 <div id="viewPanel">
     <div class="panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-file"></span> 排程發佈</div>
-        <div class="panel-body" id="schedule-panel">
-            <div class="input-group date col-xs-6 col-md-3 col-lg-2" style="float: right;" data-provide="datepicker" id="schedule-datepicker">
-                <input type="text" class="form-control">
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-th"></span>
-                </div>
-            </div>
-            <table id="schedule-table"></table>
-        </div>
-    </div>
-    <div class="panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-search"></span> 資料查詢
         </div>
         <div class="panel-body" id="query-panel">
@@ -48,6 +36,7 @@
         <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表
         </div>
         <div class="panel-body" id="event-list-panel">
+            <div id="panel-body-msg"></div>
             <table id="table"></table>
         </div>
         <div style="text-align: right; margin: 15px;">
@@ -321,9 +310,9 @@
             </div>
             <div class="modal-body">
                 <div class="input-group input-daterange" id="datepicker">
-                    <input type="text" class="form-control" >
+                    <input type="text" class="form-control">
                     <div class="input-group-addon">to</div>
-                    <input type="text" class="form-control" >
+                    <input type="text" class="form-control">
                 </div>
                 <div style="margin-top: 12px; text-align: right;">
                     <button class="btn btn-sm btn-primary" id="calendarUpdate">確定</button>
