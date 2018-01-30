@@ -338,7 +338,8 @@ namespace PointVideoGallery.Services
                     }) != 1)
                         throw new SqlExecutionException("Failed to insert data");
 
-                    var returnVal = await connection.QueryFirstAsync<int>("SELECT CAST(LAST_INSERT_ID() AS UNSIGNED INTEGER);");
+                    var returnVal =
+                        await connection.QueryFirstAsync<int>("SELECT CAST(LAST_INSERT_ID() AS UNSIGNED INTEGER);");
 
                     await connection.CloseAsync();
 
@@ -370,7 +371,7 @@ namespace PointVideoGallery.Services
                         updateGen.Add("`Name`=@name");
                     if (!string.IsNullOrWhiteSpace(adEvent.PlayOutMethod))
                         updateGen.Add("`PlayoutMethod`=@playoutMethod");
-                    if(!string.IsNullOrWhiteSpace(adEvent.PlayOutSequence))
+                    if (!string.IsNullOrWhiteSpace(adEvent.PlayOutSequence))
                         updateGen.Add("`PlayoutSequence`=@playoutSequence");
                     if (adEvent.PlayOutTimeSpan >= 0)
                         updateGen.Add("`PlayoutTimeSpan`=@playoutTimeSpan");
@@ -416,7 +417,7 @@ namespace PointVideoGallery.Services
 
                     var sql = "DELETE FROM `ad_events` WHERE Id=@id";
 
-                    if (await connection.ExecuteAsync(sql, new { id = id }) != 1)
+                    if (await connection.ExecuteAsync(sql, new {id = id}) != 1)
                         throw new SqlExecutionException("Failed to remove data");
 
                     await connection.CloseAsync();
@@ -766,20 +767,92 @@ namespace PointVideoGallery.Services
         /// Update ad event resources and playout params 
         /// </summary>
         /// <returns></returns>
-        public async Task UpdateAdResourceAndPlayoutParamsAsync(AdEvent adEvent)
+        public async Task<bool> UpdateAdResourceAndPlayoutParamsAsync(AdEvent adEvent)
         {
-            throw new NotImplementedException();
-            var queryBuilder = new StringBuilder("UPDATE ``");
+            if (adEvent == null)
+                return false;
+            var queryBuilder = new StringBuilder();
 
             using (var connection = new MySqlConnection(ConnectionString))
             {
                 try
                 {
                     await connection.OpenAsync();
-
                     using (var transaction = await connection.BeginTransactionAsync())
                     {
-                        await connection.ExecuteAsync(queryBuilder.ToString(), transaction: transaction);
+                        await connection.ExecuteAsync($"UPDATE `ad_events` SET " +
+                                                      $"`PlayoutMethod`='{adEvent.PlayOutMethod}', " +
+                                                      $"`PlayoutTimeSpan`='{adEvent.PlayOutTimeSpan}', " +
+                                                      $"`PlayoutSequence`='{adEvent.PlayOutSequence}' " +
+                                                      $"WHERE `Id`={adEvent.Id};",
+                            transaction: transaction);
+
+                        if (adEvent.Resources != null && adEvent.Resources.Any())
+                        {
+                            var actionQueryBuilder = new StringBuilder("INSERT INTO `action` " +
+                                                                       "(`Type`, `Action`, `Parameter`, `Color`, `EventId`, `ResourceSeq`, `Checked`) " +
+                                                                       "VALUES ");
+                            var actionCount = 0;
+                            var count = await connection.QuerySingleAsync<int>(
+                                $"SELECT COUNT(*) FROM `event_resource` WHERE `EventId`={adEvent.Id};");
+
+                            queryBuilder.Append("INSERT INTO `event_resource` " +
+                                                "(`EventId`, `ResourceId`, `ResourceSeq`, `ResourcePlayWeight`) " +
+                                                "VALUES ");
+                            adEvent.Resources.ForEach((ResourceEvent s, int index) =>
+                            {
+                                queryBuilder.Append(
+                                    $"('{adEvent.Id}', '{s.Id}', '{s.Sequence}', '{s.PlayoutWeight}')");
+                                if (index != adEvent.Resources.Count - 1)
+                                    queryBuilder.Append(", ");
+
+                                if (s.Actions != null && s.Actions.Count > 0)
+                                {
+                                    s.Actions.ForEach((act, i) =>
+                                    {
+                                        actionQueryBuilder.Append(
+                                            $"('{act.Type}', '{act.Action}', '{act.Parameter}', " +
+                                            $"'{act.Color}', '{adEvent.Id}', '{s.Sequence}', '{act.Checked}')");
+
+                                        actionQueryBuilder.Append(", ");
+                                        actionCount++;
+                                    });
+                                }
+                            });
+
+                            queryBuilder.Append(" ON DUPLICATE KEY UPDATE " +
+                                                "`EventId`=VALUES(`EventId`), " +
+                                                "`ResourceId`=VALUES(`ResourceId`), " +
+                                                "`ResourceSeq`=VALUES(`ResourceSeq`), " +
+                                                "`ResourcePlayWeight`=VALUES(`ResourcePlayWeight`);");
+                            if (actionQueryBuilder.ToString().EndsWith(", "))
+                            {
+                                // remove trailing comma
+                                actionQueryBuilder.Remove(actionQueryBuilder.Length - 2, 2);
+                            }
+
+                            actionQueryBuilder.Append(" ON DUPLICATE KEY UPDATE " +
+                                                      "`Type`=VALUES(`Type`), " +
+                                                      "`Action`=VALUES(`Action`), " +
+                                                      "`Parameter`=VALUES(`Parameter`), " +
+                                                      "`Color`=VALUES(`Color`), " +
+                                                      "`EventId`=VALUES(`EventId`), " +
+                                                      "`ResourceSeq`=VALUES(`ResourceSeq`), " +
+                                                      "`Checked`=VALUES(`Checked`);");
+                            for (var i = adEvent.Resources.Count; i < count; ++i)
+                            {
+                                queryBuilder.Append(
+                                    $"DELETE FROM `event_resource` WHERE `EventId`={adEvent.Id} AND `ResourceSeq`={i};");
+                            }
+                            Trace.WriteLine("--- SQL ---");
+                            Trace.WriteLine(actionQueryBuilder);
+                            Trace.WriteLine("--- MERGED SQL ---");
+                            if (actionCount > 0)
+                                queryBuilder.Append(actionQueryBuilder);
+                            Trace.WriteLine(queryBuilder);
+
+                            await connection.ExecuteAsync(queryBuilder.ToString(), transaction);
+                        }
                         transaction.Commit();
                     }
                 }
@@ -787,8 +860,36 @@ namespace PointVideoGallery.Services
                 {
                     Trace.WriteLine(e);
                     await connection.CloseAsync();
+                    return false;
                 }
+
                 await connection.CloseAsync();
+                return true;
+            }
+        }
+
+        public async Task<List<ResourceAction>> GetActionsAsync(int eventId, int resourceSeq)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    var list = (await connection.QueryAsync<ResourceAction>(
+                        "SELECT e.*, a.`Type`, a.`Action`, a.`Parameter`, a.`Color`, a.`Checked` FROM `event_resource` AS e " +
+                        "INNER JOIN `action` AS a ON e.`EventId`=a.`EventId` AND e.`ResourceSeq` =a.`ResourceSeq` " +
+                        $"WHERE e.`EventId`={eventId} AND a.`ResourceSeq`={resourceSeq};")
+                    ).ToList();
+                    await connection.CloseAsync();
+                    return list;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return null;
+                }
+                
             }
         }
     }

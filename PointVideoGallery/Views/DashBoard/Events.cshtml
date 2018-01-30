@@ -11,7 +11,20 @@
 }
 <div id="viewPanel">
     <div class="panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-search"></span> 資料查詢</div>
+        <div class="panel-heading"><span class="glyphicon glyphicon-file"></span> 排程發佈</div>
+        <div class="panel-body" id="schedule-panel">
+            <div class="input-group date col-xs-6 col-md-3 col-lg-2" style="float: right;" data-provide="datepicker" id="schedule-datepicker">
+                <input type="text" class="form-control">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+            <table id="schedule-table"></table>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="glyphicon glyphicon-search"></span> 資料查詢
+        </div>
         <div class="panel-body" id="query-panel">
             <div class="col-xs-6">
                 <label for="locationSelect" style="display: block;">播放位址</label>
@@ -32,7 +45,8 @@
     </div>
 
     <div class="panel panel-default">
-        <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表</div>
+        <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表
+        </div>
         <div class="panel-body" id="event-list-panel">
             <table id="table"></table>
         </div>
@@ -56,16 +70,9 @@
                 <div class="form-group">
                     <input type="text" name="name" class="form-control input-sm" id="name"/>
                 </div>
-                <label>影片</label>
-                <div class="form-group">
-                    <input type="text" name="name" class="form-control input-sm input-with-label" disabled="disabled"/>
-                    <button class="input-sm input-right-label form-control btn-primary" style="text-align: center;">
-                        <span class="glyphicon glyphicon-facetime-video"></span> 選擇
-                    </button>
-                </div>
                 <label>秒數</label>
                 <div class="form-group">
-                    <input type="number" name="name" class="form-control input-sm input-with-label" placeholder="10"/>
+                    <input type="number" name="name" class="form-control input-sm input-with-label" disabled/>
                     <p class="input-right-label">秒</p>
                 </div>
             </div>
@@ -168,6 +175,159 @@
                 <table id="res-select-table"></table>
                 <div style="margin-top: 10px; text-align: right;">
                     <button id="resEditSubmit" class="btn btn-sm btn-primary">確認</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*action modal*@
+<div class="modal fade" id="actionModal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> 動作清單</h4>
+            </div>
+            <div class="modal-body">
+                <form name="action" id="action">
+                    <table id="action-select-table" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>套用</th>
+                            <th>設定</th>
+                            <th>類型</th>
+                            <th>動作</th>
+                            <th>參數</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="checkbox" name="redEnable"/></td>
+                            <td>
+                                <p class="badge bg-important">Red</p>
+                            </td>
+                            <td>
+                                <select class="form-control input-sm" name="redType">
+                                    <option value="image" selected="selected">image</option>
+                                    <option value="app">app</option>
+                                    <option value="media">media</option>
+                                    <option value="webpage">webpage</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" maxlength="255" class="form-control input-sm" name="redAction"/>
+                            </td>
+                            <td>
+                                <input type="text" name="redParam" maxlength="255" class="form-control input-sm" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="greenEnable"/></td>
+                            <td>
+                                <p class="badge bg-success">Green</p>
+                            </td>
+                            <td>
+                                <select class="form-control input-sm" name="greenType">
+                                    <option value="image" selected="selected">image</option>
+                                    <option value="app">app</option>
+                                    <option value="media">media</option>
+                                    <option value="webpage">webpage</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="greenAction" maxlength="255" class="form-control input-sm" />
+                            </td>
+                            <td>
+                                <input type="text" name="greenParam" maxlength="255" class="form-control input-sm" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="yellowEnable" /></td>
+                            <td>
+                                <p class="badge bg-warning">Yellow</p>
+                            </td>
+                            <td>
+                                <select class="form-control input-sm" name="yellowType">
+                                    <option value="image" selected="selected">image</option>
+                                    <option value="app">app</option>
+                                    <option value="media">media</option>
+                                    <option value="webpage">webpage</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="yellowAction" maxlength="255" class="form-control input-sm" />
+                            </td>
+                            <td>
+                                <input type="text" name="yellowParam" maxlength="255" class="form-control input-sm" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="blueEnable" /></td>
+                            <td>
+                                <p class="badge bg-primary">Blue</p>
+                            </td>
+                            <td>
+                                <select class="form-control input-sm" name="blueType">
+                                    <option value="image" selected="selected">image</option>
+                                    <option value="app">app</option>
+                                    <option value="media">media</option>
+                                    <option value="webpage">webpage</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="blueAction" maxlength="255" class="form-control input-sm" />
+                            </td>
+                            <td>
+                                <input type="text" name="blueParam" maxlength="255" class="form-control input-sm" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="okEnable" /></td>
+                            <td>
+                                <p class="badge bg-info">Ok</p>
+                            </td>
+                            <td>
+                                <select class="form-control input-sm" name="okType">
+                                    <option value="image" selected="selected">image</option>
+                                    <option value="app">app</option>
+                                    <option value="media">media</option>
+                                    <option value="webpage">webpage</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="okAction" maxlength="255" class="form-control input-sm" />
+                            </td>
+                            <td>
+                                <input type="text" name="okParam" maxlength="255" class="form-control input-sm" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 10px; text-align: right;">
+                        <button id="actionEditSubmit" class="btn btn-sm btn-primary" type="button">確認</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*calender modal*@
+<div class="modal fade" id="calendarModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> 加入排程</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-daterange" id="datepicker">
+                    <input type="text" class="form-control" >
+                    <div class="input-group-addon">to</div>
+                    <input type="text" class="form-control" >
+                </div>
+                <div style="margin-top: 12px; text-align: right;">
+                    <button class="btn btn-sm btn-primary" id="calendarUpdate">確定</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" id="calendarAbort">取消</button>
                 </div>
             </div>
         </div>

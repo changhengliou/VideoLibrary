@@ -83,13 +83,31 @@ namespace PointVideoGallery.Api
         /// <summary>
         /// PUT /api/v1/ad/events/res
         /// </summary>
-        [System.Web.Http.Route]
+        [System.Web.Http.Route("res")]
         [System.Web.Http.HttpPut]
         public async Task<IHttpActionResult> UpdateResourcesAsync([FromBody] AdEvent data)
         {
             var service = new AdService();
-            await service.UpdateAdResourceAndPlayoutParamsAsync(data);
+            if (await service.UpdateAdResourceAndPlayoutParamsAsync(data))
+                return Ok();
             return InternalServerError();
+        }
+
+        /// <summary>
+        /// POST: /api/v1/ad/events/res/action
+        /// </summary>
+        /// <param name="e">eventId</param>
+        /// <param name="r">resourceSeq</param>
+        [System.Web.Http.Route("res/action")]
+        [System.Web.Http.HttpPost]
+        public async Task<IHttpActionResult> GetResourceActions([FromBody] ActionQueryData data)
+        {
+            var service = new AdService();
+            var returnVal = await service.GetActionsAsync(eventId: data.E, resourceSeq: data.R);
+
+            if (returnVal == null)
+                return InternalServerError();
+            return Json(returnVal);
         }
 
         /// <summary>

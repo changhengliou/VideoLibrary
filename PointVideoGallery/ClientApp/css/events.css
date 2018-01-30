@@ -47,6 +47,11 @@ div.alert {
     font-size: 14px;
 }
 
+td.disabled.day {
+    color: #ccc!important;
+    border-radius: 0!important;
+    cursor: not-allowed!important;
+}
 @keyframes fadeIn {
   0% { opacity: 0 }
   100% { opacity: 1 }

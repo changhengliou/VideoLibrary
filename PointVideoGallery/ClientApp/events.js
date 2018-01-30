@@ -1,12 +1,13 @@
+// import $ from 'jquery';
 import 'bootstrap-table';
 import 'bootstrap-table/dist/bootstrap-table.css';
 import 'select2';
 import 'select2/dist/css/select2.css';
+import 'bootstrap-datepicker/js/bootstrap-datepicker.js';
+import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css';
 import './css/events.css';
 import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, addMsgbox, getDateString } from './js/utils';
 
-
-const disableBy = fn => fn ? 'disable="disabled"' : null;
 /**
  * reload select2 data
  */
@@ -61,23 +62,6 @@ const getDiff = (oldArr, newArr) => {
     return { add: add, rm: rm };
 }
 
-/**
- *  Given 2 array with old data and new data, return the difference
- * @param {Array} oldArr // 2,5,9,13
- * @param {Array} newArr // 5,7,9
- * @returns {Object} 
- * @return @param {Array} add data sholud be add, 
- * @return @param {Array} rm data should be remove, 
- * @return @param {Array} update data should be update
- */
-const getResourceDiff = (oldArr, newArr) => {
-    for(var i = 0; i < oldArr.length && newArr.length; ++i) {
-        if (oldArr[i].Id !== newArr[i].Id) {
-            
-        }
-    }
-}
-
 $(document).ready(() => {
     var table = $('#table'),
         locTable = $('#location-table'),
@@ -103,6 +87,9 @@ $(document).ready(() => {
             formatter: (value, row, index, field) => `<div>
                                                           <button class='btn btn-sm btn-default' data-id="${row.Id}" onClick='$.fn.switchView(this);'>
                                                               <span class="glyphicon glyphicon-pencil"></span>
+                                                          </button>
+                                                          <button class='btn btn-sm btn-default' data-id="${row.Id}" onClick='$.fn.addCalendar(this);'>
+                                                              <span class='glyphicon glyphicon-calendar'></span>
                                                           </button>
                                                           <button class='btn btn-sm btn-default' data-id="${row.Id}" data-t='eve' onClick='$.fn.remove(this);'>
                                                               <span class="glyphicon glyphicon-remove"></span>
@@ -143,6 +130,9 @@ $(document).ready(() => {
     });
     resTable.bootstrapTable({
         ...tableSetting,
+        onLoadSuccess: () => {
+            window.dispatchEvent(new Event('resize'));
+        },
         onClickCell: (field, value, row, element) => {
             if (field !== 'PlayoutWeight')
                 return;
@@ -165,10 +155,6 @@ $(document).ready(() => {
             title: '創建日期',
             formatter: (value) => getDateTimeString(new Date(value))
         }, {
-            field: 'Action',
-            title: '動作',
-            formatter: (value, row, index, field) => null
-        }, {
             field: 'PlayoutWeight',
             title: '比重',
             formatter: (value, row, index, field) => value > 0 ? value : null
@@ -183,7 +169,7 @@ $(document).ready(() => {
                     <button class='btn btn-sm btn-default' data-id="${row.Id}" data-seq="${index}" data-t='down' onClick='$.fn.moveSeq(this);'>
                         <span class="glyphicon glyphicon-arrow-down"></span>
                     </button>
-                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-seq="${index}" onClick='$.fn.moveSeq(this);'>
+                    <button class='btn btn-sm btn-default' data-id="${row.Id}" data-seq="${index}" onClick='$.fn.editAction(this);'>
                         <span class="glyphicon glyphicon-tag"></span>
                     </button>
                     <button class='btn btn-sm btn-default' data-id="${row.Id}" data-seq="${index}" data-t='res' onClick='$.fn.remove(this);'>
@@ -235,9 +221,20 @@ $(document).ready(() => {
     $('#editSelect').select2({
         width: '100%'
     });
+    // initialize date picker
+    $('#datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        startDate: '+1d'
+    });
+    $('#schedule-datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+    });
 
     // hide playoutweight by default
-    $('#resource-table').bootstrapTable('hideColumn', 'PlayoutWeight');
+    resTable.bootstrapTable('hideColumn', 'PlayoutWeight');
+
     /**
      * Get detail data from server
      * @param {number} id request data id  
@@ -249,11 +246,16 @@ $(document).ready(() => {
         })
         .done(res => {
             $._res = {...res, Resources: res.Resources.sort((x, y) => x.Sequence > y.Sequence)};
-            $._res_ = $._res.Resources;
             $('#location-table').bootstrapTable('load', res.LocationTags);
             $('#so-table').bootstrapTable('load', res.SoSettings);
             $('#resource-table').bootstrapTable('load', $._res.Resources);
+            // set value
             document.getElementById('name').value = $._res.Name;
+            document.getElementById('playoutMethod').value = res.PlayOutMethod || 'taketurn';
+            document.getElementById('playoutSeq').value = res.PlayOutSequence || 'byasset';
+            document.getElementById('playoutSec').value = res.PlayOutTimeSpan;
+            // show column
+            document.getElementById('playoutMethod').dispatchEvent(new Event('change'));
         })
         .fail(err => {
             console.log(err);
@@ -264,7 +266,6 @@ $(document).ready(() => {
      * when playout weight is click
      */
     const onEditClick = (e, row, value) => {
-        console.log(row);
         if (e.find('input').length > 0)
             return;
         e.html(
@@ -346,6 +347,13 @@ $(document).ready(() => {
             msg.style.display = 'block';
             msg.innerHTML = "查詢失敗!";
         });
+    }
+
+    /**
+     * toggle calendar modal
+     */
+    $.fn.addCalendar = (e) => {
+        $('#calendarModal').modal('toggle');
     }
 
     /**
@@ -507,33 +515,66 @@ $(document).ready(() => {
         });
     }
 
-    // add event listener to go back button
-    document.getElementById('goBack').addEventListener('click', (e) => {
-        $.fn.switchView();
-        $('#table').bootstrapTable('refresh');
-    });
-    // add listener to query button
-    document.getElementById('queryBtn').addEventListener('click', $.fn.query);
-    // add listener when add new row button is click
-    document.getElementById('newLocBtn').addEventListener('click', $.fn.addRow);
-    document.getElementById('newSoBtn').addEventListener('click', $.fn.addRow);
-    // add listener when update new row button is click
-    document.getElementById('editSubmit').addEventListener('click', $.fn.updateRow);
-    // hide column when playout method change
-    document.getElementById('playoutMethod').addEventListener('change', (e) => {
-        if (e.target.value === 'taketurn')
-            $('#resource-table').bootstrapTable('hideColumn', 'PlayoutWeight');
-        else if (e.target.value === 'random')
-            $('#resource-table').bootstrapTable('showColumn', 'PlayoutWeight');
-    });
-    // create new event
-    document.getElementById('newEventBtn').addEventListener('click', (e) => {
-        document.getElementById('name').value = '';
-        $.fn.switchView(null);
-    });
+    /**
+     * edit resource action 
+     * @param {HTMLElement} e
+     */
+    $.fn.editAction = (e) => {
+        var eventId = document.getElementById('editPanel').getAttribute('data-id'),
+            resourceSeq = e.getAttribute('data-seq');
 
-    // on save event
-    document.getElementById('save').addEventListener('click', (e) => {
+        document.getElementById('actionEditSubmit').setAttribute('data-seq', resourceSeq);
+        $.ajax({
+            url: '/api/v1/ad/events/res/action', 
+            method: 'POST',
+            data: {
+                e: eventId,
+                r: resourceSeq
+            }
+        })
+        .done(res => {
+            $('#actionModal').modal('toggle');
+            if (!Array.isArray(res))
+                throw new Error();
+            res.map(obj => {
+                var enable = document.forms.action[`${obj.Color}Enable`], 
+                    type = document.forms.action[`${obj.Color}Type`],
+                    action = document.forms.action[`${obj.Color}Action`],
+                    param = document.forms.action[`${obj.Color}Param`];
+                $(`form#action input[name=${obj.Color}Enable]`).prop('checked', obj.Checked == 1);
+                // obj.Checked == 1 ? enable.setAttribute('checked', 'checked') : enable.removeAttribute('checked');
+                type.value = obj.Type;
+                action.value = obj.Action;
+                param.value = obj.Parameter;
+            });
+        })
+        .fail(err => {
+            addMsgbox("獲取資料失敗!", "", "res-panel", "danger");
+        });
+    }
+
+    const onActionSave = (e) => {
+        var data = $('#action').serializeArray(),
+            index = e.target.getAttribute('data-seq'),
+            _t = { redEnable: null, okEnable: null, blueEnable: null, yellowEnable: null, greenEnable: null };
+        
+        data.map(obj => {
+            if (obj.name.indexOf('Enable') !== -1)
+                _t[obj.name] = 1;
+            else
+                _t[obj.name] = obj.value;
+        });
+
+        $('#resource-table').bootstrapTable('updateRow', { 
+            index: index,
+            row: {
+                Actions: _t
+            } 
+        });
+        $('#actionModal').modal('toggle');
+    }
+
+    const onEventInfoSave = (e) => {
         const name = document.getElementById('name').value,
               edit = document.getElementById('editPanel'),
               id = edit.getAttribute('data-id');
@@ -576,18 +617,60 @@ $(document).ready(() => {
             console.log(err);
             addMsgbox("儲存失敗!", "", "info-panel", "danger");
         });
-    });
-    // a workaround for close modal
-    $('#editModal').on('hidden.bs.modal', function () {
-        document.body.removeChild(document.querySelector('div.modal-backdrop.fade'));
-    });
-    $('#resourceModal').on('hidden.bs.modal', function () {
-        document.body.removeChild(document.querySelector('div.modal-backdrop.fade'));
-        $('#res-select-table').bootstrapTable('uncheckAll');
-    });
+    };
 
-    // add new resource
-    document.getElementById('resEditSubmit').addEventListener('click', (e) => {
+    /**
+     * transform serialize input to val object
+     * @param {Object} val 
+     */
+    const actionMapTransform = (val) => {
+        var color = ['red', 'green', 'yellow', 'blue', 'ok'],
+            actions = [];
+        if (val === null)
+            return;
+
+        color.map((c, i) => {
+            actions.push({
+                color: color[i],
+                type: val[`${c}Type`],
+                action: val[`${c}Action`],
+                parameter: val[`${c}Param`],
+                checked: val[`${c}Enable`]
+            });
+        });
+        return actions;
+    };
+
+    const onResourcesSave = (e) => {
+        var _tb = $('#resource-table'),
+            _data = _tb.bootstrapTable('getData'),
+            data = JSON.parse(JSON.stringify(_data));
+        data.map(o => {
+            o.Actions = o.Actions ? actionMapTransform(o.Actions) : null;
+        });
+
+        $.ajax({
+            url: '/api/v1/ad/events/res',
+            method: 'PUT', 
+            data: {
+                id: $._res.Id,
+                resources: data,
+                playOutMethod: document.getElementById('playoutMethod').value,
+                playOutSequence: document.getElementById('playoutSeq').value,
+                playOutTimeSpan: document.getElementById('playoutSec').value
+            }
+        })
+        .done(res => {
+            addMsgbox("更新成功", "", "res-panel", "success");
+            console.log(res);
+        })
+        .fail(err => {
+            console.log(err);
+            addMsgbox("更新失敗", "", "res-panel", "danger");
+        });
+    };
+
+    const onResourcesChange = (e) => {
         var tb = $('#res-select-table'),
             dataTb = $('#resource-table');
         tb.bootstrapTable('getSelections').map(obj => {
@@ -599,32 +682,56 @@ $(document).ready(() => {
         });
 
         $('#resourceModal').modal('toggle');
+    }
+
+    // add event listener to go back button
+    document.getElementById('goBack').addEventListener('click', (e) => {
+        $.fn.switchView();
+        $('#table').bootstrapTable('refresh');
+    });
+    // add listener to query button
+    document.getElementById('queryBtn').addEventListener('click', $.fn.query);
+    // add listener when add new row button is click
+    document.getElementById('newLocBtn').addEventListener('click', $.fn.addRow);
+    document.getElementById('newSoBtn').addEventListener('click', $.fn.addRow);
+    // add listener when update new row button is click
+    document.getElementById('editSubmit').addEventListener('click', $.fn.updateRow);
+    // hide column when playout method change
+    document.getElementById('playoutMethod').addEventListener('change', (e) => {
+        if (e.target.value === 'taketurn')
+            $('#resource-table').bootstrapTable('hideColumn', 'PlayoutWeight');
+        else if (e.target.value === 'random')
+            $('#resource-table').bootstrapTable('showColumn', 'PlayoutWeight');
+    });
+    // create new event
+    document.getElementById('newEventBtn').addEventListener('click', (e) => {
+        document.getElementById('name').value = '';
+        $.fn.switchView(null);
     });
 
-    document.getElementById('saveRes').addEventListener(click, (e) => {
-        var _tb = $('#resource-table'),
-            _new = $._res,
-            _old = $._res_;
-        $.ajax({
-            url: '/api/v1/ad/events/res',
-            method: 'PUT', 
-            data: {
-                id: $._res.Id,
-                resources: _tb.bootstrapTable('getData'),
-                playOutMethod: document.getElementById('playoutMethod').value,
-                playOutSequence: document.getElementById('playoutSeq').value,
-                playOutTimeSpan: document.getElementById('playoutSec').value
-            }
-        })
-        .done(res => {
-            addMsgbox("更新成功", "", "res-panel", "success");
-            console.log(res);
-            // _tb.bootstrapTable('load', res);
-            // $._res.Resources = res
-        })
-        .fail(err => {
-            console.log(err);
-            addMsgbox("更新失敗", "", "res-panel", "danger");
-        });
+    // on save event info
+    document.getElementById('save').addEventListener('click', onEventInfoSave);
+    // a workaround for close modal
+    $('#editModal,#calendarModal').on('hidden.bs.modal', function () {
+        document.body.removeChild(document.querySelector('div.modal-backdrop.fade'));
     });
+    $('#resourceModal').on('hidden.bs.modal', function () {
+        document.body.removeChild(document.querySelector('div.modal-backdrop.fade'));
+        $('#res-select-table').bootstrapTable('uncheckAll');
+    });
+    $('#actionModal').on('hidden.bs.modal', function () {
+        document.body.removeChild(document.querySelector('div.modal-backdrop.fade'));
+        $('form#action input[type=text]').each(function(){$(this).val('')});
+        $('form#action select').each(function(){$(this).val('image')});
+        $('form#action input[type=checkbox]').each(function(){$(this).prop('checked', false)});
+    });
+
+    // add new resource
+    document.getElementById('resEditSubmit').addEventListener('click', onResourcesChange);
+
+    // save resources
+    document.getElementById('saveRes').addEventListener('click', onResourcesSave);
+
+    // save actions
+    document.getElementById('actionEditSubmit').addEventListener('click', onActionSave);
 });

@@ -7,10 +7,13 @@ namespace PointVideoGallery.Models
 {
     public class ResourceAction
     {
-        public int Id { get; set; }
         public string Type { get; set; }
         public string Action { get; set; }
         public string Parameter { get; set; }
 
+        public string Color { get; set; }
+        public int ResourceId { get; set; }
+        public int ResourceSeq { get; set; }
+        public int Checked { get; set; }
     }
 }

@@ -38,4 +38,13 @@ namespace PointVideoGallery.Models
         public List<int> Add { get; set; }
         public List<int> Rm { get; set; }
     }
+
+    /// <summary>
+    /// Query model for POST API /api/v1/ad/events/res/action
+    /// </summary>
+    public class ActionQueryData
+    {
+        public int E { get; set; }
+        public int R { get; set; }
+    }
 }

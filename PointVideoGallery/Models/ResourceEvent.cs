@@ -12,8 +12,6 @@ namespace PointVideoGallery.Models
     {
         public int Sequence { get; set; }
         public int PlayoutWeight { get; set; }
-        public int ActionId { get; set; }
-
         public IList<ResourceAction> Actions { get; set; }
     }
 }

@@ -14,7 +14,6 @@ namespace PointVideoGallery.Models
         public string Path { get; set; }
         public string ThumbnailPath { get; set; }
         public DateTime CreateTime { get; set; }
-
         public string MediaType { get; set; }
     }
 
