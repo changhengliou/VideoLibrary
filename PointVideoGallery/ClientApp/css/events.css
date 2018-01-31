@@ -33,10 +33,7 @@ div.panel-body div.form-group {
     display: block;
 }
 
-.fade-in {
-    opacity: 1;
-    animation: fadeIn 0.5s linear;
-}
+
 
 div.panel-heading {
     font-size: 16px;
@@ -45,16 +42,6 @@ div.panel-heading {
 
 div.alert {
     font-size: 14px;
-}
-
-td.disabled.day {
-    color: #ccc!important;
-    border-radius: 0!important;
-    cursor: not-allowed!important;
-}
-@keyframes fadeIn {
-  0% { opacity: 0 }
-  100% { opacity: 1 }
 }
 
 @media screen and (max-width: 700px) {

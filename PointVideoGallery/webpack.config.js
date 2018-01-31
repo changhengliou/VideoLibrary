@@ -20,6 +20,7 @@ module.exports = (env) => {
             location: path.join(__dirname, 'ClientApp', 'location.js'),
             sosetting: path.join(__dirname, 'ClientApp', 'soSetting.js'),
             events: path.join(__dirname, 'ClientApp', 'events.js'),
+            publish: path.join(__dirname, 'ClientApp', 'publish.js')
         },
         output: {
             filename: '[name].js',

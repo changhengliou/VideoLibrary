@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 import 'bootstrap-table';
 import 'bootstrap-table/dist/bootstrap-table.css';
 import 'select2';
@@ -6,7 +5,7 @@ import 'select2/dist/css/select2.css';
 import 'bootstrap-datepicker/js/bootstrap-datepicker.js';
 import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css';
 import './css/events.css';
-import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, addMsgbox, getDateString } from './js/utils';
+import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, addMsgbox, getDateString, setDatePickerZhTw } from './js/utils';
 
 /**
  * reload select2 data
@@ -70,6 +69,7 @@ $(document).ready(() => {
 
     // set i18n to zh-tw
     setTableViewZhTwLocal($);
+    setDatePickerZhTw($);
     // event list table
     table.bootstrapTable({
         ...tableSetting,
@@ -223,9 +223,9 @@ $(document).ready(() => {
     });
     // initialize date picker
     $('#datepicker').datepicker({
-        format: 'yyyy-mm-dd',
         autoclose: true,
-        startDate: '+1d'
+        startDate: '+1d',
+        language: 'zhtw'
     });
 
     // hide playoutweight by default
@@ -247,7 +247,7 @@ $(document).ready(() => {
             $('#resource-table').bootstrapTable('load', $._res.Resources);
             // set value
             document.getElementById('name').value = $._res.Name;
-            document.getElementById('playoutMethod').value = res.PlayOutMethod || 'taketurn';
+            document.getElementById('playoutMethod').value = res.PlayOutMethod || 'interval';
             document.getElementById('playoutSeq').value = res.PlayOutSequence || 'byasset';
             document.getElementById('playoutSec').value = res.PlayOutTimeSpan;
             // show column
@@ -595,11 +595,12 @@ $(document).ready(() => {
             }
         })
         .done(res => {
-            addMsgbox('成功加入排程!', '<a href="/DashBoard/Publish">點此查看</a>', 'panel-body-msg', 'success');
+            addMsgbox('成功加入排程!', `<a href="/DashBoard/Publish?q=${getDateString(picker.dates[0])}">點此查看</a>`, 'panel-body-msg', 'success');
         })
         .fail(err => {
             addMsgbox('加入排程失敗!', null, 'panel-body-msg', 'danger');
         });
+        $('#calendarModal').modal('toggle');
     }
 
     const onEventInfoSave = (e) => {
@@ -627,7 +628,7 @@ $(document).ready(() => {
                     Id: res.Id,
                     LocationTags: [],
                     Name: name,
-                    PlayOutMethod: 'taketurn',
+                    PlayOutMethod: 'interval',
                     PlayOutSequence: 'byasset',
                     PlayOutTimeSpan: 0,
                     Resources: [],
@@ -726,7 +727,7 @@ $(document).ready(() => {
     document.getElementById('editSubmit').addEventListener('click', $.fn.updateRow);
     // hide column when playout method change
     document.getElementById('playoutMethod').addEventListener('change', (e) => {
-        if (e.target.value === 'taketurn')
+        if (e.target.value === 'interval')
             $('#resource-table').bootstrapTable('hideColumn', 'PlayoutWeight');
         else if (e.target.value === 'random')
             $('#resource-table').bootstrapTable('showColumn', 'PlayoutWeight');

@@ -7,26 +7,29 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointVideoGallery", "PointV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointVideoGallery.Tests", "PointVideoGallery.Tests\PointVideoGallery.Tests.csproj", "{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlGenerator", "XmlGenerator\XmlGenerator.csproj", "{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleTaskExecuter", "ScheduleTaskExecuter\ScheduleTaskExecuter.csproj", "{C5090148-476C-4E04-B844-61A055B512FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		DebugScheduler|Any CPU = DebugScheduler|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5C838B23-A16B-4649-8C0C-3057970F8DB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5C838B23-A16B-4649-8C0C-3057970F8DB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C838B23-A16B-4649-8C0C-3057970F8DB3}.DebugScheduler|Any CPU.ActiveCfg = DebugScheduler|Any CPU
 		{5C838B23-A16B-4649-8C0C-3057970F8DB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C838B23-A16B-4649-8C0C-3057970F8DB3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}.DebugScheduler|Any CPU.ActiveCfg = DebugScheduler|Any CPU
 		{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9E5B843-7A9E-4E57-A7D2-8DFB991E8AE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93FC2516-805D-433A-8B64-1CCEE0DB3FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5090148-476C-4E04-B844-61A055B512FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5090148-476C-4E04-B844-61A055B512FA}.DebugScheduler|Any CPU.ActiveCfg = DebugScheduler|Any CPU
+		{C5090148-476C-4E04-B844-61A055B512FA}.DebugScheduler|Any CPU.Build.0 = DebugScheduler|Any CPU
+		{C5090148-476C-4E04-B844-61A055B512FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5090148-476C-4E04-B844-61A055B512FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -80,5 +80,26 @@ namespace PointVideoGallery.Services
                 }
             }
         }
+
+        public async Task<bool> DropScheduleByIdAsync(int id)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    if (await connection.ExecuteAsync("DELETE FROM `schedule` WHERE Id=@id AND `ScheduleDate` > now();", new {id = id}) != 1)
+                        throw new SqlExecutionException();
+                    await connection.CloseAsync();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
+                }
+            }
+        }
     }
 }

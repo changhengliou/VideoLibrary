@@ -11,7 +11,7 @@ namespace PointVideoGallery.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// 方式, (taketurn)輪播/(random)隨機
+        /// 方式, (interval)輪播/(random)隨機
         /// </summary>
         public string PlayOutMethod { get; set; }
 

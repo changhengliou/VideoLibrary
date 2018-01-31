@@ -1,0 +1,9 @@
+.datepicker-form {
+    margin-bottom: 15px;
+}
+@media (min-width: 768px) {
+    .datepicker-form {
+        display: inline-block;
+        float: right;
+    }
+}

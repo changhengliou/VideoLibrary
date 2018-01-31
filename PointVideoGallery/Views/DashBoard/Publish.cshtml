@@ -1,14 +1,16 @@
-﻿<div class="panel panel-default">
+﻿@section header
+{
+    <link href="/Static/dist/publish.css" rel="stylesheet" />
+}
+<div class="panel panel-default">
     <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 執行作業
     </div>
     <div class="panel-body">
         <div class="form-inline" role="form">
-            <label for="" class="control-label">發布時間</label>
-            <div class="input-group date col-xs-6 col-md-3 col-lg-2" style="float: right;" data-provide="datepicker" id="schedule-datepicker">
-                <input type="text" class="form-control">
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </div>
+            <div id="schedule-msg"></div>
+            <div class="datepicker-form">
+                <label for="schedule-datepicker" class="control-label">發布時間</label>
+                <input type="text" class="form-control input-sm" id="schedule-datepicker">
             </div>
             <table id="schedule-table"></table>
             <hr/>
@@ -18,3 +20,7 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script src="~/Static/dist/publish.js"></script>
+}

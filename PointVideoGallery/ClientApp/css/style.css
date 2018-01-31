@@ -120,3 +120,18 @@ a.logo:focus {
     border-color: #2A3542;
     color: #FFFFFF;
 }
+
+td.disabled.day {
+    color: #ccc!important;
+    border-radius: 0!important;
+    cursor: not-allowed!important;
+}
+
+.fade-in {
+    opacity: 1;
+    animation: fadeIn 0.5s linear;
+}
+@keyframes fadeIn {
+  0% { opacity: 0 }
+  100% { opacity: 1 }
+}

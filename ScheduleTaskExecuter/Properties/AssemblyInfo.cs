@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("XmlGenerator")]
+[assembly: AssemblyTitle("ScheduleTaskExecuter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("XmlGenerator")]
+[assembly: AssemblyProduct("ScheduleTaskExecuter")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("93fc2516-805d-433a-8b64-1ccee0db3fe7")]
+[assembly: Guid("c5090148-476c-4e04-b844-61a055b512fa")]
 
 // Version information for an assembly consists of the following four values:
 //
