@@ -1,6 +1,18 @@
-﻿@{
-    ViewBag.Title = "Index";
+﻿@section header {
+    <link href="/Static/dist/account.css" rel="stylesheet" />
 }
-
-<h2>Index</h2>
-
+<div class="panel panel-default">
+    <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> 資料列表</div>
+    <div class="panel-body" id="data-panel">
+        <table id="table"></table>
+        <div style="position: relative; height: 40px;">
+            <button class="btn btn-sm btn-primary" style="margin-top: 10px; position: absolute; right: 0;" id="newRowBtn">
+                <span class="glyphicon glyphicon-plus"></span> 新增
+            </button>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="/Static/dist/account.js"></script>
+}

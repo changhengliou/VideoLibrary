@@ -11,6 +11,7 @@ namespace PointVideoGallery
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            config.Filters.Add(new CnsApiAuthorizeAttribute { Roles = "User" });
 
             // Web API routes
             config.MapHttpAttributeRoutes();

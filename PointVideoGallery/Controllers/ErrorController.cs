@@ -6,23 +6,21 @@ using System.Web.Mvc;
 
 namespace PointVideoGallery.Controllers
 {
-    [CnsApiAuthorize]
-    public class AccountController : Controller
+    [AllowAnonymous]
+    public class ErrorController : Controller
     {
-        // GET: Account
+        // GET: Error
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: /account/role
-        public ActionResult Role()
+        public ActionResult NotFound()
         {
             return View();
         }
 
-        [AllowAnonymous]
-        public ActionResult Signin()
+        public ActionResult AccessDenied()
         {
             return View();
         }

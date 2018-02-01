@@ -15,35 +15,6 @@
     <link rel="shortcut icon" href="img/favicon.png">
     <link rel="stylesheet" href="/Static/dist/site.css">
     @RenderSection("header", required: false)
-    <script type="text/javascript">
-        var appInsights = window.appInsights ||
-            function(config) {
-                function r(config) {
-                    t[config] = function() {
-                        var i = arguments;
-                        t.queue.push(function() { t[config].apply(t, i) })
-                    }
-                }
-
-                var t = { config: config }, u = document, e = window, o = "script", s = u.createElement(o), i, f;
-                for (s.src =
-                        config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js",
-                    u.getElementsByTagName(o)[0].parentNode.appendChild(s), t.cookie = u.cookie, t.queue = [], i =
-                        ["Event", "Exception", "Metric", "PageView", "Trace", "Ajax"];
-                    i.length;
-                ) r("track" + i.pop());
-                return r("setAuthenticatedUserContext"), r("clearAuthenticatedUserContext"),
-                    config.disableExceptionTracking ||
-                    (i = "onerror", r("_" + i), f = e[i], e[i] = function(config, r, u, e, o) {
-                        var s = f && f(config, r, u, e, o);
-                        return s !== !0 && t["_" + i](config, r, u, e, o), s
-                    }), t
-            }({
-                instrumentationKey: "ef97fd62-a5b9-4399-bde2-50a10458d94f"
-            });
-        window.appInsights = appInsights;
-        appInsights.trackPageView();
-    </script>
 </head>
 <body style="position: relative; padding-bottom: 41px; min-height: 100vh;">
 <section id="container">
@@ -138,20 +109,6 @@
     <div class="top-nav">
         <!--search & user info start-->
         <ul class="nav pull-right top-menu">
-            <li>
-                <div class="form-group has-feedback search">
-                    <input type="text" class="form-control" placeholder="關鍵字搜尋" style="width: 180px; height: 37px; border: 1px solid #eaeaea;">
-                    <i class="glyphicon glyphicon-search form-control-feedback"></i>
-                </div>
-            </li>
-
-            <li class="button">
-                <a href="#">
-                    <i class="glyphicon glyphicon-cloud-upload"></i>
-                    <span> 影片上傳 </span>
-                </a>
-            </li>
-
             <!-- user login dropdown start-->
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -173,7 +130,7 @@
                     </li>
                     <li>
                         <a href="#">
-                            <i class="glyphicon glyphicon-exclamation-sign"></i> 系統警示訂閱
+                            <i class="glyphicon glyphicon-list-alt"></i> 操作紀錄
                         </a>
                     </li>
                     <li>
@@ -194,31 +151,6 @@
     <div id="sidebar" class="nav-collapse ">
         <!-- sidebar menu start-->
         <ul class="sidebar-menu" id="nav-accordion">
-            <li>
-                <a href="#">
-                    <i class="glyphicon glyphicon-dashboard"></i>
-                    <span>廣告主機</span>
-                </a>
-            </li>
-            <li class="sub-menu">
-                <a href="#">
-                    <i class="glyphicon glyphicon-wrench"></i>
-                    <span>權限設定</span>
-                </a>
-                <ul class="sub">
-                    <li>
-                        <a href="#">
-                            <span>媒體片庫</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span>影片標籤</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
             <li class="sub-menu">
                 <a href="#" class="@ActiveViewHelper.ActiveClass(activeController, "dashboard")">
                     <i class="glyphicon glyphicon-bullhorn"></i>
@@ -242,17 +174,24 @@
                     </li>
                 </ul>
             </li>
-
-            <li class="sub-menu">
-                <a href="javascript:;">
-                    <i class="glyphicon glyphicon-cog"></i>
-                    <span>系統作業</span>
+            <li>
+                <a href="@Url.Action("Index", "Account")" class="@ActiveViewHelper.ActiveClass(activeAction, "Index")">
+                    <i class="glyphicon glyphicon-user"></i>
+                    <span>帳號管理</span>
                 </a>
-                <ul class="sub">
-                    <li>
-                        <a href="#">使用者清單</a>
-                    </li>
-                </ul>
+            </li>
+            <li>
+                <a href="@Url.Action("Role", "Account")" class="@ActiveViewHelper.ActiveClass(activeAction, "role")">
+                    <i class="glyphicon glyphicon-dashboard"></i>
+                    <span>權限管理</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("Role", "Account")" class="">
+                    <i class="glyphicon glyphicon-list-alt"></i>
+                    <span>操作紀錄</span>
+                </a>
             </li>
             <li class="sub-menu">
                 <a href="javascript:;">
@@ -261,7 +200,10 @@
                 </a>
                 <ul class="sub">
                     <li>
-                        <a href="#">操作紀錄</a>
+                        <a href="javascript:;">帳號資訊</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">操作紀錄</a>
                     </li>
                 </ul>
             </li>
