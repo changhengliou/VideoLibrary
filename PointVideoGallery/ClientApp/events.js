@@ -130,7 +130,7 @@ $(document).ready(() => {
     });
     resTable.bootstrapTable({
         ...tableSetting,
-        onLoadSuccess: () => {
+        onPostBody: () => {
             window.dispatchEvent(new Event('resize'));
         },
         onClickCell: (field, value, row, element) => {
@@ -254,7 +254,8 @@ $(document).ready(() => {
             document.getElementById('playoutMethod').dispatchEvent(new Event('change'));
         })
         .fail(err => {
-            console.log(err);
+            var msg = err.status === 403 ? "沒有權限讀取資料!" : "讀取資料失敗!";
+            addMsgbox(msg, null, 'info-panel', 'danger');
         });
     }
 
@@ -339,9 +340,8 @@ $(document).ready(() => {
             $('#table').bootstrapTable('load', res);
         })
         .fail(err => {
-            var msg = document.getElementById('msgBox');
-            msg.style.display = 'block';
-            msg.innerHTML = "查詢失敗!";
+            var msg = err.status === 403 ? "沒有權限讀取資料!" : "查詢失敗!";
+            addMsgbox(msg, null, 'query-panel', 'danger');
         });
     }
 
@@ -416,7 +416,9 @@ $(document).ready(() => {
             $("#editModal").modal('toggle');
         })
         .fail(err => {
-            // error msg goes here
+            var msg = err.status === 403 ? "沒有權限!" : "更新失敗!",
+                panelId = target === 'loc' ? 'panel-loc' : 'panel-so';
+            addMsgbox(msg, null, panelId, 'danger');
         });
     }
 
@@ -439,8 +441,9 @@ $(document).ready(() => {
                 addMsgbox("刪除成功!", null, "event-list-panel", "success");
                 $('#table').bootstrapTable('load', res); 
             })
-            .catch(res => {
-                addMsgbox("刪除失敗!", null, "event-list-panel", "danger");
+            .fail(err => {
+                var msg = err.status === 403 ? "沒有權限進行此項操作!" : "刪除失敗!"
+                addMsgbox(msg, null, "event-list-panel", "danger");
             });
             return;
         }
@@ -470,7 +473,9 @@ $(document).ready(() => {
             $('#so-table').bootstrapTable('load', res.SoSettings);
         })
         .fail(err => {
-            // err msg goes here
+            var msg = err.status === 403 ? "沒有權限!" : "更新失敗!",
+                panelId = type === 'so' ? 'panel-so' : 'panel-loc';
+            addMsgbox(msg, null, panelId, 'danger');
         });
     }
 
@@ -518,9 +523,37 @@ $(document).ready(() => {
      */
     $.fn.editAction = (e) => {
         var eventId = document.getElementById('editPanel').getAttribute('data-id'),
-            resourceSeq = e.getAttribute('data-seq');
-
+            resourceSeq = e.getAttribute('data-seq'),
+            data = $('#resource-table').bootstrapTable('getData'),
+            target = data.filter(x => x.Sequence == resourceSeq);
+        
         document.getElementById('actionEditSubmit').setAttribute('data-seq', resourceSeq);
+
+        // recover to original state
+        ['redImg', 'greenImg', 'yellowImg', 'blueImg', 'okImg'].map(obj => {
+            document.querySelector(`label[for=${obj}]`).innerHTML = '';
+        });
+        
+        // if actions data already defined, load the data
+        if (target.length !== 0 && target[0].Actions) {
+            Object.keys(target[0].Actions).map(s => {
+                var val = target[0].Actions[s];
+                document.forms.action[s].value = val;
+
+                if (s.indexOf('Enable') !== -1)
+                    $(`form#action input[name=${s}]`).prop('checked', val ? true : false);
+                else if (s.indexOf('Type') !== -1) {
+                    let color = s.substr(0, s.length - 4);
+                    document.querySelector(`label[for=${color}Img]`).innerHTML = target[0].Actions[`${color}Action`];
+                }
+            });
+            ['redType', 'greenType', 'yellowType', 'blueType', 'okType'].map(e => {
+                document.getElementById(e).dispatchEvent(new Event('change'));
+            });
+            $('#actionModal').modal('toggle');
+            return;
+        }
+        // otherwise, request from the server
         $.ajax({
             url: '/api/v1/ad/events/res/action', 
             method: 'POST',
@@ -533,26 +566,51 @@ $(document).ready(() => {
             $('#actionModal').modal('toggle');
             if (!Array.isArray(res))
                 throw new Error();
+            
+            let row = {};
+            
             res.map(obj => {
                 var enable = document.forms.action[`${obj.Color}Enable`], 
                     type = document.forms.action[`${obj.Color}Type`],
                     action = document.forms.action[`${obj.Color}Action`],
                     param = document.forms.action[`${obj.Color}Param`];
+                
+                // bind value to state container
+                row[`${obj.Color}Enable`] = obj.Checked ? 1 : 0;
+                row[`${obj.Color}Type`] = obj.Type;
+                row[`${obj.Color}Action`] = obj.Action;
+                row[`${obj.Color}Param`] = obj.Parameter;
+                // bind value to view
+                if (obj.Type === 'image') {                    
+                    document.querySelector(`label[for=${obj.Color}Img]`).innerHTML = obj.Action;
+                } else 
+                    action.value = obj.Action;
                 $(`form#action input[name=${obj.Color}Enable]`).prop('checked', obj.Checked == 1);
-                // obj.Checked == 1 ? enable.setAttribute('checked', 'checked') : enable.removeAttribute('checked');
                 type.value = obj.Type;
-                action.value = obj.Action;
                 param.value = obj.Parameter;
+            });
+            // update to table
+            $('#resource-table').bootstrapTable('updateRow', { 
+                index: resourceSeq,
+                row: {
+                    Actions: {...data[resourceSeq].Actions, ...row}
+                } 
+            });
+            ['redType', 'greenType', 'yellowType', 'blueType', 'okType'].map(e => {
+                document.getElementById(e).dispatchEvent(new Event('change'));
             });
         })
         .fail(err => {
-            addMsgbox("獲取資料失敗!", "", "res-panel", "danger");
+            var msg = err.status === 403 ? "沒有權限讀取資料!" : "獲取資料失敗!";
+            addMsgbox(msg, null, 'res-panel', 'danger');
         });
     }
 
     const onActionSave = (e) => {
         var data = $('#action').serializeArray(),
             index = e.target.getAttribute('data-seq'),
+            _tb = $('#resource-table'),
+            _tbd = _tb.bootstrapTable('getData'),
             _t = { redEnable: null, okEnable: null, blueEnable: null, yellowEnable: null, greenEnable: null };
         
         data.map(obj => {
@@ -562,7 +620,14 @@ $(document).ready(() => {
                 _t[obj.name] = obj.value;
         });
 
-        $('#resource-table').bootstrapTable('updateRow', { 
+        ['redType', 'greenType', 'yellowType', 'blueType', 'okType'].map(e => {
+            let color = e.substr(0, e.length - 4);
+            if (document.getElementById(e).value === 'image') {
+                _t[`${color}Action`] = _tbd[index].Actions[`${color}Action`];
+            }
+        });
+
+        _tb.bootstrapTable('updateRow', { 
             index: index,
             row: {
                 Actions: _t
@@ -570,6 +635,62 @@ $(document).ready(() => {
         });
         $('#actionModal').modal('toggle');
     }
+
+    const onSelectImg = (e) => {
+        var file = e.target.files;
+
+        if (file.length === 0)
+            return;
+        
+        var color = e.target.id.substr(0, e.target.id.length - 3),
+            seq = document.getElementById('actionEditSubmit').getAttribute('data-seq'),
+            eventId = $._res.Id,
+            form = new FormData(),
+            displayText = document.querySelector(`label[for=${color}Img]`);
+
+        form.append('file[]', file[0]);
+        form.append('fileInfo', JSON.stringify({
+            color: color, 
+            sequence: seq, 
+            eventId: eventId 
+        }));
+
+        $.ajax({
+            url: '/api/v1/ad/events/action/upload',
+            method: 'POST',
+            processData: false,
+            contentType: false,
+            data: form
+        })
+        .done(res => {
+            var data = $('#resource-table').bootstrapTable('getData')[seq];
+            displayText.innerHTML = `${res.Path}`;
+            if (!data.Actions)
+                data.Actions = {};
+            data.Actions[`${color}Action`] = res.Path;
+        })
+        .fail(err => {
+            displayText.innerHTML = '<strong style="color:red;">上傳失敗</strong>'
+        });
+    };
+
+    // action type input on change
+    ['redType', 'greenType', 'yellowType', 'blueType', 'okType'].map(e => {
+        document.getElementById(e).addEventListener('change', ele => {
+            var color = e.substr(0, e.length - 4);
+            if (ele.target.value === 'image') {
+                document.querySelector(`input[name=${color}Action]`).style.display = 'none';
+                document.querySelector(`label[for=${color}Img]`).style.display = '';
+            } else {
+                document.querySelector(`input[name=${color}Action]`).style.display = '';
+                document.querySelector(`label[for=${color}Img]`).style.display = 'none';
+            }
+        });
+    });
+    // action image input on change
+    ['redImg', 'greenImg', 'yellowImg', 'blueImg', 'okImg'].map(e => {
+        document.getElementById(e).addEventListener('change', onSelectImg);
+    });
 
     const onAddSchedule = (e) => {
         const eventId = e.target.getAttribute('data-id'),
@@ -598,7 +719,8 @@ $(document).ready(() => {
             addMsgbox('成功加入排程!', `<a href="/DashBoard/Publish?q=${getDateString(picker.dates[0])}">點此查看</a>`, 'panel-body-msg', 'success');
         })
         .fail(err => {
-            addMsgbox('加入排程失敗!', null, 'panel-body-msg', 'danger');
+            var msg = err.status === 403 ? "沒有權限進行此項操作!" : "加入排程失敗!";
+            addMsgbox(msg, null, 'panel-body-msg', 'danger');
         });
         $('#calendarModal').modal('toggle');
     }
@@ -643,8 +765,8 @@ $(document).ready(() => {
             addMsgbox("成功儲存!", null, "info-panel");
         })
         .fail(err => {
-            console.log(err);
-            addMsgbox("儲存失敗!", "", "info-panel", "danger");
+            var msg = err.status === 403 ? "沒有權限進行此項操作!" : "儲存失敗!";
+            addMsgbox(msg, "", "info-panel", "danger");
         });
     };
 
@@ -655,16 +777,14 @@ $(document).ready(() => {
     const actionMapTransform = (val) => {
         var color = ['red', 'green', 'yellow', 'blue', 'ok'],
             actions = [];
-        if (val === null)
-            return;
 
         color.map((c, i) => {
             actions.push({
-                color: color[i],
-                type: val[`${c}Type`],
-                action: val[`${c}Action`],
-                parameter: val[`${c}Param`],
-                checked: val[`${c}Enable`]
+                color: c,
+                type: val ? val[`${c}Type`] : 'image',
+                action: val ? val[`${c}Action`] : null,
+                parameter: val ? val[`${c}Param`] : null,
+                checked: val ? val[`${c}Enable`] : null
             });
         });
         return actions;
@@ -675,9 +795,9 @@ $(document).ready(() => {
             _data = _tb.bootstrapTable('getData'),
             data = JSON.parse(JSON.stringify(_data));
         data.map(o => {
-            o.Actions = o.Actions ? actionMapTransform(o.Actions) : null;
+            o.Actions = actionMapTransform(o.Actions);
         });
-
+        
         $.ajax({
             url: '/api/v1/ad/events/res',
             method: 'PUT', 
@@ -691,11 +811,10 @@ $(document).ready(() => {
         })
         .done(res => {
             addMsgbox("更新成功", "", "res-panel", "success");
-            console.log(res);
         })
         .fail(err => {
-            console.log(err);
-            addMsgbox("更新失敗", "", "res-panel", "danger");
+            var msg = err.status === 403 ? "沒有權限進行此項操作!" : "更新失敗!";
+            addMsgbox(msg, "", "res-panel", "danger");
         });
     };
 

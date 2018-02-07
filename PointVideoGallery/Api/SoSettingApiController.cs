@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using PointVideoGallery.Models;
 using PointVideoGallery.Services;
+using PointVideoGallery.Utils;
 
 namespace PointVideoGallery.Api
 {
@@ -19,6 +20,7 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.SoRead)]
         public async Task<IHttpActionResult> GetSoSetting()
         {
             SettingService service = new SettingService();
@@ -30,14 +32,20 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.SoWrite)]
         public async Task<IHttpActionResult> AddSoSetting([FromBody] SoSetting setting)
         {
             if (string.IsNullOrWhiteSpace(setting.Code) || string.IsNullOrWhiteSpace(setting.Name))
                 return BadRequest("Invalid Request.");
             SettingService service = new SettingService();
-            if (await service.AddSoSettingAsync(setting))
-                return Ok();
-            return StatusCode(HttpStatusCode.Gone);
+            if (!await service.AddSoSettingAsync(setting)) return StatusCode(HttpStatusCode.Gone);
+            await LogService.WriteLogAsync(new Log
+            {
+                Action = $"SO—新增 {setting.Code} - {setting.Name}",
+                ActionTime = DateTime.Now,
+                UserId = Helper.GetUserId(Request)
+            });
+            return Ok();
         }
 
         /// <summary>
@@ -45,15 +53,21 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpPut]
         [System.Web.Http.Route]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.SoWrite)]
         public async Task<IHttpActionResult> UpdateSoSetting([FromBody] SoSetting setting)
         {
             if (setting.Id <= 0 || string.IsNullOrWhiteSpace(setting.Code) ||
                 string.IsNullOrWhiteSpace(setting.Name))
                 return BadRequest("Invalid Request.");
             SettingService service = new SettingService();
-            if (await service.UpdateSoSettingByIdAsync(setting))
-                return Ok();
-            return StatusCode(HttpStatusCode.Gone);
+            if (!await service.UpdateSoSettingByIdAsync(setting)) return StatusCode(HttpStatusCode.Gone);
+            await LogService.WriteLogAsync(new Log
+            {
+                Action = $"SO—更新 {setting.Code} - {setting.Name}",
+                ActionTime = DateTime.Now,
+                UserId = Helper.GetUserId(Request)
+            });
+            return Ok();
         }
 
         /// <summary>
@@ -61,14 +75,20 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpDelete]
         [System.Web.Http.Route("{id}")]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.SoWrite)]
         public async Task<IHttpActionResult> DeleteSoSetting(int id)
         {
             if (id <= 0)
                 return BadRequest("Invalid Request.");
             SettingService service = new SettingService();
-            if (await service.RemoveSoSettingByIdAsync(id))
-                return Ok();
-            return StatusCode(HttpStatusCode.Gone);
+            if (!await service.RemoveSoSettingByIdAsync(id)) return StatusCode(HttpStatusCode.Gone);
+            await LogService.WriteLogAsync(new Log
+            {
+                Action = $"SO—刪除",
+                ActionTime = DateTime.Now,
+                UserId = Helper.GetUserId(Request)
+            });
+            return Ok();
         }
 
         /// <summary>
@@ -77,15 +97,15 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("{id}")]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.SoRead)]
         public async Task<IHttpActionResult> GetSoSetting(int id)
         {
             if (id <= 0)
                 return BadRequest("Invalid Request.");
 
             SettingService service = new SettingService();
-            if (await service.GetSoSettingByIdAsync(id) != null)
-                return Ok();
-            return StatusCode(HttpStatusCode.Gone);
+            if (await service.GetSoSettingByIdAsync(id) == null) return StatusCode(HttpStatusCode.Gone);
+            return Ok();
         }
     }
 }

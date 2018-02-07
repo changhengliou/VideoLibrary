@@ -54,6 +54,10 @@
       <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.8.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.8.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DryIoc, Version=2.12.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DryIoc.dll.2.12.6\lib\net45\DryIoc.dll</HintPath>
       <Private>True</Private>
@@ -72,6 +76,10 @@
     </Reference>
     <Reference Include="DryIoc.WebApi, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DryIoc.WebApi.dll.2.2.0\lib\net45\DryIoc.WebApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.1\lib\net40\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -177,6 +185,7 @@
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -233,6 +242,7 @@
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http.Formatting">
@@ -250,6 +260,8 @@
     <Compile Include="Api\AdEventApiController.cs" />
     <Compile Include="Api\AdLocationApiController.cs" />
     <Compile Include="Api\AdResourceApiController.cs" />
+    <Compile Include="Api\LogApiController.cs" />
+    <Compile Include="Api\PublishApiController.cs" />
     <Compile Include="Api\ScheduleApiController.cs" />
     <Compile Include="Api\SoSettingApiController.cs" />
     <Compile Include="App_Start\CnsApiAuthorizeAttribute.cs" />
@@ -261,10 +273,12 @@
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EventMap.cs" />
+    <Compile Include="Models\Log.cs" />
     <Compile Include="Models\QueryData.cs" />
     <Compile Include="Models\ResourceAction.cs" />
     <Compile Include="Models\AdEvent.cs" />
@@ -280,6 +294,7 @@
     <Compile Include="App_Start\FileIndexService.cs" />
     <Compile Include="Services\AdService.cs" />
     <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\ScheduleService.cs" />
     <Compile Include="Services\SettingService.cs" />
     <Compile Include="Services\AccountService.cs" />
@@ -332,6 +347,9 @@
     <None Include="Project_Readme.html" />
     <Content Include="Views\Account\Signin.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Account\Log.cshtml" />
+    <Content Include="Views\User\Info.cshtml" />
+    <Content Include="Views\User\UserLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -341,6 +359,15 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugScheduler|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>

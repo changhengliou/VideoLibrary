@@ -10,8 +10,6 @@ namespace PointVideoGallery
 {
     public class FileIndexConfig
     {
-        private static FileSystemWatcher _fileIndexer;
-
         public static void RegisterFileIndexService()
         {
             var path = ConfigurationManager.AppSettings.Get("LibraryIndexBasePath");

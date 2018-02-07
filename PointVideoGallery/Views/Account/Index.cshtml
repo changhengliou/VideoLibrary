@@ -1,14 +1,63 @@
 ﻿@section header {
-    <link href="/Static/dist/account.css" rel="stylesheet" />
+    <link href="/Static/dist/account.css" rel="stylesheet"/>
 }
 <div class="panel panel-default">
-    <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> 資料列表</div>
+    <div class="panel-heading">
+        <span class="glyphicon glyphicon-user"></span> 資料列表
+    </div>
     <div class="panel-body" id="data-panel">
         <table id="table"></table>
         <div style="position: relative; height: 40px;">
             <button class="btn btn-sm btn-primary" style="margin-top: 10px; position: absolute; right: 0;" id="newRowBtn">
                 <span class="glyphicon glyphicon-plus"></span> 新增
             </button>
+        </div>
+    </div>
+</div>
+@*edit modal*@
+<div class="modal fade" id="editModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> 帳號資料</h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="form-group">
+                    <label for="editEmail">Email:</label>
+                    <input class='form-control input-sm' placeholder='Email' type='text' id="editEmail"/>
+                </div>
+                <div class="form-group">
+                    <label for="editId">帳號:</label>
+                    <input class='form-control input-sm' placeholder='帳號' type='text' id="editId"/>
+                </div>
+                <div class="form-group">
+                    <label for="editPwd">密碼:</label>
+                    <input class='form-control input-sm' placeholder='密碼' type='password' id="editPwd"/>
+                </div>
+                <div style="margin-top: 12px; text-align: right;">
+                    <button class="btn btn-sm btn-primary" id="editSave">儲存</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" id="editAbort">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*delete user modal*@
+<div class="modal fade" id="removeModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header" style="background: red; color: #fff;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-alert"></span> 警告</h4>
+            </div>
+            <div class="modal-body">
+                <strong>確定刪除帳號?刪除後無法復原!</strong>
+                <div style="margin-top: 12px; text-align: right;">
+                    <button class="btn btn-sm btn-primary" id="removeConfirm">儲存</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -1,1 +1,18 @@
-﻿ROLE
+﻿@section header {
+    <link href="/Static/dist/account.css" rel="stylesheet" />
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="glyphicon glyphicon-user"></span> 權限設定
+    </div>
+    <div class="panel-body" id="data-panel">
+        <p><strong style="font-size: 16px;">
+            <span style="color: red;">*</span>開啟/關閉所有功能
+        </strong></p>
+        <table id="table" style="min-width: 675px;"></table>
+    </div>
+</div>
+@section scripts
+{
+    <script src="/Static/dist/role.js"></script>
+}

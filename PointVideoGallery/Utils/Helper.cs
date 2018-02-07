@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
 using System.Web;
 
 namespace PointVideoGallery.Utils
@@ -20,6 +22,12 @@ namespace PointVideoGallery.Utils
 //            foreach (string subdirectory in subdirectoryEntries)
 //                GetFilesInDirectory(subdirectory);
             Directory.GetFiles(dirPath, "*.*", SearchOption.AllDirectories);
+        }
+
+        public static int GetUserId(HttpRequestMessage request)
+        {
+            var claim = request.GetOwinContext().Authentication.User.FindFirst(s => s.Type == ClaimTypes.NameIdentifier);
+            return Convert.ToInt32(claim.Value);
         }
     }
 }

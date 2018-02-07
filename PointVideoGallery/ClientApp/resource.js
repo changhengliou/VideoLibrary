@@ -1,7 +1,7 @@
 import 'bootstrap-table';
 import 'bootstrap-table/dist/bootstrap-table.css';
 import './css/resource.css';
-import { getDateTimeString, setTableViewZhTwLocal } from './js/utils';
+import { getDateTimeString, setTableViewZhTwLocal, addMsgbox } from './js/utils';
 
 // edit button click
 const onEditClick = (row) => {
@@ -75,7 +75,6 @@ const onEditClick = (row) => {
             name = document.getElementById('editName').value,
             id = e.target.getAttribute('data-id');
 
-        console.log(e.target);
         if (btn === 'editUpdate') {
             $.ajax({
                 url: '/api/v1/ad/resource/update',
@@ -89,10 +88,10 @@ const onEditClick = (row) => {
             .done(res => {
                 $('#editModal').modal('toggle');
                 $('#resource-table').bootstrapTable('refresh');
-                console.log(res);
+                addMsgbox('上傳成功!', null, 'panel-upload', 'success');
             })
             .fail(err => {
-                console.log(err);
+                addMsgbox(err.status === 403 ? '沒有權限!' : '更新失敗!', null, 'panel-upload', 'danger');
             });
         } else if (btn === 'editDelete') {
             $.ajax({
@@ -102,10 +101,10 @@ const onEditClick = (row) => {
             .done(res => {
                 $('#editModal').modal('toggle');
                 $('#resource-table').bootstrapTable('refresh');
-                console.log(res);
+                addMsgbox('刪除成功!', null, 'panel-upload', 'success');
             })
             .fail(err => {
-                console.log(err);
+                addMsgbox(err.status === 403 ? '沒有權限!' : '刪除失敗!', null, 'panel-upload', 'danger');
             });
         }
     }
@@ -115,11 +114,15 @@ const onEditClick = (row) => {
 
     // upload button click listener
     document.getElementById('upload-img').addEventListener('change', (e) => {
-        var input = e.target;
+        var input = e.target,
+            msg = '';
         if (input.files && input.files.length) {
             var count = 0;
             for (var i = 0; i < input.files.length; ++i) {
-                if (!input.files[i].type.match('image')) continue;
+                if (!(input.files[i].type.match('image') || input.files[i].type.match('video'))) {
+                    msg += `${input.files[i].name} 格式錯誤<br>`;
+                    continue;
+                }
                 count++;
                 // read file as preview
                 var reader = new FileReader();
@@ -145,6 +148,8 @@ const onEditClick = (row) => {
 
                 reader.readAsDataURL(input.files[i]);
             }
+            if (msg)
+                addMsgbox(msg, null, 'panel-upload', 'danger');
             if (count > 0)
                 toggleBtn();
         }
@@ -175,13 +180,27 @@ const onEditClick = (row) => {
             contentType: false,
             data: data
         })
-        .done(msg => {
-            console.log(msg);
+        .done(res => {
+            var okMsg = '', errMsg = '';
             toggleBtn();
             clearPreviewPanel();
             $("#resource-table").bootstrapTable('refresh');
+            if (Array.isArray(res)) {
+                res.map(e => {
+                    if (e.Ok)
+                        okMsg += `${e.FileName} ${e.Message} <br>`;
+                    else
+                        errMsg += `${e.FileName} ${e.Message} <br>`;
+                })
+            }
+            if (okMsg)
+                addMsgbox(okMsg, null, 'panel-upload', 'success');
+            if (errMsg)
+                addMsgbox(errMsg, null, 'panel-upload', 'danger');
         })
-        .fail(err => console.log(err));
+        .fail(err => {
+            addMsgbox(err.status === 403 ? '沒有權限!' : '上傳失敗!', null, 'panel-upload', 'danger');
+        });
     });
 
     // show / hide submit and upload button 

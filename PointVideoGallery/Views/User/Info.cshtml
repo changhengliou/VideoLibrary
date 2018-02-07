@@ -1,0 +1,20 @@
+﻿@using System.IdentityModel.Claims
+@using ImTools
+@using PointVideoGallery.Services
+@{
+    var service = new AccountService();
+    var uid = Convert.ToInt32(Request.GetOwinContext().Authentication.User.Claims.FindFirst(s => s.Type == ClaimTypes.NameIdentifier).Value);
+    var user = service.GetUserByUserIdAsync(uid).Result;
+}
+
+<div>
+    <h2>帳戶資訊</h2>
+    <div class="form-group">
+        <label>EMAIL:</label>
+        <div class="form-control">@user.Email</div>
+    </div>
+    <div class="form-group">
+        <label>帳號:</label>
+        <div class="form-control">@user.UserName</div>
+    </div>
+</div>

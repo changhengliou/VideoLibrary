@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using PointVideoGallery.Models;
 using PointVideoGallery.Services;
+using PointVideoGallery.Utils;
 
 namespace PointVideoGallery.Api
 {
@@ -22,6 +23,7 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.Route("{s}")]
         [System.Web.Http.HttpGet]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.PublishRead)]
         public async Task<IHttpActionResult> GetSchedulesAsync([FromUri] DateTime s)
         {
             var service = new ScheduleService();
@@ -37,6 +39,7 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.Route]
         [System.Web.Http.HttpPost]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.PublishWrite)]
         public async Task<IHttpActionResult> AddScheduleAsync([FromBody] ScheduleModel data)
         {
             if (data.EventId <= 0 || data.S < DateTime.Now)
@@ -47,10 +50,15 @@ namespace PointVideoGallery.Api
                 return BadRequest();
 
             var service = new ScheduleService();
-            
-            if (await service.AddScheduleAsync(data.S.Date, endDate, data.EventId))
-                return Ok();
-            return InternalServerError();
+
+            if (!await service.AddScheduleAsync(data.S.Date, endDate, data.EventId)) return InternalServerError();
+            await LogService.WriteLogAsync(new Log
+            {
+                Action = $"廣告排程—新增一筆排程，由{data.S:yyyy-MM-dd}至{data.E:yyyy-MM-dd} 每天執行",
+                ActionTime = DateTime.Now,
+                UserId = Helper.GetUserId(Request)
+            });
+            return Ok();
         }
 
         /// <summary>
@@ -58,14 +66,20 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpDelete]
         [System.Web.Http.Route("{id}")]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.PublishWrite)]
         public async Task<IHttpActionResult> RemoveScheduleAsync([FromUri] int id)
         {
             if (id <= 0)
                 return BadRequest();
             var service = new ScheduleService();
-            if (await service.DropScheduleByIdAsync(id))
-                return Ok();
-            return InternalServerError();
+            if (!await service.DropScheduleByIdAsync(id)) return InternalServerError();
+            await LogService.WriteLogAsync(new Log
+            {
+                Action = $"廣告排程—刪除一筆排程",
+                ActionTime = DateTime.Now,
+                UserId = Helper.GetUserId(Request)
+            });
+            return Ok();
         }
 
         /// <summary>

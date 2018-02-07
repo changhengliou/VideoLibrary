@@ -490,7 +490,6 @@ namespace PointVideoGallery.Services
                             }
                             break;
                     }
-
                     locations = (await connection.QueryAsync<EventMap>(sql)).Select(s => s.EventId);
 
                     switch (soId.Count)
@@ -516,10 +515,21 @@ namespace PointVideoGallery.Services
                     {
                         queryList.AddRange(locations.Intersect(so));
                     }
-                    else if (locationId.Count > 0 || soId.Count > 0)
+                    // select only locations
+                    else if (locationId.Count > 0 && soId.Count == 0)
+                    {
+                        queryList.AddRange(locations);
+                    }
+                    // select only so
+                    else if (locationId.Count == 0 && soId.Count > 0)
                     {
                         queryList.AddRange(so);
-                        queryList.AddRange(locations);
+                    }
+                    // select both
+                    else
+                    {
+                        queryList.AddRange(soId);
+                        queryList.AddRange(locationId);
                     }
 
                     if (queryList.Count > 0)
@@ -844,12 +854,9 @@ namespace PointVideoGallery.Services
                                 queryBuilder.Append(
                                     $"DELETE FROM `event_resource` WHERE `EventId`={adEvent.Id} AND `ResourceSeq`={i};");
                             }
-                            Trace.WriteLine("--- SQL ---");
-                            Trace.WriteLine(actionQueryBuilder);
-                            Trace.WriteLine("--- MERGED SQL ---");
+
                             if (actionCount > 0)
                                 queryBuilder.Append(actionQueryBuilder);
-                            Trace.WriteLine(queryBuilder);
 
                             await connection.ExecuteAsync(queryBuilder.ToString(), transaction);
                         }
@@ -888,6 +895,43 @@ namespace PointVideoGallery.Services
                     Trace.WriteLine(e);
                     await connection.CloseAsync();
                     return null;
+                }
+            }
+        }
+
+        public async Task<bool> AddOrUpdateActionImageAssetAsync(UploadActionResFileInfo info, string path)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    string sql = "INSERT INTO `action` " +
+                                 "(`Action`, `Color`, `EventId`, `ResourceSeq`) " +
+                                 "VALUES (@action, @color, @eventId, @seq) " +
+                                 "ON DUPLICATE KEY UPDATE " +
+                                 "`Action`=VALUES(`Action`), " +
+                                 "`Color`=VALUES(`Color`), " +
+                                 "`EventId`=VALUES(`EventId`), " +
+                                 "`ResourceSeq`=VALUES(`ResourceSeq`);";
+
+                    if (await connection.ExecuteAsync(sql, new
+                    {
+                        action = path,
+                        color = info.Color,
+                        eventId = info.EventId,
+                        seq = info.Sequence
+                    }) == 0)
+                        throw new SqlExecutionException();
+                    await connection.CloseAsync();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
                 }
             }
         }

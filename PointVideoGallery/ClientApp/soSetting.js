@@ -1,6 +1,6 @@
 import 'bootstrap-table';
 import 'bootstrap-table/dist/bootstrap-table.css';
-import { setTableViewZhTwLocal, isEmpty, tableSetting } from './js/utils';
+import { setTableViewZhTwLocal, isEmpty, tableSetting, addMsgbox } from './js/utils';
 
 // edit button click
 const onEditClick = (row) => {
@@ -45,10 +45,9 @@ $(document).ready(() => {
 
 const onUpdateRow = (e) => {
     var code = document.getElementById('editCode'),
-        name = document.getElementById('editName'),
-        msgEle = document.getElementById('editModalMsg');
+        name = document.getElementById('editName');
 
-    if (!formValidation(code.value, name.value, msgEle))
+    if (!formValidation(code.value, name.value))
         return;
     
     $.ajax({
@@ -63,16 +62,14 @@ const onUpdateRow = (e) => {
         name.value = '';
     })
     .fail(err => {
-        msgEle.innerHTML = '新增失敗';
-        msgEle.style.display = '';
+        addMsgbox(err.status === 403 ? '權限不足!' : '新增失敗!', null, 'panel', 'danger');
     });
 }
 
 const onDeleteRow = (e) => {
     const id = e.target.getAttribute('data-id');
     var code = document.getElementById('editCode'),
-        name = document.getElementById('editName'),
-        msgEle = document.getElementById('editModalMsg');
+        name = document.getElementById('editName');
 
     $.ajax({
         url: `/api/v1/setting/so/${id}`,
@@ -84,22 +81,15 @@ const onDeleteRow = (e) => {
         $('#editModal').modal('toggle');
         code.value = '';
         name.value = '';
-        msgEle.innerHTML = '';
-        msgEle.style.display = 'none';
     })
     .fail(err => {
-        msgEle.innerHTML = '刪除失敗';
-        msgEle.style.display = '';
+        addMsgbox(err.status === 403 ? '權限不足!' : '刪除失敗!', null, 'panel', 'danger');
     });
 }
 
 const onAbortUpdateRow = (e) => {
-    const msgEle = document.getElementById('editModalMsg');
-
     document.getElementById('editCode').value = '';
     document.getElementById('editName').value = '';
-    msgEle.innerHTML = '';
-    msgEle.style.display = 'none';
     $('#neditModal').modal('toggle');
 }
 
@@ -107,10 +97,9 @@ const onNewRowClick = (e) => $('#newModal').modal('toggle');
 
 const onCreateNewRow = (e) => {
     var code = document.getElementById('newCode'),
-        name = document.getElementById('newName'),
-        msgEle = document.getElementById('newModalMsg');
+        name = document.getElementById('newName');
 
-    if (!formValidation(code.value, name.value, msgEle))
+    if (!formValidation(code.value, name.value))
         return;
 
     $.ajax({
@@ -125,18 +114,13 @@ const onCreateNewRow = (e) => {
         name.value = '';
     })
     .fail(err => {
-        msgEle.innerHTML = '新增失敗';
-        msgEle.style.display = '';
+        addMsgbox(err.status === 403 ? '權限不足!' : '新增失敗!', null, 'panel', 'danger');
     });
 }
 
 const onAbortCreatNewRow = (e) => {
-    const msgEle = document.getElementById('newModalMsg');
-
     document.getElementById('newCode').value = '';
     document.getElementById('newName').value = '';
-    msgEle.innerHTML = '';
-    msgEle.style.display = 'none';
     $('#newModal').modal('toggle');
 }
 
@@ -146,14 +130,11 @@ const onAbortCreatNewRow = (e) => {
  * @param {string} name 
  * @param {HTMLElement} ele
  */
-const formValidation = (code, name, ele) => {
+const formValidation = (code, name) => {
     if (isEmpty(code) || isEmpty(name)) {
-        ele.innerHTML = '欄位不能為空';
-        ele.style.display = '';
+        addMsgbox('欄位不能為空!', null, 'panel', 'danger');
         return false;
     }
-    ele.innerHTML = '';
-    ele.style.display = 'none';
     return true;
 }
 

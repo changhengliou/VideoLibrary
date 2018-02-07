@@ -81,7 +81,7 @@
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-th-list"></span> 1.顯示位置
             </div>
-            <div class="panel-body">
+            <div class="panel-body" id="panel-loc">
                 <table id="location-table"></table>
                 <div style="text-align: right; margin: 15px 0;">
                     <button class="btn btn-sm btn-primary" id="newLocBtn" data-toggle="modal" data-target="#editModal">
@@ -95,7 +95,7 @@
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-th-list"></span> 2. SO
             </div>
-            <div class="panel-body">
+            <div class="panel-body" id="panel-so">
                 <table id="so-table"></table>
                 <div style="text-align: right; margin: 15px 0;">
                     <button class="btn btn-sm btn-primary" id="newSoBtn" data-toggle="modal" data-target="#editModal">
@@ -196,7 +196,7 @@
                                 <p class="badge bg-important">Red</p>
                             </td>
                             <td>
-                                <select class="form-control input-sm" name="redType">
+                                <select class="form-control input-sm" name="redType"  id="redType">
                                     <option value="image" selected="selected">image</option>
                                     <option value="app">app</option>
                                     <option value="media">media</option>
@@ -204,7 +204,10 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" maxlength="255" class="form-control input-sm" name="redAction"/>
+                                <label for="redImg" class="btn btn-default btn-sm upload">
+                                </label>
+                                <input type="file" id="redImg" name="redImg" style="display: none" multiple accept="image/gif, image/jpeg, image/png, image/jpg" />
+                                <input type="text" maxlength="255" class="form-control input-sm action" name="redAction" style="display: none;"/>
                             </td>
                             <td>
                                 <input type="text" name="redParam" maxlength="255" class="form-control input-sm" />
@@ -216,7 +219,7 @@
                                 <p class="badge bg-success">Green</p>
                             </td>
                             <td>
-                                <select class="form-control input-sm" name="greenType">
+                                <select class="form-control input-sm" name="greenType" id="greenType">
                                     <option value="image" selected="selected">image</option>
                                     <option value="app">app</option>
                                     <option value="media">media</option>
@@ -224,7 +227,10 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="greenAction" maxlength="255" class="form-control input-sm" />
+                                <label for="greenImg" class="btn btn-default btn-sm upload">
+                                </label>
+                                <input type="file" id="greenImg" name="greenImg" style="display: none" multiple accept="image/gif, image/jpeg, image/png, image/jpg" />
+                                <input type="text" name="greenAction" maxlength="255" class="form-control input-sm action" style="display: none;"/>
                             </td>
                             <td>
                                 <input type="text" name="greenParam" maxlength="255" class="form-control input-sm" />
@@ -236,7 +242,7 @@
                                 <p class="badge bg-warning">Yellow</p>
                             </td>
                             <td>
-                                <select class="form-control input-sm" name="yellowType">
+                                <select class="form-control input-sm" name="yellowType" id="yellowType">
                                     <option value="image" selected="selected">image</option>
                                     <option value="app">app</option>
                                     <option value="media">media</option>
@@ -244,7 +250,10 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="yellowAction" maxlength="255" class="form-control input-sm" />
+                                <label for="yellowImg" class="btn btn-default btn-sm upload">
+                                </label>
+                                <input type="file" id="yellowImg" name="yellowImg" style="display: none" multiple accept="image/gif, image/jpeg, image/png, image/jpg" />
+                                <input type="text" name="yellowAction" maxlength="255" class="form-control input-sm action" style="display: none;"/>
                             </td>
                             <td>
                                 <input type="text" name="yellowParam" maxlength="255" class="form-control input-sm" />
@@ -256,7 +265,7 @@
                                 <p class="badge bg-primary">Blue</p>
                             </td>
                             <td>
-                                <select class="form-control input-sm" name="blueType">
+                                <select class="form-control input-sm" name="blueType" id="blueType">
                                     <option value="image" selected="selected">image</option>
                                     <option value="app">app</option>
                                     <option value="media">media</option>
@@ -264,7 +273,10 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="blueAction" maxlength="255" class="form-control input-sm" />
+                                <label for="blueImg" class="btn btn-default btn-sm upload">
+                                </label>
+                                <input type="file" id="blueImg" name="blueImg" style="display: none" multiple accept="image/gif, image/jpeg, image/png, image/jpg" />
+                                <input type="text" name="blueAction" maxlength="255" class="form-control input-sm action" style="display: none;"/>
                             </td>
                             <td>
                                 <input type="text" name="blueParam" maxlength="255" class="form-control input-sm" />
@@ -276,7 +288,7 @@
                                 <p class="badge bg-info">Ok</p>
                             </td>
                             <td>
-                                <select class="form-control input-sm" name="okType">
+                                <select class="form-control input-sm" name="okType" id="okType">
                                     <option value="image" selected="selected">image</option>
                                     <option value="app">app</option>
                                     <option value="media">media</option>
@@ -284,7 +296,10 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="okAction" maxlength="255" class="form-control input-sm" />
+                                <label for="okImg" class="btn btn-default btn-sm upload">
+                                </label>
+                                <input type="file" id="okImg" name="okImg" style="display: none" multiple accept="image/gif, image/jpeg, image/png, image/jpg" />
+                                <input type="text" name="okAction" maxlength="255" class="form-control input-sm action" style="display: none;"/>
                             </td>
                             <td>
                                 <input type="text" name="okParam" maxlength="255" class="form-control input-sm" />

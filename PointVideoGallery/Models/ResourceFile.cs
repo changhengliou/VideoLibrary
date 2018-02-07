@@ -17,6 +17,13 @@ namespace PointVideoGallery.Models
         public string MediaType { get; set; }
     }
 
+    public class ResourceMsg
+    {
+        public string FileName { get; set; }
+        public bool Ok { get; set; }
+        public string Message { get; set; }
+    }
+
     public class UploadFileInfo
     {
         [JsonProperty("name")]
@@ -27,5 +34,12 @@ namespace PointVideoGallery.Models
 
         [JsonProperty("filename")]
         public string FileName { get; set; }
+    }
+
+    public class UploadActionResFileInfo
+    {
+        public string Color { get; set; }
+        public int Sequence { get; set; }
+        public int EventId { get; set; }
     }
 }

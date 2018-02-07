@@ -1,6 +1,6 @@
 import 'bootstrap-table';
 import 'bootstrap-table/dist/bootstrap-table.css';
-import { setTableViewZhTwLocal, tableSetting } from './js/utils';
+import { setTableViewZhTwLocal, tableSetting, addMsgbox } from './js/utils';
 
 setTableViewZhTwLocal($);
 $.editable = false;
@@ -95,7 +95,7 @@ const onCreateRowCellClick = (e) => {
         removeEditRow(e.target, _fn, btn);
     } else if (name === 'createrow') {
         if (!data || !data.value) {
-            toggleSystemMsg('名稱空白!');
+            addMsgbox('名稱空白!', null, 'panel', 'danger');
             return;
         }
 
@@ -105,13 +105,13 @@ const onCreateRowCellClick = (e) => {
         })
         .done(res => {
             console.log(res);
-            toggleSystemMsg('新增成功!');
+            addMsgbox('新增成功!', null, 'panel', 'success');
             removeEditRow(e.target, _fn, btn);
             _fn.bootstrapTable('refresh');
         })
         .fail(err => {
             console.log(err);
-            toggleSystemMsg('新增失敗!');
+            addMsgbox(err.status === 403 ? '沒有權限!' : '新增失敗!', null, 'panel', 'danger');
         })
     }
 }
@@ -200,27 +200,12 @@ const onRowCellBtnClick = (e) => {
                 Name: _value,
             }
         });
-        toggleSystemMsg('更新成功!');
-        console.log(res)
+        addMsgbox('更新成功!', null, 'panel', 'success');
         setEditable(false);
     })
     .fail(err => {
         rollback(_fn, _id);
-        toggleSystemMsg('更新失敗!');
-        console.log(err)
+        var msg = err.status === 403 ? "沒有權限!" : "更新失敗!";
+        addMsgbox(msg, null, 'panel', 'danger');
     });
-}
-
-/**
- * show system message if param is given, otherwise hide the message box
- * @param {string} msg system message
- */
-const toggleSystemMsg = (msg) => {
-    var msgBox = document.getElementById('msg');
-    if (!msgBox || !msg.trim().length) {
-        msgBox.style.display = 'none';
-        return;
-    }
-    msgBox.innerHTML = `<span style='color:red; font-weight: 700;'>${msg}</span>`;
-    msgBox.style.display = '';
 }

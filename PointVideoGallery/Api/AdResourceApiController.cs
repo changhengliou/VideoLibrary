@@ -15,6 +15,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using PointVideoGallery.Models;
 using PointVideoGallery.Services;
+using PointVideoGallery.Utils;
 using WebGrease.Css.Extensions;
 
 namespace PointVideoGallery.Api
@@ -28,6 +29,7 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route("upload")]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.ResourceWrite)]
         public async Task<IHttpActionResult> UploadResource()
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -43,14 +45,44 @@ namespace PointVideoGallery.Api
 
             var resourceFile = JsonConvert.DeserializeObject<Dictionary<int, UploadFileInfo>>(fileInfo);
 
-            StringBuilder returnMsg = new StringBuilder();
+            List<ResourceMsg> returnVal = new List<ResourceMsg>();
 
             for (var i = 0; i < resourceFile.Keys.Count; i++)
             {
+                var fileExtension = Path.GetExtension(files[i].FileName);
+                if (files[i].ContentLength > int.Parse(ConfigurationManager.AppSettings["LimitAssetsFileSize"]) * 1024)
+                {
+                    returnVal.Add(new ResourceMsg
+                    {
+                        FileName = files[i].FileName,
+                        Ok = false,
+                        Message = "檔案過大"
+                    });
+                    continue;
+                }
+                if (!(fileExtension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                      fileExtension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                      fileExtension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
+                      fileExtension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
+                      fileExtension.Equals(".bmp", StringComparison.OrdinalIgnoreCase)))
+                {
+                    returnVal.Add(new ResourceMsg
+                    {
+                        FileName = files[i].FileName,
+                        Ok = false,
+                        Message = "檔案格式不支援"
+                    });
+                    continue;
+                }
                 var info = await adService.SaveHttpFileToDiskAsync(files[i]);
                 if (info == null)
                 {
-                    returnMsg.AppendLine($"Failed to save ${files[i].FileName}");
+                    returnVal.Add(new ResourceMsg
+                    {
+                        FileName = files[i].FileName,
+                        Ok = false,
+                        Message = "儲存失敗"
+                    });
                 }
                 else
                 {
@@ -61,13 +93,29 @@ namespace PointVideoGallery.Api
                     info.CreateTime = DateTime.Now;
                     if (await adService.AddResourceFileAsync(info))
                     {
-                        returnMsg.AppendLine($"Successfully save {files[i].FileName}");
+                        returnVal.Add(new ResourceMsg
+                        {
+                            FileName = files[i].FileName,
+                            Ok = true,
+                            Message = "上傳成功"
+                        });
+                        await LogService.WriteLogAsync(new Log
+                        {
+                            Action = $"資源維護—上傳圖檔 {files[i].FileName}",
+                            ActionTime = DateTime.Now,
+                            UserId = Helper.GetUserId(Request)
+                        });
                         continue;
                     }
-                    returnMsg.AppendLine($"Failed to save ${files[i].FileName}");
+                    returnVal.Add(new ResourceMsg
+                    {
+                        FileName = files[i].FileName,
+                        Ok = false,
+                        Message = "儲存失敗"
+                    });
                 }
             }
-            return Ok(returnMsg.ToString());
+            return Json(returnVal);
         }
 
         /// <summary>
@@ -77,6 +125,7 @@ namespace PointVideoGallery.Api
         /// sort=CreateTime&order=desc&offset=5&limit=5
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("table")]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.ResourceRead)]
         public async Task<IHttpActionResult> GetResource(int offset = 0, int limit = 10, string sort = "CreateTime",
             string order = "desc", string search = null)
         {
@@ -107,12 +156,18 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpPut]
         [System.Web.Http.Route("update")]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.ResourceWrite)]
         public async Task<IHttpActionResult> UpdateResource([FromBody] ResourceFile file)
         {
             AdService adService = new AdService();
-            if (await adService.FindAndUpdateResourceFileByIdAsync(file))
-                return Ok();
-            return InternalServerError();
+            if (!await adService.FindAndUpdateResourceFileByIdAsync(file)) return InternalServerError();
+            await LogService.WriteLogAsync(new Log
+            {
+                Action = $"資源維護—修改圖檔資訊 {file.Name}",
+                ActionTime = DateTime.Now,
+                UserId = Helper.GetUserId(Request)
+            });
+            return Ok();
         }
 
         /// <summary>
@@ -120,14 +175,20 @@ namespace PointVideoGallery.Api
         /// </summary>
         [System.Web.Http.HttpDelete]
         [System.Web.Http.Route("remove/{id}")]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.ResourceWrite)]
         public async Task<IHttpActionResult> RemoveResource(int id)
         {
             if (id <= 0)
                 return BadRequest("Invalid Request.");
             AdService adService = new AdService();
-            if (await adService.DropResourceFileByIdAsync(id))
-                return Ok();
-            return InternalServerError();
+            if (!await adService.DropResourceFileByIdAsync(id)) return InternalServerError();
+            await LogService.WriteLogAsync(new Log
+            {
+                Action = "資源維護—刪除圖檔",
+                ActionTime = DateTime.Now,
+                UserId = Helper.GetUserId(Request)
+            });
+            return Ok();
         }
     }
 }

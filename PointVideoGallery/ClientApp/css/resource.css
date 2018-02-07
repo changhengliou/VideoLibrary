@@ -5,9 +5,6 @@
     width: 26px;
     display: block;
 }
-input[type="file"] {
-    display: none;
-}
 
 .preview-img {
     background-position: center!important;

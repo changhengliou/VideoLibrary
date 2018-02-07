@@ -1,7 +1,6 @@
 ﻿<div class="panel panel-default">
     <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span> 資料列表</div>
-    <div class="panel-body">
-        <div style="display: none;" id="msg"></div>
+    <div class="panel-body" id="panel">
         <table id="table"></table>
         <div style="position: relative; height: 40px;">
             <button class="btn btn-sm btn-primary" style="margin-top: 10px; position: absolute; right: 0;" id="newRowBtn">
@@ -20,7 +19,6 @@
                 <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> 修改資料</h4>
             </div>
             <div class="modal-body">
-                <div><span style="color: red; display: none; font-weight: 800;" id="editModalMsg"></span></div>
                 <input class='form-control input-sm' placeholder='SO代碼' type='text' style='margin-top: 8px;' id="editCode"/>
                 <input class='form-control input-sm' placeholder='SO名稱' type='text' style='margin-top: 8px;' id="editName"/>
                 <div style="margin-top: 12px; text-align: right;">
