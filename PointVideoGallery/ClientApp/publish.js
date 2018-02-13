@@ -23,6 +23,14 @@ $('#schedule-table').bootstrapTable({
         field: 'Name',
         title: '活動名稱',
     }, {
+        field: 'ScheduleDate',
+        title: '上架日期',
+        formatter: (value) => getDateString(new Date(value)) + " 00:00:00"
+    }, {
+        field: 'ScheduleDateEnd',
+        title: '下架日期',
+        formatter: (value) => getDateString(new Date(value)) + " 23:59:59"
+    }, {
         field: 'CreateDate',
         title: '創建日期',
         formatter: (value) => getDateTimeString(new Date(value))

@@ -25,21 +25,24 @@ namespace PointVideoGallery.Services
             using (var connection = new MySqlConnection(ConnectionString))
             {
                 var now = DateTime.Now;
-                var sqlBuilder =
-                    new StringBuilder("INSERT INTO `schedule` (`ScheduleDate`, `CreateDate`, `EventId`) VALUES ");
-
-                for (var s = scheduleStart; s <= scheduleEnd; s = s.AddDays(1))
-                {
-                    sqlBuilder.Append($"('{s:yyyy-MM-dd}', '{now:yyyy-MM-dd HH:mm:ss}', '{eventId}')");
-                    if (s.AddDays(1) <= scheduleEnd)
-                        sqlBuilder.Append(", ");
-                }
-                sqlBuilder.Append(";");
+                var sql = "INSERT INTO `schedule` (`ScheduleDate`, `ScheduleDateEnd`, `CreateDate`, `EventId`) VALUES " +
+                          $"('{scheduleStart:yyyy-MM-dd}', '{scheduleEnd:yyyy-MM-dd}', '{now:yyyy-MM-dd HH:mm:ss}', '{eventId}');";
+//                var sqlBuilder =
+//                    new StringBuilder("INSERT INTO `schedule` (`ScheduleDate`, `CreateDate`, `EventId`) VALUES ");
+//
+//                for (var s = scheduleStart; s <= scheduleEnd; s = s.AddDays(1))
+//                {
+//                    sqlBuilder.Append($"('{s:yyyy-MM-dd}', '{now:yyyy-MM-dd HH:mm:ss}', '{eventId}')");
+//                    if (s.AddDays(1) <= scheduleEnd)
+//                        sqlBuilder.Append(", ");
+//                }
+//                sqlBuilder.Append(";");
 
                 try
                 {
                     await connection.OpenAsync();
-                    await connection.ExecuteAsync(sqlBuilder.ToString());
+                    await connection.ExecuteAsync(sql);
+                    //                    await connection.ExecuteAsync(sqlBuilder.ToString());
                 }
                 catch (Exception e)
                 {
@@ -66,7 +69,7 @@ namespace PointVideoGallery.Services
                     var list = (await connection.QueryAsync<ScheduleEvent>(
                         "SELECT `s`.`*`, `a`.`Name` FROM `schedule` AS s " +
                         "LEFT JOIN `ad_events` AS a ON `s`.`EventId`=`a`.`Id` " +
-                        "WHERE `s`.`ScheduleDate`=@scheduleDate;",
+                        "WHERE `s`.`ScheduleDate`<=@scheduleDate AND `s`.`ScheduleDateEnd`>=@scheduleDate;",
                         new {scheduleDate = date.ToString("yyyy-MM-dd")})
                     ).ToList();
                     await connection.CloseAsync();

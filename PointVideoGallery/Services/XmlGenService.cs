@@ -37,83 +37,86 @@ namespace PointVideoGallery.Services
 
                 // <entry time="2016/09/19 00:00:00">
                 await writer.WriteStartElementAsync(null, "entry", null);
-                await writer.WriteAttributeStringAsync(null, "time", null, startDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                await writer.WriteAttributeStringAsync(null, "time", null, startDate.ToString("yyyy/MM/dd HH:mm:ss"));
 
-                foreach (LocationTag location in adEvent.LocationTags)
-                {
-                    // <block name="miniepg">
-                    await writer.WriteStartElementAsync(null, "block", null);
-                    await writer.WriteAttributeStringAsync(null, "name", null, location.Name);
-
-                    // <children>
-                    await writer.WriteStartElementAsync(null, "children", null);
-
-                    // <child name="Production - miniEPG">
-                    await writer.WriteStartElementAsync(null, "child", null);
-                    await writer.WriteAttributeStringAsync(null, "name", null, adEvent.Name);
-
-                    // <playMode type="interval" subtype="bytime" value="10" />
-                    await writer.WriteStartElementAsync(null, "playMode", null);
-                    await writer.WriteAttributeStringAsync(null, "type", null, adEvent.PlayOutMethod);
-                    await writer.WriteAttributeStringAsync(null, "subtype", null, adEvent.PlayOutSequence);
-                    // only display in interval mode
-                    if (adEvent.PlayOutMethod.Equals("interval", StringComparison.OrdinalIgnoreCase))
-                        await writer.WriteAttributeStringAsync(null, "value", null, adEvent.PlayOutTimeSpan.ToString());
-
-                    // <duration value="600" />
-                    await writer.WriteStartElementAsync(null, "duration", null);
-                    await writer.WriteAttributeStringAsync(null, "value", null, videoDuration);
-
-                    // <assets>
-                    await writer.WriteStartElementAsync(null, "assets", null);
-
-                    foreach (var resource in adEvent.Resources)
+                if (adEvent?.LocationTags != null)
+                    foreach (LocationTag location in adEvent.LocationTags)
                     {
-                        var path = _leadingRelativePath + resource.Path.Split('/')[1];
-                        var thumbnail = _leadingRelativePath + resource.ThumbnailPath.Split('/')[1];
+                        // <block name="miniepg">
+                        await writer.WriteStartElementAsync(null, "block", null);
+                        await writer.WriteAttributeStringAsync(null, "name", null, location.Name);
 
-                        // <asset value="./../asset/200M_544x120_201709.jpg" type="image">
-                        await writer.WriteStartElementAsync(null, "asset", null);
-                        await writer.WriteAttributeStringAsync(null, "type", null, resource.MediaType);
-                        await writer.WriteAttributeStringAsync(null, "value", null, thumbnail);
-                        // only display if random
-                        if (adEvent.PlayOutMethod.Equals("random", StringComparison.OrdinalIgnoreCase))
-                            await writer.WriteAttributeStringAsync(null, "weights", null, resource.PlayoutWeight.ToString());
+                        // <children>
+                        await writer.WriteStartElementAsync(null, "children", null);
 
-                        var actions = await service.GetActionsAsync(adEvent.Id, resource.Sequence);
+                        // <child name="Production - miniEPG">
+                        await writer.WriteStartElementAsync(null, "child", null);
+                        await writer.WriteAttributeStringAsync(null, "name", null, adEvent.Name);
 
-                        foreach (var action in actions)
+                        // <playMode type="interval" subtype="bytime" value="10" />
+                        await writer.WriteStartElementAsync(null, "playMode", null);
+                        await writer.WriteAttributeStringAsync(null, "type", null, adEvent.PlayOutMethod);
+                        await writer.WriteAttributeStringAsync(null, "subtype", null, adEvent.PlayOutSequence);
+                        // only display in interval mode
+                        if (adEvent.PlayOutMethod.Equals("interval", StringComparison.OrdinalIgnoreCase))
+                            await writer.WriteAttributeStringAsync(null, "value", null,
+                                adEvent.PlayOutTimeSpan.ToString());
+
+                        // <duration value="600" />
+                        await writer.WriteStartElementAsync(null, "duration", null);
+                        await writer.WriteAttributeStringAsync(null, "value", null, videoDuration);
+
+                        // <assets>
+                        await writer.WriteStartElementAsync(null, "assets", null);
+
+                        foreach (var resource in adEvent.Resources)
                         {
-                            if(action.Checked == 0)
-                                continue;
-                            // <action value="./../asset/200M_1280x720_201709.jpg" type="image" parameter="none" code="blue"/> 
-                            await writer.WriteStartElementAsync(null, "action", null);
-                            await writer.WriteAttributeStringAsync(null, "value", null, path);
-                            await writer.WriteAttributeStringAsync(null, "type", null, action.Type);
-                            await writer.WriteAttributeStringAsync(null, "parameter", null, action.Parameter);
-                            await writer.WriteAttributeStringAsync(null, "code", null, action.Color);
+                            var path = _leadingRelativePath + resource.Path.Split('/')[1];
+                            var thumbnail = _leadingRelativePath + resource.ThumbnailPath.Split('/')[1];
 
-                            // action end
+                            // <asset value="./../asset/200M_544x120_201709.jpg" type="image">
+                            await writer.WriteStartElementAsync(null, "asset", null);
+                            await writer.WriteAttributeStringAsync(null, "type", null, resource.MediaType);
+                            await writer.WriteAttributeStringAsync(null, "value", null, thumbnail);
+                            // only display if random
+                            if (adEvent.PlayOutMethod.Equals("random", StringComparison.OrdinalIgnoreCase))
+                                await writer.WriteAttributeStringAsync(null, "weights", null,
+                                    resource.PlayoutWeight.ToString());
+
+                            var actions = await service.GetActionsAsync(adEvent.Id, resource.Sequence);
+
+                            foreach (var action in actions)
+                            {
+                                if (action.Checked == 0)
+                                    continue;
+                                // <action value="./../asset/200M_1280x720_201709.jpg" type="image" parameter="none" code="blue"/> 
+                                await writer.WriteStartElementAsync(null, "action", null);
+                                await writer.WriteAttributeStringAsync(null, "value", null, path);
+                                await writer.WriteAttributeStringAsync(null, "type", null, action.Type);
+                                await writer.WriteAttributeStringAsync(null, "parameter", null, action.Parameter);
+                                await writer.WriteAttributeStringAsync(null, "code", null, action.Color);
+
+                                // action end
+                                await writer.WriteEndElementAsync();
+                            }
+
+                            // asset end
                             await writer.WriteEndElementAsync();
                         }
 
-                        // asset end
+                        // assets end
+                        await writer.WriteEndElementAsync();
+                        // duration end
+                        await writer.WriteEndElementAsync();
+                        // playMode end
+                        await writer.WriteEndElementAsync();
+                        // child end
+                        await writer.WriteEndElementAsync();
+                        // children end
+                        await writer.WriteEndElementAsync();
+                        // block end
                         await writer.WriteEndElementAsync();
                     }
-
-                    // assets end
-                    await writer.WriteEndElementAsync();
-                    // duration end
-                    await writer.WriteEndElementAsync();
-                    // playMode end
-                    await writer.WriteEndElementAsync();
-                    // child end
-                    await writer.WriteEndElementAsync();
-                    // children end
-                    await writer.WriteEndElementAsync();
-                    // block end
-                    await writer.WriteEndElementAsync();
-                }
                 // entry end
                 await writer.WriteEndElementAsync();
                 // root end

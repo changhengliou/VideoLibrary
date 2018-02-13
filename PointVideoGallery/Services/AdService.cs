@@ -860,6 +860,10 @@ namespace PointVideoGallery.Services
 
                             await connection.ExecuteAsync(queryBuilder.ToString(), transaction);
                         }
+                        else
+                        {
+                            await connection.ExecuteAsync("DELETE FROM `event_resource` WHERE `EventId`=@eventId;", new {eventId= adEvent.Id }, transaction);
+                        }
                         transaction.Commit();
                     }
                 }
@@ -932,6 +936,59 @@ namespace PointVideoGallery.Services
                     Trace.WriteLine(e);
                     await connection.CloseAsync();
                     return false;
+                }
+            }
+        }
+
+        public async Task<List<ScheduleAdEvent>> QueryScheduleAdEventByDateAsync(DateTime from, DateTime to)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    string sql = "SELECT `EventId`, `ScheduleDate`, `ScheduleDateEnd`, `CreateDate` FROM `schedule` " +
+                                 "WHERE `ScheduleDate`<=@to AND `ScheduleDateEnd`>=@from ;";
+
+                    var list = (await connection.QueryAsync<Schedule>(sql, new
+                    {
+                        from = from,
+                        to = to
+                    })).ToList();
+
+                    var eventCache = new Dictionary<int, AdEvent>();
+                    var result = new List<ScheduleAdEvent>(list.Count);
+
+                    foreach (Schedule schedule in list)
+                    {
+                        AdEvent temp;
+                        if (eventCache.ContainsKey(schedule.EventId))
+                            temp = eventCache[schedule.EventId];
+                        else
+                        {
+                            temp = await GetAdEventByIdAsync(schedule.EventId);
+                            foreach (ResourceEvent t in temp.Resources)
+                            {
+                                t.Actions = await GetActionsAsync(schedule.EventId, t.Sequence);
+                            }
+                            eventCache[schedule.EventId] = temp;
+                        }
+                        result.Add(new ScheduleAdEvent
+                        {
+                            CreateDate = schedule.CreateDate,
+                            ScheduleDate = schedule.ScheduleDate,
+                            ScheduleDateEnd = schedule.ScheduleDateEnd,
+                            AdEvent = temp
+                        });
+                    }
+                    await connection.CloseAsync();
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    throw;
                 }
             }
         }

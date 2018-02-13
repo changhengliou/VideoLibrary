@@ -13,5 +13,9 @@ namespace PointVideoGallery.Models
         public int Sequence { get; set; }
         public int PlayoutWeight { get; set; }
         public IList<ResourceAction> Actions { get; set; }
+        public override string ToString()
+        {
+            return string.IsNullOrWhiteSpace(Path) ? Path : System.IO.Path.GetFileName(Path);
+        }
     }
 }

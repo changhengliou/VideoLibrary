@@ -28,7 +28,7 @@ namespace PointVideoGallery.Api
         {
             var service = new ScheduleService();
             var returnVal = await service.GetSchedulesByDateAsync(s);
-            Trace.WriteLine(returnVal);
+
             if (returnVal == null)
                 return InternalServerError();
             return Json(returnVal);
