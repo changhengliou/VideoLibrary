@@ -9,6 +9,7 @@ using System.Xml;
 using PointVideoGallery;
 using PointVideoGallery.Models;
 using PointVideoGallery.Services;
+using PointVideoGallery.Utils;
 using WinSCP;
 
 namespace ScheduleTaskExecuter
@@ -30,7 +31,10 @@ namespace ScheduleTaskExecuter
 
         // the full path of generated xml file stored locally 
         private static readonly string XmlOutputFilePath = Path.Combine(XmlOutputDirectory, "data.xml");
-
+        // the local path that remote data.xml will be download and save at
+        private static string RemoteXmlLocalDirectory { get; } = Path.Combine(XmlOutputDirectory, "remote");
+        // the full path after saving the remote file in local hard drive
+        private static string RemoteXmlLocalFilePath { get; } = Path.Combine(RemoteXmlLocalDirectory, "data.xml");
         private static string RemoteRootDirectory { get; } = ConfigurationManager.AppSettings["RemoteRootDirectory"];
         private static string CombineDirectory { get; } = Path.Combine(XmlOutputDirectory, "combine");
         private static string CombineDirectoryFilePath { get; } = Path.Combine(CombineDirectory, "data.xml");
@@ -53,6 +57,7 @@ namespace ScheduleTaskExecuter
 
         static void Main(string[] args)
         {
+            Helper.MysqlConnectionTest();
             if (args.Length != 0)
             {
                 int id;
@@ -62,7 +67,8 @@ namespace ScheduleTaskExecuter
                     Console.WriteLine("INVALID INPUT");
                 return;
             }
-            var events = _service.GetSchedulesByDateAsync(DateTime.Today).Result;
+            List<ScheduleEvent> events = _service.GetSchedulesByDateAsync(DateTime.Today).Result;
+
             foreach (var scheduleEvent in events)
             {
                 List<string> paths = new List<string>();
@@ -79,7 +85,6 @@ namespace ScheduleTaskExecuter
                 adEvent.SoSettings.ForEach(s => soList.Add(s.Code));
                 UploadFiles(paths, soList).Wait();
             }
-            Console.ReadKey();
         }
 
 
@@ -214,6 +219,8 @@ namespace ScheduleTaskExecuter
                 Directory.CreateDirectory(XmlOutputDirectory);
             if (!Directory.Exists(CombineDirectory))
                 Directory.CreateDirectory(CombineDirectory);
+            if (!Directory.Exists(RemoteXmlLocalDirectory))
+                Directory.CreateDirectory(RemoteXmlLocalDirectory);
 
             using (Session session = new Session())
             {
@@ -236,30 +243,25 @@ namespace ScheduleTaskExecuter
                         var remotePath = RemoteRootDirectory + "SO" + s + @"/";
                         // remotr file path to be merged
                         var remoteFilePath = remotePath + "data.xml";
-                        // the local path that remote data.xml will be download and save at
-                        var remoteXmlLocalPath = Path.Combine(XmlOutputDirectory, "remote");
-                        // the full path after saving the remote file in local hard drive
-                        var remoteXmlLocalFilePath = Path.Combine(remoteXmlLocalPath, "data.xml");
-                        // the portal block xml that to be combined
+
                         var portalBlock = new StringBuilder();
 
                         try
                         {
                             // check if remote data.xml is existed, if yes, combine the remote and the local
                             session.GetFileInfo(remoteFilePath);
-
                             // download file from the remote directory
-                            session.GetFiles(remotePath, remoteXmlLocalPath, false, options).Check();
+                            session.GetFiles(remotePath, RemoteXmlLocalDirectory, false, options).Check();
 
                             // check if remote file is correctly downloaded
-                            if (!File.Exists(remoteXmlLocalFilePath))
+                            if (!File.Exists(RemoteXmlLocalFilePath))
                             {
-                                errMsg.AppendLine($"File not found {remoteXmlLocalFilePath}");
-                                throw new FileNotFoundException($"File not found {remoteXmlLocalFilePath}");
+                                errMsg.AppendLine($"File not found {RemoteXmlLocalFilePath}");
+                                throw new FileNotFoundException($"File not found {RemoteXmlLocalFilePath}");
                             }
 
                             // read download file and extract the portal block
-                            using (var reader = new StreamReader(remoteXmlLocalFilePath))
+                            using (var reader = new StreamReader(RemoteXmlLocalFilePath))
                             {
                                 bool isPortal = false;
                                 while (!reader.EndOfStream)
@@ -295,15 +297,15 @@ namespace ScheduleTaskExecuter
                                         var line = await reader.ReadLineAsync();
 
                                         var index = -1;
-                                        if ((index = line.IndexOf("</block>", StringComparison.Ordinal)) == -1)
+                                        if ((index = line.IndexOf("</entry>", StringComparison.Ordinal)) == -1)
                                         {
                                             await writer.WriteLineAsync(line);
                                             continue;
                                         }
-                                        await writer.WriteLineAsync(line.Substring(index, 8));
+                                        if (index != 0)
+                                            await writer.WriteLineAsync(line.Substring(0, index));
                                         await writer.WriteLineAsync(portalBlock.ToString());
-                                        if (line.Length > index + 8)
-                                            await writer.WriteLineAsync(line.Substring(8, line.Length - 8));
+                                        await writer.WriteLineAsync(line.Substring(index, line.Length - index));
                                         await writer.WriteLineAsync(await reader.ReadToEndAsync());
                                         await writer.FlushAsync();
                                         break;

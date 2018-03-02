@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
+using System.Web.Http.Results;
 using OfficeOpenXml;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using OfficeOpenXml.Style;
@@ -21,7 +26,17 @@ namespace PointVideoGallery.Api
     [RoutePrefix("api/v1/publish")]
     public class PublishApiController : ApiController
     {
-        private readonly double _resHeight = 39.0D;
+        private readonly double _resWidth = 50D;
+        private readonly double _resHeight = 50D;
+
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.PublishWrite)]
+        public IHttpActionResult Publish()
+        {
+            Process.Start(ConfigurationManager.AppSettings["ScheduleTaskExecuterPath"]);
+            return Ok();
+        }
 
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("excelsheet")]
@@ -53,7 +68,6 @@ namespace PointVideoGallery.Api
 
                 worksheet.Cells["A1:H1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                StringBuilder builder = new StringBuilder();
                 string basePath = ConfigurationManager.AppSettings["LibraryIndexBasePath"];
 
                 int row = 2;
@@ -76,15 +90,22 @@ namespace PointVideoGallery.Api
 
                         if (list[i].AdEvent.PlayOutMethod.Equals("random", StringComparison.OrdinalIgnoreCase))
                             worksheet.Cells[$"E{row}"].Value = $"隨機, 比重:{list[i].AdEvent.Resources[j].PlayoutWeight}";
-                        else if(list[i].AdEvent.PlayOutMethod.Equals("interval", StringComparison.OrdinalIgnoreCase))
-                            worksheet.Cells[$"E{row}"].Value = $"輪播";
+                        else if (list[i].AdEvent.PlayOutMethod.Equals("interval", StringComparison.OrdinalIgnoreCase))
+                            worksheet.Cells[$"E{row}"].Value = "輪播";
                         // COLUMN F RESOURCE IMAGE
                         worksheet.Row(row).Height = _resHeight;
+
                         var path = Path.Combine(basePath, list[i].AdEvent.Resources[j].Path);
                         var fileInfo = new FileInfo(path);
 
+
                         if (File.Exists(path))
-                            worksheet.Drawings.AddPicture($"{row}-{j}", fileInfo).SetPosition(row - 1, 0, 5, 0);
+                        {
+                            // add resources image
+                            var excelImage = worksheet.Drawings.AddPicture($"{row}-{j}", fileInfo);
+                            excelImage.SetPosition(row - 1, 0, 5, 0);
+                            excelImage.SetSize(80);
+                        }
                         else
                             worksheet.Cells[$"F{row}"].Value += $"找不到{list[i].AdEvent.Resources[j].Path}";
 
@@ -97,8 +118,6 @@ namespace PointVideoGallery.Api
                                 if (list[i].AdEvent.Resources[j].Actions[k].Type.Equals(
                                     "image", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    worksheet.Row(row).Height = _resHeight;
-
                                     path = Path.Combine(basePath, list[i].AdEvent.Resources[j].Actions[k].Action);
 
                                     if (!File.Exists(path))
@@ -109,8 +128,10 @@ namespace PointVideoGallery.Api
                                     }
                                     fileInfo = new FileInfo(path);
 
-                                    worksheet.Drawings.AddPicture($"{row}-{j}-{k}", fileInfo)
-                                        .SetPosition(row - 1, k * (int) _resHeight + 1, 6, 0);
+                                    // add action image
+                                    var excelImage = worksheet.Drawings.AddPicture($"{row}-{j}-{k}", fileInfo);
+                                    excelImage.SetPosition(row - 1, k * (int) _resHeight + 1, 6, 0);
+                                    excelImage.SetSize(80);
                                 }
                                 worksheet.Cells[$"G{row}"].Value +=
                                     $"{list[i].AdEvent.Resources[j].Actions[k].Type} - " +
@@ -127,6 +148,8 @@ namespace PointVideoGallery.Api
 
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
                 worksheet.Cells[worksheet.Dimension.Address].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Column(6).Width = _resWidth;
+                worksheet.Column(7).Width = _resWidth;
 
                 package.Save();
 

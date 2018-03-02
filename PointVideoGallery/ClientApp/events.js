@@ -5,7 +5,7 @@ import 'select2/dist/css/select2.css';
 import 'bootstrap-datepicker/js/bootstrap-datepicker.js';
 import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css';
 import './css/events.css';
-import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, addMsgbox, getDateString, setDatePickerZhTw } from './js/utils';
+import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, addMsgbox, getDateString, setDatePickerZhTw, fireEvent } from './js/utils';
 
 /**
  * reload select2 data
@@ -131,7 +131,7 @@ $(document).ready(() => {
     resTable.bootstrapTable({
         ...tableSetting,
         onPostBody: () => {
-            window.dispatchEvent(new Event('resize'));
+            fireEvent(window, 'resize');
         },
         onClickCell: (field, value, row, element) => {
             if (field !== 'PlayoutWeight')
@@ -198,12 +198,15 @@ $(document).ready(() => {
         }, {
             field: 'MediaType',
             title: '類型',
+            sortable: true
         }, {
             field: 'Name',
             title: '名稱',
+            sortable: true
         }, {
             field: 'CreateTime',
             title: '創建日期',
+            sortable: true,
             formatter: (value) => getDateString(new Date(value))
         }]
     });
@@ -216,6 +219,12 @@ $(document).ready(() => {
     $('#soSelect').select2({
         width: window.innerWidth > 700 ? '60%' : '90%',
         data: mapSelectData($._so)
+    });
+    $(document.body).on("change", "#soSelect", function(){
+        fireEvent(window, 'resize');
+    });
+    $(document.body).on("change", "#editSelect", function(){
+        fireEvent(window, 'resize');
     });
     // initialize select box in edit modal
     $('#editSelect').select2({
@@ -251,7 +260,7 @@ $(document).ready(() => {
             document.getElementById('playoutSeq').value = res.PlayOutSequence || 'byasset';
             document.getElementById('playoutSec').value = res.PlayOutTimeSpan;
             // show column
-            document.getElementById('playoutMethod').dispatchEvent(new Event('change'));
+            fireEvent(document.getElementById('playoutMethod'), 'change');
         })
         .fail(err => {
             var msg = err.status === 403 ? "沒有權限讀取資料!" : "讀取資料失敗!";
@@ -283,7 +292,7 @@ $(document).ready(() => {
         ele.addEventListener('keypress', function keyHandler(e) {
             if (e.keyCode == 13) {
                 e.target.removeEventListener('keypress', keyHandler);
-                e.target.dispatchEvent(new Event('focusout'))
+                fireEvent(e.target, 'focusout')
             }
         });
     }
@@ -315,7 +324,7 @@ $(document).ready(() => {
             view.style.display = 'none';
         }
         // a workaround to make scroll bar always visible
-        window.dispatchEvent(new Event('resize'));
+        fireEvent(window, 'resize');
     }
 
     /**
@@ -548,7 +557,7 @@ $(document).ready(() => {
                 }
             });
             ['redType', 'greenType', 'yellowType', 'blueType', 'okType'].map(e => {
-                document.getElementById(e).dispatchEvent(new Event('change'));
+                fireEvent(document.getElementById(e), 'change');
             });
             $('#actionModal').modal('toggle');
             return;
@@ -597,7 +606,7 @@ $(document).ready(() => {
                 } 
             });
             ['redType', 'greenType', 'yellowType', 'blueType', 'okType'].map(e => {
-                document.getElementById(e).dispatchEvent(new Event('change'));
+                fireEvent(document.getElementById(e), 'change');
             });
         })
         .fail(err => {

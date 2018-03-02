@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using PointVideoGallery.Utils;
 
 namespace PointVideoGallery
 {
@@ -24,6 +25,7 @@ namespace PointVideoGallery
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 //            DryIocConfig.ConfigureDependencyInjection();
             MvcHandler.DisableMvcResponseHeader = true;
+            Helper.MysqlConnectionTest();
         }
     }
 }

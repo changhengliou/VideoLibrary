@@ -85,7 +85,7 @@ namespace PointVideoGallery.Services
                 {
                     await connection.OpenAsync();
                     list = (await connection.QueryAsync<UserInfo>("SELECT `Id`, `UserName`, `Email`, `Enable` " +
-                                                              "FROM `user`;")).ToList();
+                                                              "FROM `user` WHERE `Id` > 0;")).ToList();
                 }
                 catch (Exception e)
                 {
@@ -109,7 +109,7 @@ namespace PointVideoGallery.Services
                     await connection.OpenAsync();
                     list = (await connection.QueryAsync<UserRole>(
                         "SELECT `Id`, `UserName`, `EnableResource`, `EnablePublish`, `EnableLocation`, `EnableSo`, `EnableEvent`, `EnableAdmin` " +
-                        "FROM `user`;")).ToList();
+                        "FROM `user` WHERE `Id` > 0;")).ToList();
                 }
                 catch (Exception e)
                 {
@@ -184,7 +184,7 @@ namespace PointVideoGallery.Services
                     await connection.OpenAsync();
                     user = await connection.QueryFirstOrDefaultAsync<UserInfo>(
                         "SELECT `Id`, `UserName`, `Email`, `Enable` " +
-                        "FROM `user` WHERE `UserName`=@name;", new {name = name});
+                        "FROM `user` WHERE `UserName`=@name AND `Id` > 0;", new {name = name});
                 }
                 catch (Exception e)
                 {
@@ -207,7 +207,7 @@ namespace PointVideoGallery.Services
                     await connection.OpenAsync();
                     if (await connection.ExecuteAsync(
                             "Update `user` SET `UserName`=@userName, `Password`=@password, " +
-                            "`Email`=@email, `Enable`=@enable WHERE Id=@id;", new
+                            "`Email`=@email, `Enable`=@enable WHERE Id=@id AND Id>0;", new
                             {
                                 id = user.Id,
                                 userName = user.UserName,
@@ -239,7 +239,7 @@ namespace PointVideoGallery.Services
                 {
                     await connection.OpenAsync();
                     if (await connection.ExecuteAsync("UPDATE `user` SET `Enable` = @status " +
-                                                      "WHERE `Id`= @id ;", new
+                                                      "WHERE `Id`= @id AND `Id`>0;", new
                     {
                         id = id,
                         status = status
@@ -267,7 +267,7 @@ namespace PointVideoGallery.Services
                 try
                 {
                     await connection.OpenAsync();
-                    if (await connection.ExecuteAsync("DELETE FROM `user` WHERE `Id`= @id ;", new {id = id}) != 1)
+                    if (await connection.ExecuteAsync("DELETE FROM `user` WHERE `Id`= @id AND `Id`>0 ;", new {id = id}) != 1)
                         throw new SqlExecutionException();
                 }
                 catch (Exception e)

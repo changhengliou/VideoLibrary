@@ -41,6 +41,7 @@ export const setTableViewZhTwLocal = ($) => {
 }
 
 export const tableSetting = {
+    onPageChange: () => fireEvent(window, 'resize'),
     uniqueId: 'Id',
     iconSize: 'sm',
     locale: 'zh-TW',
@@ -104,4 +105,37 @@ export const setDatePickerZhTw = ($) => {
         titleFormat: "yyyy MM", /* Leverages same syntax as 'format' */
         weekStart: 0
     };
+}
+
+export const isIe = () => {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    if (msie > 0) {
+        // IE 10 or older => return version number
+        return true;
+    }
+
+    var trident = ua.indexOf('Trident/');
+    if (trident > 0) {
+        // IE 11 => return version number
+        var rv = ua.indexOf('rv:');
+        return true;
+    }
+    return false;
+}
+
+/**
+ * cross browser event fire function with safety 
+ * @param {HTMLElement} element a HTMLElement that fires an event 
+ * @param {string} eventName the name of the event name
+ */
+export const fireEvent = (element, eventName) => {
+    if (isIe()) {
+        var event = document.createEvent("Event");
+        event.initEvent(eventName, true, false); 
+        element.dispatchEvent(event);
+    } else {
+        element.dispatchEvent(new Event(eventName));
+    }
 }

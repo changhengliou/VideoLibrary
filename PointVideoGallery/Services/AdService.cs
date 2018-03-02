@@ -967,10 +967,11 @@ namespace PointVideoGallery.Services
                         else
                         {
                             temp = await GetAdEventByIdAsync(schedule.EventId);
-                            foreach (ResourceEvent t in temp.Resources)
-                            {
-                                t.Actions = await GetActionsAsync(schedule.EventId, t.Sequence);
-                            }
+                            if (temp?.Resources != null)
+                                foreach (ResourceEvent t in temp.Resources)
+                                {
+                                    t.Actions = await GetActionsAsync(schedule.EventId, t.Sequence);
+                                }
                             eventCache[schedule.EventId] = temp;
                         }
                         result.Add(new ScheduleAdEvent

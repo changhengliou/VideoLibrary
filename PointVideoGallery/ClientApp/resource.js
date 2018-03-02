@@ -1,7 +1,7 @@
 import 'bootstrap-table';
 import 'bootstrap-table/dist/bootstrap-table.css';
 import './css/resource.css';
-import { getDateTimeString, setTableViewZhTwLocal, addMsgbox } from './js/utils';
+import { getDateTimeString, setTableViewZhTwLocal, addMsgbox, fireEvent } from './js/utils';
 
 // edit button click
 const onEditClick = (row) => {
@@ -20,6 +20,7 @@ const onEditClick = (row) => {
                 return;
             onEditClick(row);
         },
+        onPageChange: () => fireEvent(window, 'resize'),
         url: '/api/v1/ad/resource/table',
         sidePagination: 'server',
         iconSize: 'sm',
@@ -123,6 +124,10 @@ const onEditClick = (row) => {
                     msg += `${input.files[i].name} 格式錯誤<br>`;
                     continue;
                 }
+                if (input.files[i].name.length > 40) {
+                    msg += `${input.files[i].name} 檔名太長，最大40個字元<br>`;
+                    continue;
+                }
                 count++;
                 // read file as preview
                 var reader = new FileReader();
@@ -142,7 +147,7 @@ const onEditClick = (row) => {
                                             </select>
                                             <input class='form-control input-sm' placeholder='name' type='text' style='margin-top: 8px;' name='name_${e.target.id}' data-id=${e.target.id} data-fname=${input.files[e.target.id].name}></input>
                                         </div>`;
-                    document.getElementById('preview-panel').append(imgBox);
+                    document.getElementById('preview-panel').appendChild(imgBox);
                     document.getElementById(`abort_${e.target.id}`).addEventListener('click', onAbortPreviewBtnClick);
                 }
 
