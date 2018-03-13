@@ -233,7 +233,7 @@ $(document).ready(() => {
     // initialize date picker
     $('#datepicker').datepicker({
         autoclose: true,
-        startDate: '+1d',
+        startDate: '+0d',
         language: 'zhtw'
     });
 

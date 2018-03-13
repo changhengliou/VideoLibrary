@@ -1,7 +1,13 @@
 import './css/signin.css';
-import { isEmpty } from './js/utils';
+import { isEmpty, fireEvent } from './js/utils';
 
 const clear = (e) => document.getElementById('msg').innerHTML = '';
+
+window.addEventListener('keyup', (e) => {
+    if (e.keyCode !== 13)
+        return;
+    fireEvent(document.getElementById('submitBtn'), 'click');
+});
 
 document.getElementById('submitBtn').addEventListener('click', (e) => {
     e.preventDefault();

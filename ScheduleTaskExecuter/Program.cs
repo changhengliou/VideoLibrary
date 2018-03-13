@@ -31,14 +31,16 @@ namespace ScheduleTaskExecuter
 
         // the full path of generated xml file stored locally 
         private static readonly string XmlOutputFilePath = Path.Combine(XmlOutputDirectory, "data.xml");
+
         // the local path that remote data.xml will be download and save at
         private static string RemoteXmlLocalDirectory { get; } = Path.Combine(XmlOutputDirectory, "remote");
+
         // the full path after saving the remote file in local hard drive
         private static string RemoteXmlLocalFilePath { get; } = Path.Combine(RemoteXmlLocalDirectory, "data.xml");
+
         private static string RemoteRootDirectory { get; } = ConfigurationManager.AppSettings["RemoteRootDirectory"];
         private static string CombineDirectory { get; } = Path.Combine(XmlOutputDirectory, "combine");
         private static string CombineDirectoryFilePath { get; } = Path.Combine(CombineDirectory, "data.xml");
-
 
         private static string HostName { get; } = ConfigurationManager.AppSettings["HostName"];
         private static string UserName { get; } = ConfigurationManager.AppSettings["UserName"];
@@ -167,7 +169,7 @@ namespace ScheduleTaskExecuter
                                     continue;
                                 // <action value="./../asset/200M_1280x720_201709.jpg" type="image" parameter="none" code="blue"/> 
                                 writer.WriteStartElement("action");
-                                writer.WriteAttributeString("value", path);
+                                writer.WriteAttributeString("value", action.Action);
                                 writer.WriteAttributeString("type", action.Type);
                                 writer.WriteAttributeString("parameter", action.Parameter);
                                 writer.WriteAttributeString("code", action.Color);
@@ -237,7 +239,7 @@ namespace ScheduleTaskExecuter
 
                     Console.WriteLine("---------- Upload ----------");
 
-                    soList.ForEach(async s =>
+                    foreach (var s in soList)
                     {
                         // remote directory 
                         var remotePath = RemoteRootDirectory + "SO" + s + @"/";
@@ -248,8 +250,15 @@ namespace ScheduleTaskExecuter
 
                         try
                         {
-                            // check if remote data.xml is existed, if yes, combine the remote and the local
-                            session.GetFileInfo(remoteFilePath);
+                            try
+                            {
+                                // check if remote data.xml is existed, if yes, combine the remote and the local
+                                session.GetFileInfo(remoteFilePath);
+                            }
+                            catch (SessionRemoteException)
+                            {
+                                session.GetFileInfo(remoteFilePath);
+                            }
                             // download file from the remote directory
                             session.GetFiles(remotePath, RemoteXmlLocalDirectory, false, options).Check();
 
@@ -257,6 +266,7 @@ namespace ScheduleTaskExecuter
                             if (!File.Exists(RemoteXmlLocalFilePath))
                             {
                                 errMsg.AppendLine($"File not found {RemoteXmlLocalFilePath}");
+                                Console.WriteLine($"File not found {RemoteXmlLocalFilePath}");
                                 throw new FileNotFoundException($"File not found {RemoteXmlLocalFilePath}");
                             }
 
@@ -266,7 +276,7 @@ namespace ScheduleTaskExecuter
                                 bool isPortal = false;
                                 while (!reader.EndOfStream)
                                 {
-                                    var line = await reader.ReadLineAsync();
+                                    var line = await reader.ReadLineAsync(); //<block name="portal">
                                     if (!isPortal && !line.Contains("<block name=\"portal\">"))
                                         continue;
                                     isPortal = true;
@@ -317,11 +327,13 @@ namespace ScheduleTaskExecuter
                         }
                         catch (SessionRemoteException)
                         {
+                            Console.WriteLine($"Remote data.xml does not existed, directly push local generated xml file");
                             // remote data.xml does not existed, directly push local generated xml file
                             results.Add(session.PutFiles(XmlOutputFilePath, remotePath, false, options));
                         }
                         Console.WriteLine(remotePath);
-                    });
+                    }
+
 
                     // upload media assets
                     paths.ForEach(s =>

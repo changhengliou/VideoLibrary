@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Web.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using OfficeOpenXml.Style;
@@ -23,7 +24,7 @@ using PointVideoGallery.Services;
 
 namespace PointVideoGallery.Api
 {
-    [RoutePrefix("api/v1/publish")]
+    [System.Web.Http.RoutePrefix("api/v1/publish")]
     public class PublishApiController : ApiController
     {
         private readonly double _resWidth = 50D;
@@ -34,8 +35,40 @@ namespace PointVideoGallery.Api
         [CnsApiAuthorize(Roles = Role.Admin + "," + Role.PublishWrite)]
         public IHttpActionResult Publish()
         {
-            Process.Start(ConfigurationManager.AppSettings["ScheduleTaskExecuterPath"]);
+            try
+            {
+                Process.Start(ConfigurationManager.AppSettings["ScheduleTaskExecuterPath"]);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return InternalServerError();
+            }
             return Ok();
+        }
+
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("download")]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.PublishRead)]
+        public async Task<HttpResponseMessage> Download(DateTime s)
+        {
+            try
+            {
+                var stream = await XmlGenService.GenerateDownloadPackageAsync(s);
+                HttpResponseMessage result =
+                    new HttpResponseMessage(HttpStatusCode.OK) { Content = new StreamContent(stream) };
+
+                result.Content.Headers.ContentDisposition =
+                    new ContentDispositionHeaderValue("attachment") { FileName = "package.zip" };
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+                result.Content.Headers.ContentLength = stream.Length;
+                return result;
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e);
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
         }
 
         [System.Web.Http.HttpGet]

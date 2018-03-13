@@ -42,9 +42,9 @@ namespace PointVideoGallery.Api
         [CnsApiAuthorize(Roles = Role.Admin + "," + Role.PublishWrite)]
         public async Task<IHttpActionResult> AddScheduleAsync([FromBody] ScheduleModel data)
         {
-            if (data.EventId <= 0 || data.S < DateTime.Now)
+            if (data.EventId <= 0 || data.S < DateTime.Today.AddSeconds(-1))
                 return BadRequest();
-            
+
             var endDate = data.E ?? data.S;
             if (endDate < data.S)
                 return BadRequest();
@@ -91,7 +91,7 @@ namespace PointVideoGallery.Api
         {
             var result = new HttpResponseMessage(HttpStatusCode.OK);
             var stream = new MemoryStream();
-            await XmlGenService.Generate(id, stream);
+            await XmlGenService.GenerateAsync(id, stream);
 
             stream.Seek(0, SeekOrigin.Begin);
 

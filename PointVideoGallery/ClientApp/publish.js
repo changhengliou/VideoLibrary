@@ -57,10 +57,10 @@ $(document).ready(() => {
         $('#schedule-table').bootstrapTable('hideColumn', 'Remove');
     else
         $('#schedule-table').bootstrapTable('showColumn', 'Remove');
-    
+
     $('#datepicker').datepicker({
         autoclose: true,
-        startDate: '+1d',
+        startDate: '+0d',
         language: 'zhtw'
     });
     $('#schedule-datepicker').datepicker({
@@ -103,13 +103,18 @@ $(document).ready(() => {
                 window.open('/api/v1/publish');
                 addMsgbox("發布完成", null, "schedule-msg", "success");
             } else if (e.target.id === 'downloadbtn') {
-
+                var _date = $('#schedule-datepicker').val();
+                if (isEmpty(_date)) {
+                    addMsgbox('日期不能為空!', null, 'schedule-msg', 'danger');
+                    return;
+                }
+                window.open(`/api/v1/publish/download?s=${_date}`);
             } else if (e.target.id === 'excelbtn') {
                 $('#calendarModal').modal('toggle');
             } else if (e.target.id === 'calendarUpdate') {
+                $('#calendarModal').modal('toggle');
                 var from = $('#datepicker').data('datepicker').dates[0],
                     to = $('#datepicker').data('datepicker').dates[1];
-                $('#calendarModal').modal('toggle');
                 if (isEmpty(from) || isEmpty(to)) {
                     addMsgbox('日期不能為空!', null, 'schedule-msg', 'danger');
                     return;

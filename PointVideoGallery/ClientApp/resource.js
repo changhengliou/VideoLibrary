@@ -12,6 +12,9 @@ const onEditClick = (row) => {
     type.value = row.MediaType;
     name.value = row.Name;
 }
+
+window.__lock__ = false;
+
 (function ($) {
     setTableViewZhTwLocal($);
     $('#resource-table').bootstrapTable({
@@ -149,6 +152,13 @@ const onEditClick = (row) => {
                                         </div>`;
                     document.getElementById('preview-panel').appendChild(imgBox);
                     document.getElementById(`abort_${e.target.id}`).addEventListener('click', onAbortPreviewBtnClick);
+                    if (!window.__lock__) {
+                        window.__lock__ = true;
+                        setTimeout(() => {
+                            window.__lock__ = false;
+                            fireEvent(window, 'resize');
+                        }, 200);
+                    }
                 }
 
                 reader.readAsDataURL(input.files[i]);

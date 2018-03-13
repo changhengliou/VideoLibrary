@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `videolib`.`user` (
   `UserName` VARCHAR(45) NOT NULL,
   `Password` VARCHAR(45) NOT NULL,
   `Enable` TINYINT(4) NOT NULL DEFAULT '1',
-  `Email` VARCHAR(45) NULL DEFAULT NULL,
+  `Email` VARCHAR(45) NULL DEFAULT '',
   `EnableResource` VARCHAR(5) NULL DEFAULT 'x',
   `EnablePublish` VARCHAR(5) NULL DEFAULT 'x',
   `EnableLocation` VARCHAR(5) NULL DEFAULT 'x',
@@ -220,3 +220,7 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO `videolib`.`user` (`Id`, `UserName`, `Password`, `Enable`, `EnableAdmin`) VALUES ('0', 'SYSTEM', 'xdy07scD3dkl2HpFOH2F', '1', '1');
+INSERT INTO `videolib`.`user` (`Id`, `UserName`, `Password`, `Enable`, `EnableAdmin`) VALUES ('1', 'admin', 'MTIzNA==', '1', '1');
+
