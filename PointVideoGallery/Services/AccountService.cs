@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Management;
 using Dapper;
-using DryIoc;
 using MySql.Data.MySqlClient;
 using PointVideoGallery.Models;
 

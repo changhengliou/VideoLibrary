@@ -5,7 +5,7 @@ import 'select2/dist/css/select2.css';
 import 'bootstrap-datepicker/js/bootstrap-datepicker.js';
 import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css';
 import './css/events.css';
-import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, addMsgbox, getDateString, setDatePickerZhTw, fireEvent } from './js/utils';
+import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, addMsgbox, getDateString, setDatePickerZhTw, fireEvent, removeMsgBox } from './js/utils';
 
 /**
  * reload select2 data
@@ -130,6 +130,7 @@ $(document).ready(() => {
     });
     resTable.bootstrapTable({
         ...tableSetting,
+        uniqueId: null,
         onPostBody: () => {
             fireEvent(window, 'resize');
         },
@@ -256,6 +257,7 @@ $(document).ready(() => {
             $('#resource-table').bootstrapTable('load', $._res.Resources);
             // set value
             document.getElementById('name').value = $._res.Name;
+            document.getElementById('eventTimespan').value = $._res.EventTimeSpan;
             document.getElementById('playoutMethod').value = res.PlayOutMethod || 'interval';
             document.getElementById('playoutSeq').value = res.PlayOutSequence || 'byasset';
             document.getElementById('playoutSec').value = res.PlayOutTimeSpan;
@@ -305,7 +307,7 @@ $(document).ready(() => {
         const edit = document.getElementById('editPanel'),
               view = document.getElementById('viewPanel'),
               editBody = document.getElementById('editPanelBody');
-
+        removeMsgBox();
         if (e instanceof HTMLElement) {
             id = e.getAttribute('data-id') || 'null';
             requestData(id);
@@ -496,7 +498,7 @@ $(document).ready(() => {
         if (!(e instanceof HTMLElement))
             return;
         var type = e.getAttribute('data-t'),
-            index = parseInt(e.getAttribute('data-seq')),
+            index = parseInt(e.getAttribute('data-seq')), // data sequence
             _tb = $('#resource-table'),
             _row = _tb.bootstrapTable('getData', false)[index];
 
@@ -736,9 +738,10 @@ $(document).ready(() => {
 
     const onEventInfoSave = (e) => {
         const name = document.getElementById('name').value,
+              timespan = document.getElementById('eventTimespan'),
               edit = document.getElementById('editPanel'),
               id = edit.getAttribute('data-id');
-        if (isEmpty(name))
+        if (isEmpty(name) || isEmpty(timespan.value))
               return;
         // if new event, no data-id in htmldoc, so set id = -1
         $.ajax({
@@ -746,7 +749,8 @@ $(document).ready(() => {
             url: `/api/v1/ad/events/info`,
             data: {
                 Id: id === 'null' ? -1 : id,
-                Name: name
+                Name: name,
+                EventTimeSpan: timespan.value
             } 
         })
         .done(res => {
@@ -757,14 +761,16 @@ $(document).ready(() => {
                 editBody.style.display = '';
                 $._res = {
                     Id: res.Id,
+                    EventTimeSpan: 600,
                     LocationTags: [],
                     Name: name,
                     PlayOutMethod: 'interval',
                     PlayOutSequence: 'byasset',
-                    PlayOutTimeSpan: 0,
+                    PlayOutTimeSpan: 10,
                     Resources: [],
                     SoSettings: []
                 };
+                timespan.value = 10;
                 $('#location-table').bootstrapTable('load', $._res.LocationTags);
                 $('#so-table').bootstrapTable('load', $._res.SoSettings);
                 $('#resource-table').bootstrapTable('load', $._res.Resources);
@@ -863,6 +869,8 @@ $(document).ready(() => {
     // create new event
     document.getElementById('newEventBtn').addEventListener('click', (e) => {
         document.getElementById('name').value = '';
+        document.getElementById('eventTimespan').value = '';
+        removeMsgBox();
         $.fn.switchView(null);
     });
 

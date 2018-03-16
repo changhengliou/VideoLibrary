@@ -87,6 +87,7 @@ namespace ScheduleTaskExecuter
                 adEvent.SoSettings.ForEach(s => soList.Add(s.Code));
                 UploadFiles(paths, soList).Wait();
             }
+            Environment.Exit(0);
         }
 
 
@@ -169,7 +170,7 @@ namespace ScheduleTaskExecuter
                                     continue;
                                 // <action value="./../asset/200M_1280x720_201709.jpg" type="image" parameter="none" code="blue"/> 
                                 writer.WriteStartElement("action");
-                                writer.WriteAttributeString("value", action.Action);
+                                writer.WriteAttributeString("value", _leadingRelativePath + action.Action);
                                 writer.WriteAttributeString("type", action.Type);
                                 writer.WriteAttributeString("parameter", action.Parameter);
                                 writer.WriteAttributeString("code", action.Color);

@@ -61,7 +61,7 @@
                 </div>
                 <label>秒數</label>
                 <div class="form-group">
-                    <input type="number" name="name" class="form-control input-sm input-with-label" value="600" disabled/>
+                    <input type="number" name="timespan" class="form-control input-sm input-with-label" value="600" id="eventTimespan"/>
                     <p class="input-right-label">秒</p>
                 </div>
             </div>
@@ -119,7 +119,7 @@
                         <option value="byasset" selected="selected">byasset</option>
                         <option value="bytime">bytime</option>
                     </select>
-                    <input type="number" placeholder="秒數" id="playoutSec" class="form-control input-sm playout" />
+                    <input type="number" placeholder="秒數" id="playoutSec" class="form-control input-sm playout" value="10" />
                 </div>
                 <label class="playout-label">播放項目</label>
                 <table id="resource-table"></table>

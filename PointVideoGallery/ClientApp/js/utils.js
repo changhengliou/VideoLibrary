@@ -92,6 +92,10 @@ export const addMsgbox = (msgHighlight, msgBody, id = "msgBox", type = "success"
     container.insertBefore(div, container.childNodes[0]);
 }
 
+export const removeMsgBox = () => {
+    [].slice.call(document.querySelectorAll('div.alert')).map(obj => obj.parentElement.removeChild(obj));
+}
+
 export const setDatePickerZhTw = ($) => {
     $.fn.datepicker.dates['zhtw'] = {
         days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],

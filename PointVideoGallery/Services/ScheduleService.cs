@@ -91,7 +91,7 @@ namespace PointVideoGallery.Services
                 try
                 {
                     await connection.OpenAsync();
-                    if (await connection.ExecuteAsync("DELETE FROM `schedule` WHERE Id=@id AND `ScheduleDate` > now();", new {id = id}) != 1)
+                    if (await connection.ExecuteAsync("DELETE FROM `schedule` WHERE Id=@id;", new {id = id}) != 1)
                         throw new SqlExecutionException();
                     await connection.CloseAsync();
                     return true;

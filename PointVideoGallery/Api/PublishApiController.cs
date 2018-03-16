@@ -12,6 +12,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Caching;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.Mvc;
@@ -33,18 +35,35 @@ namespace PointVideoGallery.Api
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route]
         [CnsApiAuthorize(Roles = Role.Admin + "," + Role.PublishWrite)]
-        public IHttpActionResult Publish()
+        public HttpResponseMessage Publish()
         {
+            var res = new HttpResponseMessage();
+
             try
             {
-                Process.Start(ConfigurationManager.AppSettings["ScheduleTaskExecuterPath"]);
+                var serviceLock = HttpRuntime.Cache.Get("serviceLock");
+                if (serviceLock != null)
+                {
+                    res.StatusCode = HttpStatusCode.ServiceUnavailable;
+                    res.Content = new StringContent("Request too frequently, try again later.");
+                    return res;
+                }
+
+                HttpRuntime.Cache.Add("serviceLock", "true", absoluteExpiration: DateTime.Now.AddSeconds(10),
+                    onRemoveCallback: null, dependencies: null, slidingExpiration: Cache.NoSlidingExpiration,
+                    priority: CacheItemPriority.High);
+                var process = Process.Start(ConfigurationManager.AppSettings["ScheduleTaskExecuterPath"]);
+                process.WaitForExit(6000);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return InternalServerError();
+                res.StatusCode = HttpStatusCode.InternalServerError;
+                res.Content = new StringContent("500 Internal Server Error.");
             }
-            return Ok();
+            res.StatusCode = HttpStatusCode.OK;
+            res.Content = new StringContent("Publish Succeed.");
+            return res;
         }
 
         [System.Web.Http.HttpGet]
@@ -56,10 +75,10 @@ namespace PointVideoGallery.Api
             {
                 var stream = await XmlGenService.GenerateDownloadPackageAsync(s);
                 HttpResponseMessage result =
-                    new HttpResponseMessage(HttpStatusCode.OK) { Content = new StreamContent(stream) };
+                    new HttpResponseMessage(HttpStatusCode.OK) {Content = new StreamContent(stream)};
 
                 result.Content.Headers.ContentDisposition =
-                    new ContentDispositionHeaderValue("attachment") { FileName = "package.zip" };
+                    new ContentDispositionHeaderValue("attachment") {FileName = "package.zip"};
                 result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
                 result.Content.Headers.ContentLength = stream.Length;
                 return result;

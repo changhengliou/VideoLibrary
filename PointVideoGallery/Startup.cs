@@ -2,8 +2,6 @@
 using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
-using DryIoc;
-using DryIoc.Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;

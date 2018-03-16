@@ -326,12 +326,13 @@ namespace PointVideoGallery.Services
                     await connection.OpenAsync();
 
                     var sql =
-                        "INSERT INTO `ad_events` (`Name`, `PlayoutMethod`, `PlayoutTimeSpan`, `PlayoutSequence`) " +
-                        "VALUES (@name, @playoutMethod, @playoutTimeSpan, @playoutSequence);";
+                        "INSERT INTO `ad_events` (`Name`, `EventTimeSpan`, `PlayoutMethod`, `PlayoutTimeSpan`, `PlayoutSequence`) " +
+                        "VALUES (@name, @timespan, @playoutMethod, @playoutTimeSpan, @playoutSequence);";
 
                     if (await connection.ExecuteAsync(sql, new
                     {
                         name = adEvent.Name,
+                        timespan = adEvent.EventTimeSpan,
                         playoutMethod = adEvent.PlayOutMethod,
                         playoutTimeSpan = adEvent.PlayOutTimeSpan,
                         playoutSequence = adEvent.PlayOutSequence
@@ -369,6 +370,8 @@ namespace PointVideoGallery.Services
 
                     if (!string.IsNullOrWhiteSpace(adEvent.Name))
                         updateGen.Add("`Name`=@name");
+                    if (adEvent.EventTimeSpan >= 0)
+                        updateGen.Add("`EventTimeSpan`=@timespan");
                     if (!string.IsNullOrWhiteSpace(adEvent.PlayOutMethod))
                         updateGen.Add("`PlayoutMethod`=@playoutMethod");
                     if (!string.IsNullOrWhiteSpace(adEvent.PlayOutSequence))
@@ -385,6 +388,7 @@ namespace PointVideoGallery.Services
                     {
                         id = adEvent.Id,
                         name = adEvent.Name,
+                        timespan = adEvent.EventTimeSpan,
                         playoutMethod = adEvent.PlayOutMethod,
                         playoutTimeSpan = adEvent.PlayOutTimeSpan,
                         playoutSequence = adEvent.PlayOutSequence

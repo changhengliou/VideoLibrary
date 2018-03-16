@@ -52,8 +52,8 @@ $(document).ready(() => {
             </button>`
         }]
     });
-
-    if (new Date(queryDate) < Date.now())
+    const date = new Date();
+    if (new Date(queryDate) < new Date(getDateString(date) + ' 00:00:00'))
         $('#schedule-table').bootstrapTable('hideColumn', 'Remove');
     else
         $('#schedule-table').bootstrapTable('showColumn', 'Remove');
@@ -72,8 +72,8 @@ $(document).ready(() => {
             var tb = $('#schedule-table');
             tb.bootstrapTable('refresh', {
                 url: `/api/v1/schedule/${getDateString(e.date)}`
-            })
-            if (e.date < Date.now())
+            });
+            if (e.date < new Date(getDateString(new Date()) + ' 00:00:00'))
                 tb.bootstrapTable('hideColumn', 'Remove');
             else
                 tb.bootstrapTable('showColumn', 'Remove');
@@ -100,8 +100,19 @@ $(document).ready(() => {
     }
     const onbBtnClick = (e) => {
             if (e.target.id === 'pubbtn') {
-                window.open('/api/v1/publish');
-                addMsgbox("發布完成", null, "schedule-msg", "success");
+                addMsgbox("請稍後...", null, "schedule-msg", "warning");
+                $.ajax({
+                    url: `/api/v1/publish`,
+                    method: 'GET'
+                })
+                .done(res => addMsgbox("發布完成", null, "schedule-msg", "success"))
+                .fail(err => {
+                    if (err.status === 503)
+                        addMsgbox("發佈過於頻繁，請稍後再進行操作!", null, "schedule-msg", "danger");
+                    else if (err.status === 403)
+                        location.href = '/account/signin';
+                    else addMsgbox("系統錯誤!", null, "schedule-msg", "danger");
+                });
             } else if (e.target.id === 'downloadbtn') {
                 var _date = $('#schedule-datepicker').val();
                 if (isEmpty(_date)) {

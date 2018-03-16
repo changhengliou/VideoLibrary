@@ -10,6 +10,8 @@ namespace PointVideoGallery.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public int EventTimeSpan { get; set; }
+
         /// <summary>
         /// 方式, (interval)輪播/(random)隨機
         /// </summary>

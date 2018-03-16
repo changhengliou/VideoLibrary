@@ -137,7 +137,7 @@ namespace PointVideoGallery.Services
                                 continue;
                             // <action value="./../asset/200M_1280x720_201709.jpg" type="image" parameter="none" code="blue"/> 
                             await writer.WriteStartElementAsync(null, "action", null);
-                            await writer.WriteAttributeStringAsync(null, "value", null, action.Action);
+                            await writer.WriteAttributeStringAsync(null, "value", null, _leadingRelativePath + action.Action);
                             await writer.WriteAttributeStringAsync(null, "type", null, action.Type);
                             await writer.WriteAttributeStringAsync(null, "parameter", null, action.Parameter);
                             await writer.WriteAttributeStringAsync(null, "code", null, action.Color);
