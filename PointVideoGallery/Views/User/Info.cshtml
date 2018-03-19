@@ -1,9 +1,8 @@
 ﻿@using System.IdentityModel.Claims
-@using ImTools
 @using PointVideoGallery.Services
 @{
     var service = new AccountService();
-    var uid = Convert.ToInt32(Request.GetOwinContext().Authentication.User.Claims.FindFirst(s => s.Type == ClaimTypes.NameIdentifier).Value);
+    var uid = Convert.ToInt32(Request.GetOwinContext().Authentication.User.Claims.First(s => s.Type == ClaimTypes.NameIdentifier).Value);
     var user = service.GetUserByUserIdAsync(uid).Result;
 }
 

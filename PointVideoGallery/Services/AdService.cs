@@ -866,7 +866,8 @@ namespace PointVideoGallery.Services
                         }
                         else
                         {
-                            await connection.ExecuteAsync("DELETE FROM `event_resource` WHERE `EventId`=@eventId;", new {eventId= adEvent.Id }, transaction);
+                            await connection.ExecuteAsync("DELETE FROM `event_resource` WHERE `EventId`=@eventId;",
+                                new {eventId = adEvent.Id}, transaction);
                         }
                         transaction.Commit();
                     }
@@ -994,6 +995,54 @@ namespace PointVideoGallery.Services
                     Trace.WriteLine(e);
                     await connection.CloseAsync();
                     throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copy existed ad event as new event
+        /// </summary>
+        public async Task<bool> CreateCopyEvent(int id)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    using (var transaction = await connection.BeginTransactionAsync())
+                    {
+                        var newId = await connection.ExecuteScalarAsync<int>(
+                            "INSERT INTO `ad_events` (`Name`, `EventTimeSpan`, `PlayoutMethod`, `PlayoutTimeSpan`, `PlayoutSequence`) " +
+                            "SELECT CONCAT(`Name`, '- COPY') AS `Name`, `EventTimeSpan`, `PlayoutMethod`, `PlayoutTimeSpan`, `PlayoutSequence` FROM `ad_events` WHERE Id=@id;" +
+                            "SELECT last_insert_id();", new {id = id}, transaction);
+
+                        await connection.ExecuteAsync("INSERT INTO `event_location` (`EventId`, `LocationId`) " +
+                                                      "SELECT @newId, `LocationId` FROM `event_location` WHERE `EventId`=@id;",
+                            new {id = id, newId = newId}, transaction);
+                        await connection.ExecuteAsync("INSERT INTO `event_so` (`EventId`, `SoId`) " +
+                                                      "SELECT @newId, `SoId` FROM `event_so` WHERE `EventId`=@id;",
+                            new {id = id, newId = newId}, transaction);
+
+                        await connection.ExecuteAsync(
+                            "INSERT INTO `event_resource` (`EventId`, `ResourceId`, `ResourcePlayWeight`, `ResourceSeq`) " +
+                            "SELECT @newId, `ResourceId`, `ResourcePlayWeight`, `ResourceSeq` FROM `event_resource` WHERE `EventId`=@id;",
+                            new {id = id, newId = newId}, transaction);
+
+                        await connection.ExecuteAsync(
+                            "INSERT INTO `action` (`Type`, `Action`, `Parameter`, `Color`, `EventId`, `ResourceSeq`, `Checked`) " +
+                            "SELECT `Type`, `Action`, `Parameter`, `Color`, @newId, `ResourceSeq`, `Checked` FROM `action` WHERE `EventId`= @id; ",
+                            new { id = id, newId = newId }, transaction);
+
+                        transaction.Commit();
+                    }
+                    await connection.CloseAsync();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                    await connection.CloseAsync();
+                    return false;
                 }
             }
         }

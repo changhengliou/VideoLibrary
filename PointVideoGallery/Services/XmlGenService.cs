@@ -70,7 +70,6 @@ namespace PointVideoGallery.Services
         {
             var service = new AdService();
             var startDate = DateTime.Today;
-            var videoDuration = "600";
 
             // <?xml version="1.0" encoding="utf-8"?>
             await writer.WriteStartDocumentAsync();
@@ -109,7 +108,7 @@ namespace PointVideoGallery.Services
 
                     // <duration value="600" />
                     await writer.WriteStartElementAsync(null, "duration", null);
-                    await writer.WriteAttributeStringAsync(null, "value", null, videoDuration);
+                    await writer.WriteAttributeStringAsync(null, "value", null, adEvent.EventTimeSpan.ToString());
 
                     // <assets>
                     await writer.WriteStartElementAsync(null, "assets", null);

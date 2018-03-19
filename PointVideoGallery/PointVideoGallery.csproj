@@ -303,6 +303,7 @@
     <Compile Include="Utils\ActiveViewHelper.cs" />
     <Compile Include="Utils\BrowserJsonFormatter.cs" />
     <Compile Include="Utils\Helper.cs" />
+    <Compile Include="Utils\NpoiMemoryStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

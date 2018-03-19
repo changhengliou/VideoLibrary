@@ -60,7 +60,6 @@ $(document).ready(() => {
 
     $('#datepicker').datepicker({
         autoclose: true,
-        startDate: '+0d',
         language: 'zhtw'
     });
     $('#schedule-datepicker').datepicker({
@@ -130,7 +129,7 @@ $(document).ready(() => {
                     addMsgbox('日期不能為空!', null, 'schedule-msg', 'danger');
                     return;
                 }
-                window.open(`/api/v1/publish/excelsheet?s=${getDateString(new Date(from))}&e=${getDateString(new Date(to))}`);
+                window.open(`/api/v1/publish/excelsheet?s=${getDateString(new Date(from))}&e=${getDateString(new Date(to))}&type=xls`);
             }
         }
         ['pubbtn', 'downloadbtn', 'excelbtn', 'calendarUpdate'].map(fn => {

@@ -183,6 +183,7 @@ namespace PointVideoGallery.Api
             return Json(await service.GetAdEventsWithIdFilterAsync(data?.So, data?.Location));
         }
 
+
         [System.Web.Http.Route("action/upload")]
         [System.Web.Http.HttpPost]
         [CnsApiAuthorize(Roles = Role.Admin + "," + Role.EventWrite)]
@@ -239,6 +240,20 @@ namespace PointVideoGallery.Api
             returnMsg.Ok = true;
 
             return Json(new {returnMsg, info.Path});
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [System.Web.Http.Route("cp/{id}")]
+        [System.Web.Http.HttpGet]
+        [CnsApiAuthorize(Roles = Role.Admin + "," + Role.EventWrite)]
+        public async Task<IHttpActionResult> CopyEventAsync(int id)
+        {
+            if (id <= 0)
+                return BadRequest();
+            AdService adService = new AdService();
+            return Json(await adService.CreateCopyEvent(id));
         }
     }
 }

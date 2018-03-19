@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using PointVideoGallery;
@@ -76,6 +77,7 @@ namespace ScheduleTaskExecuter
                 List<string> paths = new List<string>();
                 List<string> soList = new List<string>();
                 var adEvent = GenerateXml(scheduleEvent.EventId);
+
                 adEvent.Resources.ForEach(s =>
                 {
                     paths.Add(s.Path.Replace("/", @"\"));
@@ -86,6 +88,7 @@ namespace ScheduleTaskExecuter
                 });
                 adEvent.SoSettings.ForEach(s => soList.Add(s.Code));
                 UploadFiles(paths, soList).Wait();
+                Thread.Sleep(1000);
             }
             Environment.Exit(0);
         }
@@ -144,6 +147,10 @@ namespace ScheduleTaskExecuter
                         if (adEvent.PlayOutMethod.Equals("interval", StringComparison.OrdinalIgnoreCase))
                             writer.WriteAttributeString("value", adEvent.PlayOutTimeSpan.ToString());
 
+                        // <duration value="600" />
+                        writer.WriteStartElement("duration");
+                        writer.WriteAttributeString("value", adEvent.EventTimeSpan.ToString());
+
                         // <assets>
                         writer.WriteStartElement("assets");
 
@@ -186,7 +193,7 @@ namespace ScheduleTaskExecuter
                         // assets end
                         writer.WriteEndElement();
                         // duration end
-                        //                     writer.WriteEndElement();
+                        writer.WriteEndElement();
                         // playMode end
                         writer.WriteEndElement();
                         // child end
@@ -236,12 +243,14 @@ namespace ScheduleTaskExecuter
 
                 try
                 {
+                    int failedCount = 0;
                     session.Open(_options);
 
                     Console.WriteLine("---------- Upload ----------");
 
-                    foreach (var s in soList)
+                    for (var i = 0; i < soList.Count; i++)
                     {
+                        var s = soList[i];
                         // remote directory 
                         var remotePath = RemoteRootDirectory + "SO" + s + @"/";
                         // remotr file path to be merged
@@ -251,17 +260,7 @@ namespace ScheduleTaskExecuter
 
                         try
                         {
-                            try
-                            {
-                                // check if remote data.xml is existed, if yes, combine the remote and the local
-                                session.GetFileInfo(remoteFilePath);
-                            }
-                            catch (SessionRemoteException)
-                            {
-                                session.GetFileInfo(remoteFilePath);
-                            }
-                            // download file from the remote directory
-                            session.GetFiles(remotePath, RemoteXmlLocalDirectory, false, options).Check();
+                            GetRemoteFile(session, options, remoteFilePath, remotePath, 0);
 
                             // check if remote file is correctly downloaded
                             if (!File.Exists(RemoteXmlLocalFilePath))
@@ -328,11 +327,20 @@ namespace ScheduleTaskExecuter
                         }
                         catch (SessionRemoteException)
                         {
-                            Console.WriteLine($"Remote data.xml does not existed, directly push local generated xml file");
+                            Console.WriteLine("Remote data.xml does not existed, directly push local generated xml file");
                             // remote data.xml does not existed, directly push local generated xml file
                             results.Add(session.PutFiles(XmlOutputFilePath, remotePath, false, options));
                         }
+                        Thread.Sleep(1000);
                         Console.WriteLine(remotePath);
+
+                        var info = session.GetFileInfo(remotePath + "data.xml");
+                        if (info.Length != 0) continue;
+                        if (failedCount > 3)
+                            throw new ApplicationException("Failed to upload file.");
+                        failedCount++;
+                        i--;
+                        Console.WriteLine("Upload Failed, try upload again.");
                     }
 
 
@@ -375,6 +383,29 @@ namespace ScheduleTaskExecuter
                     Console.WriteLine(errMsg);
                     Console.WriteLine(e.Message);
                 }
+            }
+        }
+
+        public static void GetRemoteFile(Session session, TransferOptions options, string remoteFilePath, string remotePath, int failedCount = 0)
+        {
+            try
+            {
+                // check if remote data.xml is existed, if yes, combine the remote and the local
+                session.GetFileInfo(remoteFilePath);
+
+                // download file from the remote directory
+                session.GetFiles(remotePath, RemoteXmlLocalDirectory, false, options).Check();
+            }
+            catch (SessionRemoteException)
+            {
+                if (failedCount > 5)
+                {
+                    Console.WriteLine("Possibly no remote file, abort.");
+                    throw;
+                }
+                Console.WriteLine($"Unable to retrieve file at {remotePath}");
+                Thread.Sleep(500);
+                GetRemoteFile(session, options, remoteFilePath, remotePath, failedCount + 1);
             }
         }
     }

@@ -19,6 +19,7 @@ import { setTableViewZhTwLocal, isEmpty, tableSetting, getDateTimeString, swap, 
         });
         $select.html(options.join('')).change();
     };
+    $.fn.addMsgbox = addMsgbox;
 })(jQuery);
 
 /**
@@ -40,8 +41,8 @@ const mapSelectData = (arr) => arr.map(obj => {
 const getDiff = (oldArr, newArr) => {
     const add = [], rm = [];
     var oi = 0, ni = 0;
-    oldArr = oldArr.sort((x,y) => x > y);
-    newArr = newArr.sort((x,y) => x > y);
+    oldArr = oldArr.sort((x,y) => x > y ? 1 : -1);
+    newArr = newArr.sort((x,y) => x > y ? 1 : -1);
     while (oi < oldArr.length && ni < newArr.length) {
         if (oldArr[oi] == newArr[ni]) {
             oi++;
@@ -90,6 +91,9 @@ $(document).ready(() => {
                                                           </button>
                                                           <button class='btn btn-sm btn-default' data-id="${row.Id}" onClick='$.fn.addCalendar(this);'>
                                                               <span class='glyphicon glyphicon-calendar'></span>
+                                                          </button>
+                                                          <button class='btn btn-sm btn-default' data-id="${row.Id}" onClick='$.fn.copyEvent(this);'>
+                                                              <span class='glyphicon glyphicon-copy'></span>
                                                           </button>
                                                           <button class='btn btn-sm btn-default' data-id="${row.Id}" data-t='eve' onClick='$.fn.remove(this);'>
                                                               <span class="glyphicon glyphicon-remove"></span>
@@ -251,7 +255,7 @@ $(document).ready(() => {
             url: `/api/v1/ad/events/${id}`
         })
         .done(res => {
-            $._res = {...res, Resources: res.Resources.sort((x, y) => x.Sequence > y.Sequence)};
+            $._res = {...res, Resources: res.Resources.sort((x, y) => x.Sequence > y.Sequence ? 1 : -1)};
             $('#location-table').bootstrapTable('load', res.LocationTags);
             $('#so-table').bootstrapTable('load', res.SoSettings);
             $('#resource-table').bootstrapTable('load', $._res.Resources);
@@ -299,6 +303,11 @@ $(document).ready(() => {
         });
     }
 
+    $.fn.copyEvent = (e) => {
+        var id = e.getAttribute('data-id');
+        addMsgbox("確定複製該筆資料?", 
+                `<a href="javascript:$.ajax({url:'/api/v1/ad/events/cp/${id}',method:'GET'}).done(function(res){$('#table').bootstrapTable('refresh');$.fn.addMsgbox('成功複製!',null,'event-list-panel','success')}).fail(function(res){$.fn.addMsgbox('複製失敗!',null,'event-list-panel','danger')});void(0);">確定</a> <a href="javascript:$('div.alert').each(function(i,x){x.parentElement.removeChild(x)});void(0);">取消</a>`,'event-list-panel','warning');
+    }
     /**
      * Switch view between edit and view panel
      */
@@ -444,18 +453,7 @@ $(document).ready(() => {
             type = e.getAttribute('data-t');
         
         if (type === 'eve') {
-            $.ajax({
-                url: `/api/v1/ad/events/rm/${id}`,
-                method: 'DELETE',
-            })
-            .then(res => {
-                addMsgbox("刪除成功!", null, "event-list-panel", "success");
-                $('#table').bootstrapTable('load', res); 
-            })
-            .fail(err => {
-                var msg = err.status === 403 ? "沒有權限進行此項操作!" : "刪除失敗!"
-                addMsgbox(msg, null, "event-list-panel", "danger");
-            });
+            addMsgbox('確定要刪除?', `<a href='javascript:$.ajax({url:"/api/v1/ad/events/rm/${id}",method:"DELETE"}).done(function(a){$.fn.addMsgbox("刪除成功!",null,"event-list-panel","success"),$("#table").bootstrapTable("load",a)}).fail(function(a){var e=403===a.status?"沒有權限進行此項操作!":"刪除失敗!";$.fn.addMsgbox(e,null,"event-list-panel","danger")});void(0);';>確定</a> <a href="javascript:$('div.alert').each(function(i,x){x.parentElement.removeChild(x)});void(0);">取消</a>`, 'event-list-panel', 'warning');
             return;
         }
         if (type === 'res') {
@@ -500,7 +498,7 @@ $(document).ready(() => {
         var type = e.getAttribute('data-t'),
             index = parseInt(e.getAttribute('data-seq')), // data sequence
             _tb = $('#resource-table'),
-            _row = _tb.bootstrapTable('getData', false)[index];
+            _row = _tb.bootstrapTable('getData', false).filter(s => s.Sequence === index)[0];
 
         if (type === 'up') {
             if (index === 0)
@@ -836,14 +834,12 @@ $(document).ready(() => {
     const onResourcesChange = (e) => {
         var tb = $('#res-select-table'),
             dataTb = $('#resource-table');
+        var index = dataTb.bootstrapTable('getData', false).length;
         tb.bootstrapTable('getSelections').map(obj => {
-            dataTb.bootstrapTable('append', obj);
+            dataTb.bootstrapTable('append', { ...obj, Sequence: index });
+            index++;
         });
         $._res.Resources = dataTb.bootstrapTable('getData', false);
-        $._res.Resources.map((obj, index) => {
-            obj.Sequence = index;
-        });
-
         $('#resourceModal').modal('toggle');
     }
 
